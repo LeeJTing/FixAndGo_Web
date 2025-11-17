@@ -104,7 +104,7 @@ CREATE OR REPLACE TABLE CartItem (
     cart_id INT NOT NULL,
     qty INT DEFAULT 1 NOT NULL,
     is_check BOOLEAN DEFAULT FALSE NOT NULL,
-    is_take BOOLEAN DEFAULT FALSE NOT NULL,
+    is_tick BOOLEAN DEFAULT FALSE NOT NULL,
     product_id INT NOT NULL,
     FOREIGN KEY (cart_id) REFERENCES Cart(cart_id),
     FOREIGN KEY (product_id) REFERENCES Product(product_id)
