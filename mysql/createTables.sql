@@ -88,23 +88,12 @@ CREATE OR REPLACE TABLE Product (
     FOREIGN KEY (category_code) REFERENCES Category(category_code)
 );
 
-
-CREATE OR REPLACE TABLE ImageLink (
-    link_id INT PRIMARY KEY AUTO_INCREMENT,
-    url VARCHAR(500) NOT NULL,
-    position INT DEFAULT 0 NOT NULL,
-    alt VARCHAR(50) NULL,
-    product_id INT NOT NULL,
-    is_show BOOLEAN DEFAULT TRUE NOT NULL,
-    FOREIGN KEY (product_id) REFERENCES Product(product_id)
-);
-
 CREATE OR REPLACE TABLE CartItem (
     item_id INT PRIMARY KEY AUTO_INCREMENT,
     cart_id INT NOT NULL,
     qty INT DEFAULT 1 NOT NULL,
     is_check BOOLEAN DEFAULT FALSE NOT NULL,
-    is_tick BOOLEAN DEFAULT FALSE NOT NULL,
+    is_take BOOLEAN DEFAULT FALSE NOT NULL,
     product_id INT NOT NULL,
     FOREIGN KEY (cart_id) REFERENCES Cart(cart_id),
     FOREIGN KEY (product_id) REFERENCES Product(product_id)
@@ -118,6 +107,7 @@ CREATE OR REPLACE TABLE ProductVisualMedia (
     file_path VARCHAR(100) NOT NULL,
     alt VARCHAR(50) NULL,
     is_show BOOLEAN DEFAULT TRUE NOT NULL,
+    type ENUM('Video', 'Image', 'Video URL', 'Image URL') NOT NULL,
     FOREIGN KEY (product_id) REFERENCES Product(product_id)
 );
 
@@ -156,28 +146,12 @@ CREATE OR REPLACE TABLE OrderItem (
     FOREIGN KEY (product_id) REFERENCES Product(product_id)
 );
 
--- Create OrderAdjustment table
-CREATE OR REPLACE TABLE OrderAdjustment (
-    adjust_id INT PRIMARY KEY AUTO_INCREMENT,
-    order_id INT NOT NULL,
-    amount DECIMAL(10,2) NOT NULL,
-    type ENUM('TAX', 'SHIPPING_FEE', 'DISCOUNT') NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES Orders(order_id)
-);
-
-CREATE OR REPLACE TABLE Invoice (
-    invoice_id INT PRIMARY KEY AUTO_INCREMENT,
-    order_id INT NOT NULL,
-    total_amount DECIMAL(10,2) NOT NULL,
-    invoiced_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES Orders(order_id)
-);
 
 -- Create Payment table
 CREATE OR REPLACE TABLE Payment (
     payment_id INT PRIMARY KEY AUTO_INCREMENT,
-    invoice_id INT NOT NULL,
+    order_id INT NOT NULL,
     payment_method ENUM('Credit Card', 'Debit Card', 'PayPal', 'Bank Transfer', 'Cash') NOT NULL,
     paid_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    FOREIGN KEY (invoice_id) REFERENCES Invoice(invoice_id)
+    FOREIGN KEY (order_id) REFERENCES Orders(order_id)
 );
