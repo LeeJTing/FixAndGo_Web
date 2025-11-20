@@ -37,7 +37,7 @@ CREATE TABLE `address` (
   `address_three` varchar(255) DEFAULT NULL,
   `state` varchar(50) NOT NULL,
   `post_code` varchar(5) NOT NULL,
-  `country` varchar(40) DEFAULT 'Malaysia'
+  `country` varchar(40) NOT NULL DEFAULT 'Malaysia'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -206,7 +206,7 @@ CREATE TABLE `review` (
   `product_id` int(11) NOT NULL,
   `reviewed_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `comment` varchar(200) DEFAULT NULL,
-  `is_valid` tinyint(1) DEFAULT 1,
+  `is_valid` tinyint(1) NOT NULL DEFAULT 1,
   `rating` decimal(2,1) DEFAULT NULL CHECK (`rating` >= 0.0 and `rating` <= 5.0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -244,10 +244,10 @@ CREATE TABLE `userprofile` (
 CREATE TABLE `users` (
   `user_id` varchar(12) NOT NULL,
   `user_name` varchar(50) NOT NULL,
-  `user_role` enum('Member','Admin') DEFAULT 'Member',
+  `user_role` enum('Member','Admin') NOT NULL DEFAULT 'Member',
   `email` varchar(30) NOT NULL,
   `hash_password` varchar(255) NOT NULL,
-  `account_status` enum('Verified','Unverified','Blocked') DEFAULT 'Unverified'
+  `account_status` enum('Verified','Unverified','Blocked') NOT NULL DEFAULT 'Unverified'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
