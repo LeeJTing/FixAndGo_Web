@@ -1,0 +1,19 @@
+--ignore this
+INSERT INTO media
+(product_id, position, file_path, alt, is_show, type)
+VALUES
+(1, 0, 'images/product/claw_hammer_23mm-0.jpg', 'Claw Hammer 23mm', 1, 'Image'),
+(1, 1, 'images/product/claw_hammer_23mm-1.jpg', 'Claw Hammer 23mm', 1, 'Image'),
+(1, 2, 'images/product/claw_hammer_23mm-2.jpg', 'Claw Hammer 23mm', 1, 'Image'),
+(1, 3, 'images/product/claw_hammer_23mm-3.jpg', 'Claw Hammer 23mm', 1, 'Image'),
+(2, 0, 'images/product/magnetic_claw_hammer-0.jpg', 'Magnetic Claw Hammer', 1, 'Image'),
+(2, 1, 'images/product/magnetic_claw_hammer-1.jpg', 'Magnetic Claw Hammer', 1, 'Image'),
+(2, 2, 'images/product/magnetic_claw_hammer-2.jpg', 'Magnetic Claw Hammer', 1, 'Image'),
+(3, 0, 'images/product/short_handle_mini_hammer-0.jpg', 'Short-Handle Mini Hammer', 1, 'Image'),
+(3, 1, 'images/product/short_handle_mini_hammer-1.jpg', 'Short-Handle Mini Hammer', 1, 'Image'),
+(3, 2, 'images/product/short_handle_mini_hammer-2.jpg', 'Short-Handle Mini Hammer', 1, 'Image'),
+(4, 0, 'images/product/cross_pein_pin_hammer_18mm-0.jpg', 'Pin hammer for metalwork', 1, 'Image'),
+(4, 1, 'images/product/cross_pein_pin_hammer_18mm-1.jpg', 'Pin hammer for metalwork', 1, 'Image'),
+(4, 2, 'images/product/cross_pein_pin_hammer_18mm-2.jpg', 'Pin hammer for metalwork', 1, 'Image'),
+(5, 0, 'images/product/cross_pein_pin_hammer_14mm-0.jpg', 'Smaller cross pein pin hammer', 1, 'Image'),
+(5, 1, 'images/product/cross_pein_pin_hammer_14mm-1.jpg', 'Smaller cross pein pin hammer', 1, 'Image');

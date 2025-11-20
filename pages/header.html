@@ -1,0 +1,55 @@
+<header>
+    <div class="container flex justify-between">
+        <a href="#" class="logo" data-link="home">
+            <img src="/FixAndGo_Web/images/logo.png" alt="Logo" style="width: 70px; height: 90px;" />
+            Fix&Go
+        </a>
+        <nav class="desktop-nav">
+            <ul class="flex">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Products</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+
+        <!-- Menu Toggle Button (appears on all sizes) -->
+        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <!-- Cart Icon (click to open sidebar) -->
+        <div class="cart-icon" id="cartIcon">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span class="cart-count" id="cartCount">0</span>
+        </div>
+
+        <div class="mobile-dropdown" id="mobileDropdown">
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Products</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </div>
+
+        <!-- Sliding Cart Sidebar -->
+        <div id="cartSidebar" class="cart-sidebar">
+            <div class="cart-header">
+                <h3>Your Cart</h3>
+                <button class="close-cart">&times;</button>
+            </div>
+            <div class="cart-items" id="cartItems">
+                <p class="empty-cart">Your cart is empty</p>
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <strong>Total: <span id="cartTotalPrice">$0.00</span></strong>
+                </div>
+                <button class="btn-primary checkout-btn">Checkout</button>
+            </div>
+        </div>
+
+        <!-- Overlay (dark background when cart is open) -->
+        <div id="cartOverlay" class="cart-overlay"></div>
+    </div>
+</header>
