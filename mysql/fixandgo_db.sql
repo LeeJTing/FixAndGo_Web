@@ -517,6 +517,9 @@ ALTER TABLE `userprofile`
   ADD CONSTRAINT `userprofile_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
 COMMIT;
 
+ALTER TABLE `productvisualmedia` 
+MODIFY COLUMN `alt` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '';
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
@@ -626,83 +629,12 @@ INSERT INTO profilepicture (user_id, file_path)
 VALUE
 ('M001', 'images/profile/1.webp');
 
-INSERT INTO category (category_code, category_name, description) VALUES
-(1,'HouseHold', 'Did you know you can find all your household and housekeeping supplies in one place at Mr DIY. Whatever you need, kitchenware, houseware, dining and laundry, you’ll find it here. Great ranges of baskets, hampers, organizers, storage, cleaning materials and cookware will help you choose exactly what you need for every room in your home.'),
-(2, 'Hardware', 'Keeping your home in top condition is a priority for everyone. That’s why Mr DIY has the best range of hardware on our website. Whatever DIY project you are working on, we’ll have what you need: a great range of hand tools and power tools, all the painting, decorating and plumbing equipment you need, and a great choice of door furniture, including locks and hinges.'),
-(3, 'Electrical', 'Mr DIY offers the largest range of electrical products. Whatever you need you will find it here - find the perfect batteries for your devices, find a new rice cooker or the perfect hair dryer We also have a massive range of electrical accessories - cables, adapters, chargers – plus lighting and computer accessories, headphones, mice & keyboards.'),
-(4, 'Toys', 'Welcome to Mr DIY’s toy store! Whatever the age, we’ve got the toy you’re looking for: educational toys and learning aids for the older child, and teddy bears, plush toys and dolls for toddlers. There are action figures and remote control cars for kids, and building blocks, rattles, musical toys and musical toys, plus an amazing selection of arts & crafts supplies.');
+INSERT INTO category (category_name, description) VALUES
+('Storage', 'Storage solutions, tool boxes, shelves and trolleys'),
+('Stationery', 'Notebooks, sticky notes, pencils, pens and office supplies'),
+('Automotive', 'Car accessories, maintenance tools and automotive equipment'),
+('Hardware-Hand Tools', 'Manual tools: screwdrivers, chisels, scissors, knives, pliers, etc.'),
+('Power-Tools', 'Cordless tools, compressors, power screwdrivers and electric tools')
+ON DUPLICATE KEY UPDATE 
+    description = VALUES(description);
 
-INSERT INTO product 
-(product_id, product_name, stock_quantity, description, short_desc, unit_price, product_point, sold_number, category_code) 
-VALUES
-(1, 'Claw Hammer 23mm', 100, 'WHAT IS (MR.DIY) NON-SLIP ERGONOMIC STEEL CLAW HAMMER ? This hammer is suitable for tasks such as striking chisels, punches, and forming or straightening non-hardened steel. Its ergonomic design and robust construction make it a reliable tool  suitable for a variety of tasks, from simple home repairs to professional construction work and also carpentry', 'Non-Slip Ergonomic Steel Claw Hammer is a durable tool designed for striking tasks and easy nail removal, featuring a curved claw and strong steel construction suitable for home or professional use. Its fiber-rubber shock-absorbing handle provides a secure non-slip grip, reduces hand fatigue, and includes a hang hole for convenient storage.', 10.20, 10200, 100, 2),
-(2, 'Cross Pein Pin Hammer 14mm', 200, 'Features: -Small cross pein pin hammer, also known as a telephone hammer. -Used for precision work on small fixings, panel pins etc -Suitable to use at home, office, school etc. -Easy and convenient to use -Comfortable handle with soft grip -Ideal for light joinery and cabinet work -Good quality product Specifications: -Size: 14mm -Brand: AGASS', 'A small cross pein pin hammer designed for precise light-duty tasks, featuring a soft-grip handle and suitable for home, office, school, and light joinery work.', 6.50, 6500, 100, 2),
-(3, 'Cross Pein Pin Hammer 18mm', 10, 'Cross pein pin hammer, also known as a telephone hammer, is used for precision work on small fixings, panel pins etc. Ideal for light joinery and cabinet work.', 'The cross pein pin (telephone) hammer is designed for precision work on small fixings, panel pins, and light joinery or cabinet tasks.', 7.30, 7300, 90, 2),
-(4, 'Magnetic Claw Hammer', 70, 'MR DIY general purpose claw hammer is made with good quality material', 'The MR DIY General Purpose Claw Hammer is made from durable, high-quality materials.', 13.90, 13900, 100, 2),
-(5, 'Short Handle Mini Hammer', 90, 'Features:
-
-• Mini hammer with short handle
-• 100%brand new
-• Ergonomic and comfortable grip handle
-• Designed to manually drive nails, brads, and other fasteners into softer materials, such as wood or drywall
-• Small size and space-saving
-• Multipurpose use
-• Durable, long-lasting use and easy to use
-• Good quality product
-• Value for money
- for driving nails and fasteners into soft materials, offering multipurpose, long-lasting use in a compact design.', 'for driving nails and fasteners into soft materials, offering multipurpose, long-lasting use in a compact design', 7.70, 7700, 1200, 2);
-
-INSERT INTO `productvisualmedia` (product_id, position, file_path, alt, is_show, type) VALUES 
-(1, 0, 'images/product/claw_hammer_23mm/claw_hammer_23mm-0.jpg', 'Claw Hammer 23mm', 1, 'Image'), 
-(1, 1, 'images/product/claw_hammer_23mm/claw_hammer_23mm-1.jpg', 'Claw Hammer 23mm', 1, 'Image'), 
-(1, 2, 'images/product/claw_hammer_23mm/claw_hammer_23mm-2.jpg', 'Claw Hammer 23mm', 1, 'Image'), 
-
-(2, 0, 'images/product/cross_pein_pin_hammer_14mm/cross_pein_pin_hammer_14mm-0.jpg', 'Cross Pein Pin Hammer 14mm', 1, 'Image'),
-(2, 1, 'images/product/cross_pein_pin_hammer_14mm/cross_pein_pin_hammer_14mm-1.jpg', 'Cross Pein Pin Hammer 14mm', 1, 'Image'),
-
-(3, 0, 'images/product/cross_pein_pin_hammer_18mm/cross_pein_pin_hammer_18mm-0.jpg', 'Cross Pein Pin Hammer 18mm', 1, 'Image'),
-(3, 2, 'images/product/cross_pein_pin_hammer_18mm/cross_pein_pin_hammer_18mm-1.jpg', 'Cross Pein Pin Hammer 18mm', 1, 'Image'),
-
-(4, 0, 'images/product/magnetic_claw_hammer/magnetic_claw_hammer-0.jpg', 'Magnetic Claw Hammer', 1, 'Image'), 
-(4, 1, 'images/product/magnetic_claw_hammer/magnetic_claw_hammer-1.jpg', 'Magnetic Claw Hammer', 1, 'Image'),
- (4, 2, 'images/product/magnetic_claw_hammer/magnetic_claw_hammer-2.jpg', 'Magnetic Claw Hammer', 1, 'Image'),
- 
- (5, 0, 'images/product/short_handle_mini_hammer-0.jpg', 'Short Handle Mini Hammer', 1, 'Image'),
- (5, 1, 'images/product/short_handle_mini_hammer-1.jpg', 'Short Handle Mini Hammer', 1, 'Image'),
- (5, 2, 'images/product/short_handle_mini_hammer-2.jpg', 'Short Handle Mini Hammer', 1, 'Image');
-
-INSERT INTO `orders`
-(`order_id`, `user_id`, `order_at`, `payment_status`, `status`, `total_price`, `utilize_point`, `address_id`)
-VALUES
-(1, 'M001', '2025-01-10 10:25:00', 'Paid', 'Delivered', 129.90, 129, 11);
-
-INSERT INTO `orderitem`
-(`order_id`, `product_id`, `qty`, `unit_price`)
-VALUES
-(1, 3, 4, 12.90), 
-(1, 2, 2, 15.00);
-
-INSERT INTO `payment`
-(`order_id`, `payment_method`, `paid_at`)
-VALUES
--- Payment for Order 1 (Delivered)
-(1, 'Credit Card', '2025-01-10 14:23:55');
-
-INSERT INTO review (review_id, user_id, product_id, reviewed_at, comment, is_valid, rating)
-VALUES
-(1, 'M001', 1, '2025-01-12 10:15:00', 'Good quality and fast delivery.', 1, 4.5),
-(2, 'M002', 1, '2025-01-13 14:22:00', 'Value for money, recommended.', 1, 4.0),
-(3, 'M003', 2, '2025-01-13 18:05:00', 'Not bad but packaging can improve.', 1, 3.5),
-(4, 'M004', 2, '2025-01-14 09:40:00', 'Exactly as described.', 1, 5.0),
-(5, 'M005', 2, '2025-01-15 11:10:00', 'Item received in good condition.', 1, 4.2),
-(6, 'M006', 4, '2025-01-15 15:00:00', NULL, 1, 3.0),
-(7, 'M007', 4, '2025-01-16 20:12:00', 'Satisfied with the purchase.', 1, 4.8),
-(8, 'M008', 1, '2025-01-17 08:50:00', 'Quality could be better.', 1, 2.5),
-(9, 'M009', 4, '2025-01-17 16:30:00', NULL, 1, 3.7),
-(10, 'M010', 5, '2025-01-18 12:15:00', 'Amazing product!', 1, 5.0);
-
-INSERT INTO `cartitem`
-(cart_id, qty, is_check, is_take, product_id)
-VALUES
-(1, 2, 1, 0, 4),   -- Claw Hammer
-(1, 1, 0, 0, 2);
