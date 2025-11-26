@@ -5,39 +5,34 @@ $products = [
         'category' => 'Power Tools',
         'desc' => 'High-power cordless drill with 2 batteries included.',
         'price' => '89.99',
-        'image' => '../../images/product/claw_hammer_23mm-0.jpg'
+        'image' => '../../images/product/claw_hammer_23mm/claw_hammer_23mm-0.jpg'
     ],
     [
         'name' => 'Cordless Drill 20V',
         'category' => 'Power Tools',
         'desc' => 'High-power cordless drill with 2 batteries included.',
         'price' => '89.99',
-        'image' => '../../images/product/cross_pein_pin_hammer_14mm-0.jpg'
+        'image' => '../../images/product/cross_pein_pin_hammer_14mm/cross_pein_pin_hammer_14mm-0.jpg'
     ],
     [
         'name' => 'Cordless Drill 20V',
         'category' => 'Power Tools',
         'desc' => 'High-power cordless drill with 2 batteries included.',
         'price' => '89.99',
-        'image' => '../../images/product/cross_pein_pin_hammer_14mm-0.jpg'
+        'image' => '../../images/product/cross_pein_pin_hammer_14mm/cross_pein_pin_hammer_14mm-0.jpg'
     ],
     // ... more products
 ];
 ?>
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="../../css/style.css">
-    <link rel="stylesheet" href="../../css/responsive.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
-</head>
 
 <body>
-    <?php include "../header.html" ?>
+    <?php 
+    require "../../_base.php";
+    $rootDir = "../../";
+
+    include $rootDir."_head.php" 
+    
+    ?>
     <section class="hero">
         <div class="container">
             <h1>Build Your Dreams</h1>
@@ -57,7 +52,7 @@ $products = [
             <!-- 1. Hand Tools -->
             <a href="products.php?cat=hand-tools" class="circle-cat">
                 <div class="circle-img">
-                    <img src="../../images/product/claw_hammer_23mm-1.jpg" alt="Hand Tools">
+                    <img src="../../images/product/claw_hammer_23mm/claw_hammer_23mm-1.jpg" alt="Hand Tools">
                 </div>
                 <span class="circle-label">Hand Tools</span>
             </a>
@@ -65,7 +60,7 @@ $products = [
             <!-- 2. Power Tools -->
             <a href="products.php?cat=power-tools" class="circle-cat">
                 <div class="circle-img">
-                    <img src="../../images/product/claw_hammer_23mm-0.jpg" alt="Power Tools">
+                    <img src="../../images/product/claw_hammer_23mm/claw_hammer_23mm-0.jpg" alt="Power Tools">
                 </div>
                 <span class="circle-label">Power Tools</span>
             </a>
@@ -73,7 +68,7 @@ $products = [
             <!-- 3. Measuring Tools -->
             <a href="products.php?cat=measuring" class="circle-cat">
                 <div class="circle-img">
-                    <img src="../../images/product/cross_pein_pin_hammer_14mm-0.jpg" alt="Measuring Tools">
+                    <img src="../../images/product/cross_pein_pin_hammer_14mm/cross_pein_pin_hammer_14mm-0.jpg" alt="Measuring Tools">
                 </div>
                 <span class="circle-label">Measuring Tools</span>
             </a>
@@ -81,7 +76,7 @@ $products = [
             <!-- 4. Safety Gear -->
             <a href="products.php?cat=safety" class="circle-cat">
                 <div class="circle-img">
-                    <img src="../../images/product/magnetic_claw_hammer-0.jpg" alt="Safety Gear">
+                    <img src="../../images/product/magnetic_claw_hammer/magnetic_claw_hammer-0.jpg" alt="Safety Gear">
                 </div>
                 <span class="circle-label">Safety Gear</span>
             </a>
@@ -89,7 +84,7 @@ $products = [
             <!-- 5. Accessories -->
             <a href="products.php?cat=accessories" class="circle-cat">
                 <div class="circle-img">
-                    <img src="../../images/product/magnetic_claw_hammer-2.jpg" alt="Accessories">
+                    <img src="../../images/product/magnetic_claw_hammer/magnetic_claw_hammer-2.jpg" alt="Accessories">
                 </div>
                 <span class="circle-label">Accessories</span>
             </a>
@@ -134,7 +129,7 @@ $products = [
             <?php endforeach; ?>
         </div>
     </section>
-     <?php include "../footer.html" ?>
-    <script src="../../js/script.js"></script>
+     <?php include $rootDir . "_foot.php" ?>
+    <script src="<?= $rootDir ?>js/script.js"></script>
 
 </html>

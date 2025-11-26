@@ -1,15 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= $_title ?? 'Untitled' ?></title>
+    <link rel="shortcut icon" href="<?= $rootDir ?>images/icon.png">
+    <link rel="stylesheet" href="<?= $rootDir ?>css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+
 <header>
     <div class="container flex justify-between">
         <a href="#" class="logo" data-link="home">
-            <img src="/FixAndGo_Web/images/logo.png" alt="Logo" style="width: 70px; height: 90px;" />
+            <img src="<?= $rootDir ?>images/logo.png" alt="Logo" style="width: 70px; height: 90px;" />
             Fix&Go
         </a>
         <nav class="desktop-nav">
             <ul class="flex">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Products</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
+                <li><a href="<?= $rootDir ?>#">Home</a></li>
+                <li><a href="<?= $rootDir ?>#">Products</a></li>
+                <li><a href="<?= $rootDir ?>#">About</a></li>
+                <li><a href="<?= $rootDir ?>#">Contact</a></li>
             </ul>
         </nav>
 
@@ -25,10 +36,10 @@
 
         <div class="mobile-dropdown" id="mobileDropdown">
             <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Products</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
+                <li><a href="<?= $rootDir ?>#">Home</a></li>
+                <li><a href="<?= $rootDir ?>#">Products</a></li>
+                <li><a href="<?= $rootDir ?>#">About</a></li>
+                <li><a href="<?= $rootDir ?>#">Contact</a></li>
             </ul>
         </div>
 
