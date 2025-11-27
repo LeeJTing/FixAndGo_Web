@@ -10,7 +10,7 @@
                     <button class="favorite-btn" aria-label="Add to wishlist">
                         <i class="fa-regular fa-heart"></i>
                     </button>
-                    <img src="../../images/drill.jpg" alt="Drill">
+                    <img src="../../images/icon.png" alt="Drill">
                 </div>
                 <div class="product-info">
                     <div class="product-category">Power Tools</div>

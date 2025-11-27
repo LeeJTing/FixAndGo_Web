@@ -75,9 +75,15 @@ $password = '';
 $dbname = 'fixandgo_db';
 
 // Global PDO object
-$_db = new PDO("mysql:host=$host;dbname=$dbname", $username, $password, [
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
-]);
+try {
+    $_db = new PDO("mysql:host=$host;dbname=$dbname", $username, $password, [
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
+        PDO::ATTR_EMULATE_PREPARES   => false,
+    ]);
+    //echo "Connected successfully!";
+} catch (PDOException $err) {
+    die("Connection failed: " . $err->getMessage());
+}
 
 // connect to db
 // $stmt = $_db->query("SELECT * FROM users");

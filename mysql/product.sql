@@ -41,6 +41,4 @@ INSERT INTO `product` (
 (36, 'COMIX Marker Pen Black (12 Pcs)',                 300, 'Permanent marker 0.5-1.5mm – pack of 12',         'COMIX Black Marker 12-Pack',                     29.90,  30, 0, 2),
 (37, 'COMIX A5 Business Notebook (122 sheets)',         250, 'Premium hard-cover lined A5 notebook',            'COMIX A5 Notebook',                              24.90,  25, 0, 2),
 (38, '2B Mechanical Pencil & Lead Set',                 500, '0.5mm mechanical pencil with extra leads',        '2B Mechanical Pencil Set',                       12.90,  13, 0, 2),
-(39, 'Sticky Notes',                                    400, 'Assorted color sticky notes – 6 pads',            'Sticky Notes 6-Pack',                            19.90,  20, 0, 2),
-(40, 'A5 Business Notebook',                            300, 'Classic lined A5 notebook for daily use',         'A5 Business Notebook',                           18.90,  19, 0, 2),
-(41, 'A5 Business Notebook',                            300, 'Simple and elegant A5 notebook',                  'A5 Business Notebook',                           18.90,  19, 0, 2);
+(39, 'Sticky Notes',                                    400, 'Assorted color sticky notes – 6 pads',            'Sticky Notes 6-Pack',                            19.90,  20, 0, 2);
