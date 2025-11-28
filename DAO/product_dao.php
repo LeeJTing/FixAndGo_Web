@@ -36,6 +36,7 @@ function getProductForDisplay()
                 p.stock_quantity,
                 p.product_point,
                 c.category_name,
+                c.category_code,
                 pvm.file_path,
                 COALESCE(pvm.alt, p.product_name) AS alt_text
             FROM product p
@@ -54,13 +55,43 @@ function getProductForDisplay()
 function getProductById($id)
 {
     global $_db;
-    $stmt = $_db->prepare("SELECT p.*, c.category_name 
+    $stmt = $_db->prepare("SELECT 
+                            p.*, 
+                            c.category_name,
+                            pvm.file_path,
+                            pvm.alt
                            FROM product p 
                            JOIN category c ON p.category_code = c.category_code 
+                           JOIN productvisualmedia pvm ON pvm.product_id = p.product_id
                            WHERE p.product_id = ? 
                            LIMIT 1");
     $stmt->execute([$id]);
-    return $stmt->fetch() ?: false;  // Return false if not found
+    return $stmt->fetch();  // Return false if not found
+}
+
+function getProductImageById($id)
+{
+    global $_db;
+    $stmt = $_db->prepare("SELECT file_path, alt 
+                           FROM productvisualmedia 
+                           WHERE product_id = ? 
+                           ");
+    $stmt->execute([$id]);
+    return $stmt->fetchAll(); // Returns object (consistent with your style)
+}
+
+function getProductReviews($product_id)
+{
+    global $_db;
+    $stmt = $_db->prepare("
+        SELECT r.*, c.name AS customer_name 
+        FROM reviews r 
+        LEFT JOIN customers c ON r.customer_id = c.customer_id 
+        WHERE r.product_id = ? AND r.is_approved = 1 
+        ORDER BY r.created_at DESC
+    ");
+    $stmt->execute([$product_id]);
+    return $stmt->fetchAll();
 }
 
 /**
@@ -108,4 +139,59 @@ function searchProducts($keyword)
                            ORDER BY p.product_name");
     $stmt->execute([$keyword, $keyword, $keyword]);
     return $stmt->fetchAll();
+}
+
+function getAllCategory()
+{
+    global $_db;
+    $stmt = $_db->query("SELECT * FROM category");
+    return $stmt->fetchAll();
+}
+
+function updateProductById($id, $data)
+{
+    global $_db;
+
+    $name         = trim($data['product_name'] ?? '');
+    $category     = intval(trim($data['category_code'] ?? ''));   // ← could be code or ID
+    $price        = floatval($data['unit_price'] ?? 0);
+    $qty          = intval($data['stock_quantity'] ?? 0);
+    $points       = intval($data['product_point'] ?? 0);
+    $short_desc   = trim($data['short_desc'] ?? '');
+    $desc         = trim($data['description'] ?? '');
+
+    $sql = "UPDATE product SET
+                product_name     = ?,
+                category_code    = ?,    
+                unit_price       = ?,
+                stock_quantity   = ?,
+                product_point    = ?,
+                short_desc       = ?,
+                description      = ?
+            WHERE product_id = ?";
+
+    try {
+        $stmt = $_db->prepare($sql);
+        $executed = $stmt->execute([
+            $name,
+            $category,
+            $price,
+            $qty,
+            $points,
+            $short_desc,
+            $desc,
+            $id
+        ]);
+
+        $changed = $stmt->rowCount() > 0;
+
+        if ($executed && $changed) {
+            return ['success' => true];
+        } else {
+            return ['success' => false, 'errors' => ['No changes made (data same as before)']];
+        }
+    } catch (PDOException $e) {
+        $errorMsg = $e->getMessage();
+        return ['success' => false, 'errors' => [$errorMsg]];
+    }
 }
