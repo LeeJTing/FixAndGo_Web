@@ -11,13 +11,52 @@
   --header-height: 80px;
 }
 
-h1.title{
+.about-us-title {
     margin: 30px auto;
     color: var(--primary-color);
+}
+
+h1.about-us-title{
     text-align: center;
 }
 
-p{
+h2.about-us-title{
     text-align: center;
-    margin: 2vh 5vw;
+    margin: 2vh 10vw;
+}
+
+.about-us-container{
+    display:block;
+}
+
+p.about-us-p{
+    text-align: center;
+    margin: 2vh 10vw;
+}
+
+/* .left{
+    text-align: left;
+} */
+
+.about-us-container{
+    display: flex;
+}
+
+.about-us-container p{
+    margin: auto auto auto 10vw;
+}
+
+#aboutUs{
+    margin: 2vh 10vw 2vh 2vw;
+    width: 40vw;
+    height: auto;
+    float: right;
+}
+
+.clearright{
+    clear: right;
+}
+
+hr{
+    margin: 5vh 4vw;
 }
