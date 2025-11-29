@@ -1,9 +1,8 @@
 <?php
 require '_base.php';
-$rootDir = '';
-
-$_title = 'Index';
+$_title = 'Fix & Go';
 include '_head.php';
+
 ?>
 
 
