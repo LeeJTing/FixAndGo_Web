@@ -6,11 +6,17 @@ session_start();
 // ============================================================================
 // Global variable
 // ============================================================================
-$rootDir = 'localhost:8000';
+$rootDir = 'http://' . $_SERVER['HTTP_HOST'];
 
 // ============================================================================
 // General Page Functions
 // ============================================================================
+
+// Get session user ID
+function get_session_id()
+{
+    return !$_SESSION['USER_ID'] ? 'Guest' : $_SESSION['USER_ID'];
+} 
 
 // Is GET request?
 function is_get()

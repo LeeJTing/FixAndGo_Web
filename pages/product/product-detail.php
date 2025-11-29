@@ -1,4 +1,6 @@
 <?php
+require '../../_base.php';
+$_title = 'Fix & Go | Product';
 include '../../_head.php';
 require '../../DAO/product_dao.php';
 $id = get('id') ?? 0;

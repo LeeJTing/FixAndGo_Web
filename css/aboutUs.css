@@ -1,0 +1,23 @@
+:root {
+  --primary-color: #f59e0b;
+  --primary-hover: #d97706;
+  --bg-dark: #111827;
+  --bg-card: #f3f4f6;
+  --text-light: #f9fafb;
+  --text-dark: #1f2937;
+  --text-muted: #6b7280;
+  --spacing-unit: 1rem;
+  --container-width: 1200px;
+  --header-height: 80px;
+}
+
+h1.title{
+    margin: 30px auto;
+    color: var(--primary-color);
+    text-align: center;
+}
+
+p{
+    text-align: center;
+    margin: 2vh 5vw;
+}

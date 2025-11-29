@@ -29,9 +29,8 @@ $products = [
 <body>
     <?php 
     require "../../_base.php";
-    $rootDir = "../../";
-
-    include $rootDir."_head.php" 
+    $_title = "Fix & Go | Home Page";
+    include  "../../_head.php";
     
     ?>
     <section class="hero">
@@ -130,7 +129,7 @@ $products = [
             <?php endforeach; ?>
         </div>
     </section>
-     <?php include $rootDir . "_foot.php" ?>
-    <script src="<?= $rootDir ?>js/script.js"></script>
+     <?php include "../../_foot.php" ?>
+    <script src="<?= $rootDir ?>/js/script.js"></script>
 
 </html>

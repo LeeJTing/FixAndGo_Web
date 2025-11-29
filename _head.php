@@ -12,18 +12,25 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 
+<?php 
+$homelink = $rootDir . '/index.php';
+if (temp('USER_ID') != null ) {
+$homelink = $rootDir . '/pages/member/memberHome.php';
+}
+?>
+
 <header>
     <div class="container flex justify-between">
-        <a href="#" class="logo" data-link="home">
+        <a href="<?= $homelink ?>" class="logo" data-link="home">
             <img src="<?= $rootDir ?>/images/logo.png" alt="Logo" style="width: 70px; height: 90px;" />
             Fix&Go
         </a>
         <nav class="desktop-nav">
             <ul class="flex">
-                <li><a href="<?= $rootDir ?>#">Home</a></li>
+                <li><a href="<?= $homelink ?>">Home</a></li>
                 <li><a href="<?= $rootDir ?>#">Products</a></li>
-                <li><a href="<?= $rootDir ?>#">About</a></li>
-                <li><a href="<?= $rootDir ?>#">Contact</a></li>
+                <li><a href="<?= $rootDir ?>/pages/member/aboutUs.php">About</a></li>
+                <li><a href="<?= $rootDir ?>">Contact</a></li>
             </ul>
         </nav>
 
