@@ -5,7 +5,7 @@
 ?>
 <link rel="stylesheet" href="<?= $rootDir ?>/css/aboutUs.css" />
 
-<body>
+<main>
     <h1 class="about-us-title">About Us</h1>
     
     <div class="about-us-container">
@@ -34,7 +34,7 @@
     <h2 class="about-us-title">4. Customer-Centric Approach</h2>
     <p class="about-us-p">We place our customers at the centre of our operations. We listen attentively, provide personalised solutions, and ensure that every client feels valued and supported.</p>
 
-</body>
+</main>
 
 <?php
     include "../../_foot.php";

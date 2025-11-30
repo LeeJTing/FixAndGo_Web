@@ -23,7 +23,6 @@ body {
   line-height: 1.6;
   color: var(--text-dark);
   background-color: #ffffff;
-  /* margin-bottom: 10vh !important; */
 }
 
 /* Layout Utilities */
@@ -683,4 +682,10 @@ footer {
   .categories-circle-grid {
     gap: 2.5rem;
   }
+}
+
+
+/* hidden guest */
+.guest{
+  display: hidden !important;
 }

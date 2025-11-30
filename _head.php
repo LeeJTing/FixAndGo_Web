@@ -13,9 +13,11 @@
 </head>
 
 <?php 
-$homelink = $rootDir . '/index.php';
+    $homelink = $rootDir . '/index.php';
+    $userRole = "guest";
+
 if (temp('USER_ID') != null ) {
-$homelink = $rootDir . '/pages/member/memberHome.php';
+    $homelink = $rootDir . '/pages/member/memberHome.php';
 }
 ?>
 
@@ -39,17 +41,17 @@ $homelink = $rootDir . '/pages/member/memberHome.php';
             <i class="fa-solid fa-bars"></i>
         </button>
         <!-- Cart Icon (click to open sidebar) -->
-        <div class="cart-icon" id="cartIcon">
+        <div class="cart-icon <?= $userRole ?>" id="cartIcon">
             <i class="fa-solid fa-cart-shopping"></i>
             <span class="cart-count" id="cartCount">0</span>
         </div>
 
         <div class="mobile-dropdown" id="mobileDropdown">
             <ul>
-                <li><a href="<?= $rootDir ?>#">Home</a></li>
+                <li><a href="<?= $homelink ?>">Home</a></li>
                 <li><a href="<?= $rootDir ?>#">Products</a></li>
-                <li><a href="<?= $rootDir ?>#">About</a></li>
-                <li><a href="<?= $rootDir ?>#">Contact</a></li>
+                <li><a href="<?= $rootDir ?>/pages/member/aboutUs.php">About</a></li>
+                <li><a href="<?= $rootDir ?>">Contact</a></li>
             </ul>
         </div>
 

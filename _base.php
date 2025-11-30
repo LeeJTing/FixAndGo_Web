@@ -114,3 +114,19 @@ function is_exists($value, $table, $field)
     $stm->execute([$value]);
     return $stm->fetchColumn() > 0;
 }
+
+// get user profile picture
+function getUserProfilePicture($userId)
+{
+    global $_db;
+    global $rootDir;
+    $filePath = "/images/profile/default_profile_picture.webp";
+
+    if($userId){
+        $stmt = $_db->prepare("SELECT file_path FROM profilepicture
+                            WHERE user_id = ?;");
+        $stmt->execute([$userId]);
+        $filePath = '/' . $stmt->fetch()->file_path;
+    }
+    return $filePath;
+}

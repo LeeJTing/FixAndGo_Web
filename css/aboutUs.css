@@ -10,6 +10,9 @@
   --container-width: 1200px;
   --header-height: 80px;
 }
+main{
+  padding-bottom: 10vh !important;
+}
 
 .about-us-title {
     margin: 30px auto;
