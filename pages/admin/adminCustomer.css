@@ -1,0 +1,270 @@
+.customers-page {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    color: #e2e8f0;
+}
+
+.customers-header {
+
+    padding: 10px 5px;
+    color: #fff;    
+}
+
+
+.customers-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.customers-header p {
+    font-size: 14px;
+    color: #94a3b8;
+    margin-bottom: 15px;
+}
+
+.add-btn {
+    background: #1d4ed8;
+    padding: 8px 18px;
+    border: none;
+    color: white;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.customers-content {
+    display: flex;
+    gap: 25px;
+}
+
+.left-section {
+    flex: 1;
+}
+
+
+/* ===== Toolbar ===== */
+.customer-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 18px;
+}
+
+.search-box {
+    background: #1e293b;
+    padding: 10px 14px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+
+.search-box input {
+    background: transparent;
+    border: none;
+    color: #e2e8f0;
+    width: 100%;
+}
+
+.search-box input:focus {
+    outline: none;
+}
+
+.filter-select,
+.sort-select {
+    background: #1e293b;
+    color: #e2e8f0;
+    border-radius: 8px;
+    border: none;
+    padding: 10px 14px;
+}
+
+/* ===== Table ===== */
+.customer-table-container {
+    background: #0f172a;
+    padding: 20px;
+    border-radius: 12px;
+    flex: 3;
+}
+
+.customer-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.customer-table th {
+    text-align: left;
+    padding-bottom: 12px;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.customer-table td {
+    padding: 12px 0;
+    border-bottom: 1px solid #1e293b;
+}
+
+.customer-table tr.selected {
+    background: rgba(37, 99, 235, 0.1);
+}
+
+.customer-table .highlight {
+    color: #60a5fa;
+}
+
+/* Status Badges */
+.status {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: white;
+}
+
+.status.active {
+    background: #22c55e;
+}
+
+.status.suspended {
+    background: #ef4444;
+}
+
+.status.new {
+    background: #0ea5e9;
+}
+
+/* Footer */
+.table-footer {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    color: #94a3b8;
+}
+
+.pagination button {
+    background: #1e293b;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: white;
+}
+
+/* ===== Right Panel ===== */
+.edit-panel {
+    background: #0f172a;
+    padding: 20px;
+    border-radius: 12px;
+    width: 320px;
+}
+
+.edit-panel h3 {
+    margin-bottom: 4px;
+}
+
+.edit-panel .sub {
+    font-size: 14px;
+    color: #94a3b8;
+    margin-bottom: 14px;
+}
+
+/* Avatar */
+.profile-upload {
+    text-align: center;
+}
+
+.profile-upload .avatar {
+    width: 90px;
+    height: 90px;
+    background: #334155;
+    margin: 0 auto 10px auto;
+    border-radius: 50%;
+    position: relative;
+}
+
+.avatar-upload-icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 32px;
+    height: 32px;
+    background: #3b82f6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 3px solid #0f172a;
+}
+
+.avatar-upload-icon:hover {
+    background: #2563eb;
+}
+
+.upload-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.upload-buttons .remove {
+    background: #1e293b;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.upload-buttons .change {
+    background: #3b82f6;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.upload-buttons .remove:hover {
+    background: #374151;
+}
+
+.edit-panel label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    color: #cbd5e1;
+}
+
+.edit-panel input,
+.edit-panel select {
+    width: 100%;
+    background: #1e293b;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    color: white;
+}
+
+.edit-panel-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.cancel {
+    background: #1e293b;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    color: white;
+}
+
+.save {
+    background: #2563eb;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    color: white;
+}
