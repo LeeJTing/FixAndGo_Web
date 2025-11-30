@@ -5,8 +5,12 @@ include "../../_head.php";
 <main>
 
 <?php 
+    require "../../controller/registerForm-controller.php";
     include "../../component/registerForm.php";
 ?>
+
+
+
 </main>
 
 <?php

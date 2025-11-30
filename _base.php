@@ -12,6 +12,14 @@ $rootDir = 'http://' . $_SERVER['HTTP_HOST'];
 // General Page Functions
 // ============================================================================
 
+// hashing password
+function hash_password($password){
+    // Hash the password
+    $hashedPassword = password_hash($password, PASSWORD_ARGON2ID);
+
+    return $password ? $hashedPassword : $password;
+}
+
 // Get session user ID
 function get_session_id()
 {
@@ -30,26 +38,36 @@ function is_post()
     return $_SERVER['REQUEST_METHOD'] == 'POST';
 }
 
-// Obtain GET parameter
-function get($key, $value = null)
+// Obtain GET parameter - FIXED: Handle null values
+function get($key, $value = '')
 {
     $value = $_GET[$key] ?? $value;
+    if ($value === null) {
+        return '';
+    }
     return is_array($value) ? array_map('trim', $value) : trim($value);
 }
 
-// Obtain POST parameter
-function post($key, $value = null)
+// Obtain POST parameter - FIXED: Handle null values
+function post($key, $value = '')
 {
     $value = $_POST[$key] ?? $value;
+    if ($value === null) {
+        return '';
+    }
     return is_array($value) ? array_map('trim', $value) : trim($value);
 }
 
-// Obtain REQUEST (GET and POST) parameter
-function req($key, $value = null)
+// Obtain REQUEST (GET and POST) parameter - FIXED: Handle null values
+function req($key, $value = '')
 {
     $value = $_REQUEST[$key] ?? $value;
+    if ($value === null) {
+        return '';
+    }
     return is_array($value) ? array_map('trim', $value) : trim($value);
 }
+
 
 // Redirect to URL
 function redirect($url = null)
