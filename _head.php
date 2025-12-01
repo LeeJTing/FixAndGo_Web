@@ -1,3 +1,18 @@
+<?php
+// temp('USER_ID', 999);
+$homelink = $rootDir . '/index.php';
+if (temp('USER_ID')) {
+
+    $homelink = $rootDir . '/pages/member/memberHome.php';
+    temp('USER_ID', 999);
+    $current_page = basename($_SERVER['PHP_SELF']);
+    if ($current_page != 'memberHome.php') {
+        redirect($homelink);
+        exit();
+    }
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,15 +26,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
-
-<?php 
-    $homelink = $rootDir . '/index.php';
-    $userRole = "guest";
-
-if (temp('USER_ID') != null ) {
-    $homelink = $rootDir . '/pages/member/memberHome.php';
-}
-?>
 
 <header>
     <div class="container flex justify-between">
@@ -40,11 +46,53 @@ if (temp('USER_ID') != null ) {
         <button class="mobile-menu-toggle" id="mobileMenuToggle">
             <i class="fa-solid fa-bars"></i>
         </button>
-        <!-- Cart Icon (click to open sidebar) -->
-        <div class="cart-icon <?= $userRole ?>" id="cartIcon">
-            <i class="fa-solid fa-cart-shopping"></i>
-            <span class="cart-count" id="cartCount">0</span>
+        <div class="profile-wrapper">
+            <?php if (temp('USER_ID')): ?>
+                <!-- LOGGED IN USER -->
+                <div class="profile-icon logged-in" id="profileIcon">
+                    <img src="<?= $rootDir . getUserProfilePicture(temp('USER_ID')) ?>"
+                        alt="Profile"
+                        class="profile-picture" />
+                    <span class="username"><?= htmlspecialchars(temp('USER_NAME') ?? 'User') ?></span>
+                    <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
+                </div>
+
+                <div class="profile-dropdown" id="profileDropdown">
+                    <a href="<?= $rootDir ?>/pages/member/profile.php">
+                        <i class="fa-regular fa-user"></i> My Profile
+                    </a>
+                    <a href="<?= $rootDir ?>/pages/member/orders.php">
+                        <i class="fa-regular fa-clipboard"></i> My Orders
+                    </a>
+                    <a href="<?= $rootDir ?>/pages/member/wishlist.php">
+                        <i class="fa-regular fa-heart"></i> Wishlist
+                    </a>
+                    <hr>
+                    <a href="<?= $rootDir ?>/pages/auth/logout.php" class="logout-btn">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+                    </a>
+                </div>
+            <?php else: ?>
+                <div class="profile-icon guest" id="profileIcon">
+                    <i class="fa-regular fa-circle-user"></i>
+                    <span>Guest</span>
+                </div>
+                <div class="profile-dropdown" id="profileDropdown">
+                    <a href="<?= $rootDir ?>/pages/auth/login.php">
+                        <i class="fa-solid fa-arrow-right-to-bracket"></i> Login
+                    </a>
+                    <a href="<?= $rootDir ?>/pages/auth/register.php">
+                        <i class="fa-solid fa-user-plus"></i> Register
+                    </a>
+                </div>
+            <?php endif; ?>
+            <!-- Cart Icon (click to open sidebar) -->
+            <div class="cart-icon <?= $userRole ?>" id="cartIcon">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </div>
         </div>
+
 
         <div class="mobile-dropdown" id="mobileDropdown">
             <ul>

@@ -35,6 +35,7 @@ function getProductForDisplay()
                 p.unit_price,
                 p.stock_quantity,
                 p.product_point,
+                p.description,
                 c.category_name,
                 c.category_code,
                 pvm.file_path,

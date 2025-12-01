@@ -71,8 +71,10 @@ $category = getAllCategory();
             </section>
         </div>
     </main>
-    <script>
-        var productsData = <?= json_encode($products, JSON_PRETTY_PRINT); ?>;
-    </script>
-    <script src="../../js/product-list.js"></script>
-    <?php include "../../_foot.php" ?>
+
+</body>
+<script>
+    var productsData = <?= json_encode($products, JSON_PRETTY_PRINT); ?>;
+</script>
+<script src="../../js/product-list.js"></script>
+<?php include "../../_foot.php" ?>

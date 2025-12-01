@@ -41,7 +41,7 @@ INSERT INTO `product` (
 
 (10, 'EMTOP Cordless Screwdriver ECSR0403', 60, 
 '4V rechargeable cordless screwdriver with LED light and ergonomic handle. Suitable for assembly, furniture installation, and small home projects.', 
-'EMTOP Cordless Screwdriver', 149.90, 150, 0, 5),
+'EMTOP Cordless Screwdriver', 149.90, 150, 0, 4),
 
 (11, 'TACTIX Insulated Screwdriver Set (6 pieces)', 90, 
 'VDE 1000V certified insulated screwdriver set. Provides safety while working with electrical equipment, including various common sizes.', 
@@ -117,7 +117,7 @@ INSERT INTO `product` (
 
 (29, 'EMTOP Auto Air Compressor (35L/min)', 50, 
 '12V portable tire inflator with LED gauge. Quickly inflates car, bike, and motorcycle tires. Compact and easy to carry.', 
-'EMTOP Car Air Compressor', 249.90, 250, 0, 5),
+'EMTOP Car Air Compressor', 249.90, 250, 0, 4),
 
 (30, 'Stainless Steel Scissor', 400, 
 'General-purpose rust-resistant scissors for home, office, and crafts. Comfortable handles and durable stainless steel blades.', 

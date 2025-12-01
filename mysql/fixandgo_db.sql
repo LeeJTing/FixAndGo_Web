@@ -75,7 +75,7 @@ CREATE TABLE `cartitem` (
 CREATE TABLE `category` (
   `category_code` int(11) NOT NULL,
   `category_name` varchar(30) NOT NULL,
-  `description` varchar(200) DEFAULT NULL
+  `description` varchar(1500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -629,12 +629,15 @@ INSERT INTO profilepicture (user_id, file_path)
 VALUE
 ('M001', 'images/profile/1.webp');
 
-INSERT INTO category (category_name, description) VALUES
-('Storage', 'Storage solutions, tool boxes, shelves and trolleys'),
-('Stationery', 'Notebooks, sticky notes, pencils, pens and office supplies'),
-('Automotive', 'Car accessories, maintenance tools and automotive equipment'),
-('Hardware-Hand Tools', 'Manual tools: screwdrivers, chisels, scissors, knives, pliers, etc.'),
-('Power-Tools', 'Cordless tools, compressors, power screwdrivers and electric tools')
+ALTER TABLE category
+ADD COLUMN img_path VARCHAR(255) AFTER category_name;
+
+INSERT INTO category (category_name, description, img_path) VALUES
+('Storage', 'Storage solutions, tool boxes, shelves and trolleys','images/storage.png'),
+('Stationery', 'Browse the widest range of stationery and office supplies all in one place! You will find everything from double sided tape and colored pencils, to filing folders and sticky notes. If you want the best deals available, you’re sure to find them here – highlighters, staplers, highlighters – we have it all.','images/stationary.png'),
+('Automotive', 'We here at Mr DIY know that spending time and money on your car is an important investment. That is why we have a range of automotive goods and car accessories in our store to make sure you are getting the best out of your ride! Whether it be car mats, sun shades, car covers, car polishes or even the newest tech gadgets, our website has everything you need to get more from your vehicle.','images/automotive.png'),
+('Power & Hand Tools', 'Cordless screwdrivers, drills. saws. chisels hammers and measuring tapes','images/hardware_tools.png')
 ON DUPLICATE KEY UPDATE 
     description = VALUES(description);
+
 
