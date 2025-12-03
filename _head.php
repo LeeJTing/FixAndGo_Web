@@ -1,10 +1,9 @@
 <?php
-// temp('USER_ID', 999);
+// temp('USER_ID', "M001");
 $homelink = $rootDir . '/index.php';
-if (temp('USER_ID')) {
 
+if (temp('USER_ID')) {
     $homelink = $rootDir . '/pages/member/memberHome.php';
-    temp('USER_ID', 999);
     $current_page = basename($_SERVER['PHP_SELF']);
     if ($current_page != 'memberHome.php') {
         redirect($homelink);
@@ -25,6 +24,13 @@ if (temp('USER_ID')) {
     <link rel="stylesheet" href="<?= $rootDir ?>/css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="<?= $rootDir ?>/js/script.js"></script>
+
+    <?php if (temp('USER_ID')): ?>
+        <script src="<?= $rootDir ?>/js/member.js"></script>
+    <?php else: ?>
+        <script src="<?= $rootDir ?>/js/guest.js"></script>
+    <?php endif; ?>
 </head>
 
 <header>

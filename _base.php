@@ -13,7 +13,8 @@ $rootDir = 'http://' . $_SERVER['HTTP_HOST'];
 // ============================================================================
 
 // hashing password
-function hash_password($password){
+function hash_password($password)
+{
     // Hash the password
     $hashedPassword = password_hash($password, PASSWORD_ARGON2ID);
 
@@ -24,7 +25,7 @@ function hash_password($password){
 function get_session_id()
 {
     return !$_SESSION['USER_ID'] ? 'Guest' : $_SESSION['USER_ID'];
-} 
+}
 
 // Is GET request?
 function is_get()
@@ -140,7 +141,7 @@ function getUserProfilePicture($userId)
     global $rootDir;
     $filePath = "/images/profile/default_profile_picture.webp";
 
-    if($userId){
+    if ($userId) {
         $stmt = $_db->prepare("SELECT file_path FROM profilepicture
                             WHERE user_id = ?;");
         $stmt->execute([$userId]);

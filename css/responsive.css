@@ -28,3 +28,28 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .circle-img {
+    width: 140px;
+    height: 140px;
+  }
+  .categories-circle-grid {
+    gap: 2.5rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .username {
+    display: none;
+  }
+  .profile-icon {
+    padding: 0.5rem 0.8rem;
+  }
+  .profile-picture {
+    width: 38px;
+    height: 38px;
+  }
+}

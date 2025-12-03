@@ -1,4 +1,5 @@
 <?php
+require '../../_base.php';
 require '../../_head.php';
 // Sample data (replace with real query later)
 $orders = [
