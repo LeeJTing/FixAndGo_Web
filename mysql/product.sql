@@ -1,160 +1,43 @@
 INSERT INTO `product` (
     product_id, product_name, stock_quantity, description, short_desc, 
-    unit_price, product_point, sold_number, category_code
+    unit_price, product_point, sold_number, category_code, status, created_at
 ) VALUES
-
-(1, 'Claw Hammer 23mm', 150, 
-'Professional claw hammer with fiberglass handle and anti-slip grip, designed for both home and professional use. Durable steel head provides maximum impact, ideal for carpentry, construction, and DIY projects.', 
-'Claw Hammer 23mm', 45.90, 46, 0, 4),
-
-(2, 'Cross Pein Pin Hammer 14mm', 200, 
-'Lightweight precision pin hammer with ergonomic handle, perfect for metalworking, delicate woodworking, and hobby projects. Balanced for optimal control and precision.', 
-'Cross Pein Pin Hammer 14mm', 32.50, 33, 0, 4),
-
-(3, 'Cross Pein Pin Hammer 18mm', 180, 
-'Medium-sized cross pein hammer designed for general work tasks, including shaping metal, driving pins, and carpentry. Ergonomic handle reduces fatigue during prolonged use.', 
-'Cross Pein Pin Hammer 18mm', 38.90, 39, 0, 4),
-
-(4, 'Magnetic Claw Hammer', 120, 
-'Claw hammer with built-in magnetic nail starter for one-handed nailing. High-strength steel head and shock-absorbing fiberglass handle for added durability.', 
-'Magnetic Claw Hammer', 59.90, 60, 0, 4),
-
-(5, 'Short-Handle Mini Hammer (16 cm)', 300, 
-'Compact hammer for tight spaces and precision tasks. Lightweight and portable, ideal for crafts, small repairs, and DIY projects.', 
-'Short-Handle Mini Hammer', 19.90, 20, 0, 4),
-
-(6, 'CHISEL SET MGZ-3PC', 80, 
-'Professional 3-piece woodworking chisel set made of high-quality steel. Perfect for carving, shaping, and precision woodworking.', 
-'3-Piece Woodworking Chisel Set', 89.90, 90, 0, 4),
-
-(7, 'Hammer with Rubber Grip', 140, 
-'Ergonomic hammer with non-slip rubber handle for safe and comfortable use. Ideal for construction, home repairs, and DIY projects.', 
-'Hammer with Rubber Grip', 49.90, 50, 0, 4),
-
-(8, 'Precision Screwdriver Set', 200, 
-'32-in-1 magnetic precision screwdriver kit, including flat, Phillips, and specialty bits. Perfect for electronics, watches, and small repairs.', 
-'Precision Screwdriver Set', 69.90, 70, 0, 4),
-
-(9, 'INCGO Removeable Screwdriver 2in1 (19cm)', 250, 
-'High-quality reversible screwdriver combining flat and Phillips heads. Ideal for home, automotive, and electronic repairs.', 
-'INCGO 2in1 Screwdriver', 24.90, 25, 0, 4),
-
-(10, 'EMTOP Cordless Screwdriver ECSR0403', 60, 
-'4V rechargeable cordless screwdriver with LED light and ergonomic handle. Suitable for assembly, furniture installation, and small home projects.', 
-'EMTOP Cordless Screwdriver', 149.90, 150, 0, 4),
-
-(11, 'TACTIX Insulated Screwdriver Set (6 pieces)', 90, 
-'VDE 1000V certified insulated screwdriver set. Provides safety while working with electrical equipment, including various common sizes.', 
-'TACTIX Insulated Screwdriver Set', 99.90, 100, 0, 4),
-
-(12, 'Knife with Cutter Blade Set', 300, 
-'Heavy-duty utility knife with 10 spare blades. Ideal for cutting cardboard, paper, and light materials in home and workshop use.', 
-'Knife with Cutter Blade Set', 29.90, 30, 0, 4),
-
-(13, 'Heavy Duty Batik Protective Hand Gloves (12 Pairs)', 100, 
-'Industrial cotton gloves – 12 pairs bulk pack. Provides protection against scratches, minor cuts, and dirt during manual work.', 
-'Protective Hand Gloves 12 Pairs', 79.90, 80, 0, 4),
-
-(14, 'Multi-Use Foldable PVC Hand Truck Trolley (300kg)', 40, 
-'Portable folding trolley with 300kg capacity. Suitable for transporting boxes, luggage, and heavy items with ease. Space-saving foldable design.', 
-'Foldable Hand Truck 300kg', 199.90, 200, 0, 1),
-
-(15, '31-Piece T-handle Wrench/Screwdriver Set', 70, 
-'Complete T-handle hex & Torx tool set for mechanical, automotive, and DIY tasks. Includes a wide range of sizes for versatility.', 
-'31-Piece T-handle Set', 179.90, 180, 0, 4),
-
-(16, '32-in-1 Magnetic Electron Screwdriver Set', 180, 
-'Magnetic precision screwdriver kit with extension rod. Perfect for electronics, computer assembly, and small maintenance tasks.', 
-'32-in-1 Magnetic Screwdriver', 89.90, 90, 0, 4),
-
-(17, 'Plastic Storage Drawer Rack Desk Organizer 3 Tier', 150, 
-'3-tier plastic desk drawer organizer to store stationery, documents, and small items neatly. Durable and stackable for office or home use.', 
-'3-Tier Desk Organizer', 49.90, 50, 0, 1),
-
-(18, 'Wall-Mounted Tissue Box-Cyan', 200, 
-'Waterproof wall-mounted tissue holder in cyan color. Ideal for kitchens, bathrooms, or offices. Easy to install and clean.', 
-'Wall-Mounted Tissue Box Cyan', 39.90, 40, 0, 1),
-
-(19, 'Wall-Mounted Stainless-Steel 2-Layer Bathroom Rack', 80, 
-'Rust-proof 2-tier stainless steel bathroom shelf for toiletries, towels, and accessories. Elegant and durable design.', 
-'Stainless Steel Bathroom Rack', 129.90, 130, 0, 1),
-
-(20, 'CHANYI 3 Tier Plastic Document File Tray', 120, 
-'Stackable A4 document tray organizer. Keep your office or study desk tidy and organized with three levels of storage.', 
-'CHANYI 3-Tier File Tray', 59.90, 60, 0, 2),
-
-(21, '3-Tier Heavy-Duty Workshop Trolley Rack', 30, 
-'Mobile 3-tier tool trolley with heavy-duty wheels for easy movement. Perfect for workshop, garage, or industrial use.', 
-'3-Tier Workshop Trolley', 289.90, 290, 0, 1),
-
-(22, '3 Shelf Multipurpose Rectangular Rack', 60, 
-'Sturdy rectangular storage shelf suitable for kitchen, office, or garage. Holds boxes, supplies, and tools efficiently.', 
-'3-Shelf Rectangular Rack', 139.90, 140, 0, 1),
-
-(23, 'Car Universal Phone Holder', 250, 
-'360° adjustable dashboard and windshield phone mount. Securely holds smartphones during driving for hands-free use.', 
-'Car Universal Phone Holder', 39.90, 40, 0, 3),
-
-(24, 'HOTAK Driver Click Extendable Ratchet 3/8"', 90, 
-'Professional extendable ratchet wrench 37cm. Ideal for automotive, mechanical, and DIY repair tasks. Durable steel construction.', 
-'HOTAK Extendable Ratchet', 159.90, 160, 0, 4),
-
-(25, 'Microfiber Wash Mitt Cleaning Gloves (1pc)', 400, 
-'Ultra-soft scratch-free car washing glove. Gently cleans surfaces without leaving scratches, perfect for automotive care.', 
-'Microfiber Wash Mitt', 19.90, 20, 0, 3),
-
-(26, 'Car Dashboard Anti-Slip Mat (30x15cm)', 500, 
-'Non-slip mat for phone, coins, and accessories. Keeps items in place on car dashboard during travel.', 
-'Anti-Slip Dashboard Mat', 15.90, 16, 0, 3),
-
-(27, 'WAXCO Auto Silicon Car Lubricant Spray (300ml)', 300, 
-'Silicon lubricant & protector spray. Ideal for car door seals, rubber gaskets, and household applications.', 
-'WAXCO Silicon Spray 300ml', 29.90, 30, 0, 3),
-
-(28, 'ROLLINGDOG Heavy Duty Scissors (216mm)', 180, 
-'Titanium-coated ultra-sharp scissors for precise cutting of paper, fabric, and light materials. Durable and long-lasting.', 
-'ROLLINGDOG Heavy Duty Scissors', 49.90, 50, 0, 4),
-
-(29, 'EMTOP Auto Air Compressor (35L/min)', 50, 
-'12V portable tire inflator with LED gauge. Quickly inflates car, bike, and motorcycle tires. Compact and easy to carry.', 
-'EMTOP Car Air Compressor', 249.90, 250, 0, 4),
-
-(30, 'Stainless Steel Scissor', 400, 
-'General-purpose rust-resistant scissors for home, office, and crafts. Comfortable handles and durable stainless steel blades.', 
-'Stainless Steel Scissor', 12.90, 13, 0, 2),
-
-(31, 'TACTIX Color Quick Change Driver Bit Set (32 pcs)', 150, 
-'Color-coded magnetic bit set with holder. Quickly swap bits for various screwdriver applications. Durable and easy to organize.', 
-'TACTIX 32-Pc Bit Set', 79.90, 80, 0, 4),
-
-(32, 'TACTIX 39-Drawers Storage Bin', 40, 
-'Professional parts organizer with 39 drawers. Ideal for screws, nuts, bolts, and small workshop components.', 
-'TACTIX 39-Drawer Storage Bin', 199.90, 200, 0, 1),
-
-(33, 'Socket Tool Set (46 pieces)', 60, 
-'Complete 1/4" & 3/8" drive socket set for automotive, mechanical, and DIY tasks. Includes ratchets, extensions, and sockets of various sizes.', 
-'46-Piece Socket Set', 289.90, 290, 0, 4),
-
-(34, '2 Drawers Storage Box (32cm)', 200, 
-'Stackable clear plastic drawer organizer for office or home. Keeps small items neatly stored and easily accessible.', 
-'2-Drawer Storage Box', 39.90, 40, 0, 1),
-
-(35, 'Durable Bamboo Wooden Tissue Box (25x12cm)', 180, 
-'Eco-friendly bamboo tissue holder. Stylish design for home or office, keeps tissues clean and dry.', 
-'Bamboo Wooden Tissue Box', 49.90, 50, 0, 1),
-
-(36, 'COMIX Marker Pen Black (12 Pcs)', 300, 
-'Permanent black marker pen set. Ideal for writing, labeling, and office or school projects. Durable ink with smooth flow.', 
-'COMIX Black Marker 12-Pack', 29.90, 30, 0, 2),
-
-(37, 'COMIX A5 Business Notebook (122 sheets)', 250, 
-'Premium hardcover A5 notebook with 122 lined sheets. Perfect for office, school, or personal notes.', 
-'COMIX A5 Notebook', 24.90, 25, 0, 2),
-
-(38, '2B Mechanical Pencil & Lead Set', 500, 
-'0.5mm mechanical pencil with extra lead set. Ideal for writing, drawing, and office or school work.', 
-'2B Mechanical Pencil Set', 12.90, 13, 0, 2),
-
-(39, 'Sticky Notes', 400, 
-'Assorted color sticky notes pack (6 pads). Perfect for reminders, notes, and organization at home, school, or office.', 
-'Sticky Notes 6-Pack', 19.90, 20, 0, 2);
+(1, 'Claw Hammer 23mm', 150, 'Professional claw hammer with fiberglass handle and anti-slip grip, designed for both home and professional use. Durable steel head provides maximum impact, ideal for carpentry, construction, and DIY projects.', 'Claw Hammer 23mm', 45.90, 46, 0, 4, 'active', NOW() - INTERVAL 39 DAY),
+(2, 'Cross Pein Pin Hammer 14mm', 200, 'Lightweight precision pin hammer with ergonomic handle, perfect for metalworking, delicate woodworking, and hobby projects. Balanced for optimal control and precision.', 'Cross Pein Pin Hammer 14mm', 32.50, 33, 0, 4, 'active', NOW() - INTERVAL 38 DAY),
+(3, 'Cross Pein Pin Hammer 18mm', 180, 'Medium-sized cross pein hammer designed for general work tasks, including shaping metal, driving pins, and carpentry. Ergonomic handle reduces fatigue during prolonged use.', 'Cross Pein Pin Hammer 18mm', 38.90, 39, 0, 4, 'active', NOW() - INTERVAL 37 DAY),
+(4, 'Magnetic Claw Hammer', 120, 'Claw hammer with built-in magnetic nail starter for one-handed nailing. High-strength steel head and shock-absorbing fiberglass handle for added durability.', 'Magnetic Claw Hammer', 59.90, 60, 0, 4, 'active', NOW() - INTERVAL 36 DAY),
+(5, 'Short-Handle Mini Hammer (16 cm)', 300, 'Compact hammer for tight spaces and precision tasks. Lightweight and portable, ideal for crafts, small repairs, and DIY projects.', 'Short-Handle Mini Hammer', 19.90, 20, 0, 4, 'active', NOW() - INTERVAL 35 DAY),
+(6, 'CHISEL SET MGZ-3PC', 80, 'Professional 3-piece woodworking chisel set made of high-quality steel. Perfect for carving, shaping, and precision woodworking.', '3-Piece Woodworking Chisel Set', 89.90, 90, 0, 4, 'active', NOW() - INTERVAL 34 DAY),
+(7, 'Hammer with Rubber Grip', 140, 'Ergonomic hammer with non-slip rubber handle for safe and comfortable use. Ideal for construction, home repairs, and DIY projects.', 'Hammer with Rubber Grip', 49.90, 50, 0, 4, 'active', NOW() - INTERVAL 33 DAY),
+(8, 'Precision Screwdriver Set', 200, '32-in-1 magnetic precision screwdriver kit, including flat, Phillips, and specialty bits. Perfect for electronics, watches, and small repairs.', 'Precision Screwdriver Set', 69.90, 70, 0, 4, 'active', NOW() - INTERVAL 32 DAY),
+(9, 'INCGO Removeable Screwdriver 2in1 (19cm)', 250, 'High-quality reversible screwdriver combining flat and Phillips heads. Ideal for home, automotive, and electronic repairs.', 'INCGO 2in1 Screwdriver', 24.90, 25, 0, 4, 'active', NOW() - INTERVAL 31 DAY),
+(10, 'EMTOP Cordless Screwdriver ECSR0403', 60, '4V rechargeable cordless screwdriver with LED light and ergonomic handle. Suitable for assembly, furniture installation, and small home projects.', 'EMTOP Cordless Screwdriver', 149.90, 150, 0, 4, 'active', NOW() - INTERVAL 30 DAY),
+(11, 'TACTIX Insulated Screwdriver Set (6 pieces)', 90, 'VDE 1000V certified insulated screwdriver set. Provides safety while working with electrical equipment, including various common sizes.', 'TACTIX Insulated Screwdriver Set', 99.90, 100, 0, 4, 'active', NOW() - INTERVAL 29 DAY),
+(12, 'Knife with Cutter Blade Set', 300, 'Heavy-duty utility knife with 10 spare blades. Ideal for cutting cardboard, paper, and light materials in home and workshop use.', 'Knife with Cutter Blade Set', 29.90, 30, 0, 4, 'active', NOW() - INTERVAL 28 DAY),
+(13, 'Heavy Duty Batik Protective Hand Gloves (12 Pairs)', 100, 'Industrial cotton gloves – 12 pairs bulk pack. Provides protection against scratches, minor cuts, and dirt during manual work.', 'Protective Hand Gloves 12 Pairs', 79.90, 80, 0, 4, 'active', NOW() - INTERVAL 27 DAY),
+(14, 'Multi-Use Foldable PVC Hand Truck Trolley (300kg)', 40, 'Portable folding trolley with 300kg capacity. Suitable for transporting boxes, luggage, and heavy items with ease. Space-saving foldable design.', 'Foldable Hand Truck 300kg', 199.90, 200, 0, 1, 'active', NOW() - INTERVAL 26 DAY),
+(15, '31-Piece T-handle Wrench/Screwdriver Set', 70, 'Complete T-handle hex & Torx tool set for mechanical, automotive, and DIY tasks. Includes a wide range of sizes for versatility.', '31-Piece T-handle Set', 179.90, 180, 0, 4, 'active', NOW() - INTERVAL 25 DAY),
+(16, '32-in-1 Magnetic Electron Screwdriver Set', 180, 'Magnetic precision screwdriver kit with extension rod. Perfect for electronics, computer assembly, and small maintenance tasks.', '32-in-1 Magnetic Screwdriver', 89.90, 90, 0, 4, 'active', NOW() - INTERVAL 24 DAY),
+(17, 'Plastic Storage Drawer Rack Desk Organizer 3 Tier', 150, '3-tier plastic desk drawer organizer to store stationery, documents, and small items neatly. Durable and stackable for office or home use.', '3-Tier Desk Organizer', 49.90, 50, 0, 1, 'active', NOW() - INTERVAL 23 DAY),
+(18, 'Wall-Mounted Tissue Box-Cyan', 200, 'Waterproof wall-mounted tissue holder in cyan color. Ideal for kitchens, bathrooms, or offices. Easy to install and clean.', 'Wall-Mounted Tissue Box Cyan', 39.90, 40, 0, 1, 'active', NOW() - INTERVAL 22 DAY),
+(19, 'Wall-Mounted Stainless-Steel 2-Layer Bathroom Rack', 80, 'Rust-proof 2-tier stainless steel bathroom shelf for toiletries, towels, and accessories. Elegant and durable design.', 'Stainless Steel Bathroom Rack', 129.90, 130, 0, 1, 'active', NOW() - INTERVAL 21 DAY),
+(20, 'CHANYI 3 Tier Plastic Document File Tray', 120, 'Stackable A4 document tray organizer. Keep your office or study desk tidy and organized with three levels of storage.', 'CHANYI 3-Tier File Tray', 59.90, 60, 0, 2, 'active', NOW() - INTERVAL 20 DAY),
+(21, '3-Tier Heavy-Duty Workshop Trolley Rack', 30, 'Mobile 3-tier tool trolley with heavy-duty wheels for easy movement. Perfect for workshop, garage, or industrial use.', '3-Tier Workshop Trolley', 289.90, 290, 0, 1, 'active', NOW() - INTERVAL 19 DAY),
+(22, '3 Shelf Multipurpose Rectangular Rack', 60, 'Sturdy rectangular storage shelf suitable for kitchen, office, or garage. Holds boxes, supplies, and tools efficiently.', '3-Shelf Rectangular Rack', 139.90, 140, 0, 1, 'active', NOW() - INTERVAL 18 DAY),
+(23, 'Car Universal Phone Holder', 250, '360° adjustable dashboard and windshield phone mount. Securely holds smartphones during driving for hands-free use.', 'Car Universal Phone Holder', 39.90, 40, 0, 3, 'active', NOW() - INTERVAL 17 DAY),
+(24, 'HOTAK Driver Click Extendable Ratchet 3/8"', 90, 'Professional extendable ratchet wrench 37cm. Ideal for automotive, mechanical, and DIY repair tasks. Durable steel construction.', 'HOTAK Extendable Ratchet', 159.90, 160, 0, 4, 'active', NOW() - INTERVAL 16 DAY),
+(25, 'Microfiber Wash Mitt Cleaning Gloves (1pc)', 400, 'Ultra-soft scratch-free car washing glove. Gently cleans surfaces without leaving scratches, perfect for automotive care.', 'Microfiber Wash Mitt', 19.90, 20, 0, 3, 'active', NOW() - INTERVAL 15 DAY),
+(26, 'Car Dashboard Anti-Slip Mat (30x15cm)', 500, 'Non-slip mat for phone, coins, and accessories. Keeps items in place on car dashboard during travel.', 'Anti-Slip Dashboard Mat', 15.90, 16, 0, 3, 'active', NOW() - INTERVAL 14 DAY),
+(27, 'WAXCO Auto Silicon Car Lubricant Spray (300ml)', 300, 'Silicon lubricant & protector spray. Ideal for car door seals, rubber gaskets, and household applications.', 'WAXCO Silicon Spray 300ml', 29.90, 30, 0, 3, 'active', NOW() - INTERVAL 13 DAY),
+(28, 'ROLLINGDOG Heavy Duty Scissors (216mm)', 180, 'Titanium-coated ultra-sharp scissors for precise cutting of paper, fabric, and light materials. Durable and long-lasting.', 'ROLLINGDOG Heavy Duty Scissors', 49.90, 50, 0, 4, 'active', NOW() - INTERVAL 12 DAY),
+(29, 'EMTOP Auto Air Compressor (35L/min)', 50, '12V portable tire inflator with LED gauge. Quickly inflates car, bike, and motorcycle tires. Compact and easy to carry.', 'EMTOP Car Air Compressor', 249.90, 250, 0, 4, 'active', NOW() - INTERVAL 11 DAY),
+(30, 'Stainless Steel Scissor', 400, 'General-purpose rust-resistant scissors for home, office, and crafts. Comfortable handles and durable stainless steel blades.', 'Stainless Steel Scissor', 12.90, 13, 0, 2, 'active', NOW() - INTERVAL 10 DAY),
+(31, 'TACTIX Color Quick Change Driver Bit Set (32 pcs)', 150, 'Color-coded magnetic bit set with holder. Quickly swap bits for various screwdriver applications. Durable and easy to organize.', 'TACTIX 32-Pc Bit Set', 79.90, 80, 0, 4, 'active', NOW() - INTERVAL 9 DAY),
+(32, 'TACTIX 39-Drawers Storage Bin', 40, 'Professional parts organizer with 39 drawers. Ideal for screws, nuts, bolts, and small workshop components.', 'TACTIX 39-Drawer Storage Bin', 199.90, 200, 0, 1, 'active', NOW() - INTERVAL 8 DAY),
+(33, 'Socket Tool Set (46 pieces)', 60, 'Complete 1/4" & 3/8" drive socket set for automotive, mechanical, and DIY tasks. Includes ratchets, extensions, and sockets of various sizes.', '46-Piece Socket Set', 289.90, 290, 0, 4, 'active', NOW() - INTERVAL 7 DAY),
+(34, '2 Drawers Storage Box (32cm)', 200, 'Stackable clear plastic drawer organizer for office or home. Keeps small items neatly stored and easily accessible.', '2-Drawer Storage Box', 39.90, 40, 0, 1, 'active', NOW() - INTERVAL 6 DAY),
+(35, 'Durable Bamboo Wooden Tissue Box (25x12cm)', 180, 'Eco-friendly bamboo tissue holder. Stylish design for home or office, keeps tissues clean and dry.', 'Bamboo Wooden Tissue Box', 49.90, 50, 0, 1, 'active', NOW() - INTERVAL 5 DAY),
+(36, 'COMIX Marker Pen Black (12 Pcs)', 300, 'Permanent black marker pen set. Ideal for writing, labeling, and office or school projects. Durable ink with smooth flow.', 'COMIX Black Marker 12-Pack', 29.90, 30, 0, 2, 'active', NOW() - INTERVAL 4 DAY),
+(37, 'COMIX A5 Business Notebook (122 sheets)', 250, 'Premium hardcover A5 notebook with 122 lined sheets. Perfect for office, school, or personal notes.', 'COMIX A5 Notebook', 24.90, 25, 0, 2, 'active', NOW() - INTERVAL 3 DAY),
+(38, '2B Mechanical Pencil & Lead Set', 500, '0.5mm mechanical pencil with extra lead set. Ideal for writing, drawing, and office or school work.', '2B Mechanical Pencil Set', 12.90, 13, 0, 2, 'active', NOW() - INTERVAL 2 DAY),
+(39, 'Sticky Notes', 400, 'Assorted color sticky notes pack (6 pads). Perfect for reminders, notes, and organization at home, school, or office.', 'Sticky Notes 6-Pack', 19.90, 20, 0, 2, 'active', NOW() - INTERVAL 1 DAY);

@@ -4,9 +4,9 @@ require '../../_base.php';
 $_title = "Fix & Go | Product";
 include '../../_head.php';
 require '../../DAO/product_dao.php';
-$products = getProductForDisplay();
+$products = getProductListDao();
 $items = getCountAllProduct();
-$category = getAllCategory();
+$category = getAllCategoryDAO();
 ?>
 
 <body>
@@ -21,7 +21,7 @@ $category = getAllCategory();
                 <!-- Category Filter -->
                 <div class="filter-group">
                     <label>Category</label>
-                    <select class="filter-select">
+                    <select class="filter-select" id="category_filter">
                         <option value="">All Categories</option>
                         <?php foreach ($category as $c): ?>
                             <option value="<?= $c->category_code ?>">
@@ -35,9 +35,9 @@ $category = getAllCategory();
                 <div class="filter-group">
                     <label>Price Range</label>
                     <div class="price-range">
-                        <input type="range" min="0" max="500" value="500" id="priceRange">
+                        <input type="range" min="0" max="500" value="50" id="priceRange">
                         <div class="price-values">
-                            <span>$0</span> - <span id="priceValue">$500</span>
+                            <span>RM 0</span> - <span id="priceValue">RM 50</span>
                         </div>
                     </div>
                 </div>
@@ -46,11 +46,11 @@ $category = getAllCategory();
                 <div class="filter-group">
                     <label>Sort By</label>
                     <select class="filter-select" id="sortSelect">
-                        <option>Featured</option>
-                        <option>Price: Low to High</option>
-                        <option>Price: High to Low</option>
-                        <option>Newest First</option>
-                        <option>Best Selling</option>
+                        <option value="">Featured</option>
+                        <option value="LowtoHigh">Price: Low to High</option>
+                        <option value="HightoLow">Price: High to Low</option>
+                        <option value="newest">Newest First</option>
+                        <option  value="">Best Selling</option>
                     </select>
                 </div>
 
@@ -73,8 +73,5 @@ $category = getAllCategory();
     </main>
 
 </body>
-<script>
-    var productsData = <?= json_encode($products, JSON_PRETTY_PRINT); ?>;
-</script>
 <script src="../../js/product-list.js"></script>
 <?php include "../../_foot.php" ?>

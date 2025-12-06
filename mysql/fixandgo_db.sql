@@ -162,7 +162,9 @@ CREATE TABLE `product` (
   `unit_price` decimal(10,2) NOT NULL,
   `product_point` int(11) DEFAULT 0,
   `sold_number` int(11) NOT NULL DEFAULT 0,
-  `category_code` int(11) NOT NULL
+  `category_code` int(11) NOT NULL,
+  `status` varchar(50) NOT NULL DEFAULT "active",
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------

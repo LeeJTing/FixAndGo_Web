@@ -3,15 +3,38 @@
 /**
  * Get all products with category name
  */
-function getAllProduct()
+function getAllProductFilterDao($category, $sort, $price)
 {
     global $_db;
-    $sql = "SELECT p.*, c.category_name 
+    $sql = "SELECT p.*, c.category_name, pvm.file_path, pvm.alt
             FROM product p
             JOIN category c ON p.category_code = c.category_code
-            ORDER BY p.product_id DESC";
+            LEFT JOIN productvisualmedia pvm ON pvm.product_id = p.product_id
+            WHERE 1=1";
+    $param = [];
 
-    $stmt = $_db->query($sql);
+    if (!empty($category)) {
+        $sql .= " AND p.category_code = ?";
+        $param[] = $category;
+    }
+
+    if ($price != "") {
+        $sql .= " AND p.unit_price <= ?";
+        $param[] = $price;
+    }
+
+    if ($sort == "LowtoHigh") {
+        $sql .= " ORDER BY p.unit_price ASC";
+    } else if ($sort == "HightoLow") {
+        $sql .= " ORDER BY p.unit_price DESC";
+    } else if ($sort == "newest") {
+        $sql .= " AND p.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)";
+    } else {
+        $sql .= " ORDER BY p.product_id ASC";
+    }
+
+    $stmt = $_db->prepare($sql);
+    $stmt->execute($param);
     return $stmt->fetchAll();
 }
 
@@ -26,7 +49,7 @@ function getCountAllProduct()
 /**
  * Get products for display on homepage/shop (with main image)
  */
-function getProductForDisplay()
+function getProductListDao()
 {
     global $_db;
     $sql = "SELECT DISTINCT
@@ -112,12 +135,15 @@ function getProductImages($product_id)
 /**
  * Get products by category code
  */
-function getProductsByCategory($category_code)
+function getProductsByCategoryDao($category_code)
 {
     global $_db;
-    $stmt = $_db->prepare("SELECT p.*, c.category_name 
+    $stmt = $_db->prepare("SELECT p.*, c.category_name,
+                            pvm.file_path,
+                            pvm.alt
                            FROM product p 
                            JOIN category c ON p.category_code = c.category_code 
+                           JOIN productvisualmedia pvm ON pvm.product_id = p.product_id
                            WHERE p.category_code = ? 
                            ORDER BY p.product_name ASC");
     $stmt->execute([$category_code]);
@@ -142,7 +168,7 @@ function searchProducts($keyword)
     return $stmt->fetchAll();
 }
 
-function getAllCategory()
+function getAllCategoryDAO()
 {
     global $_db;
     $stmt = $_db->query("SELECT * FROM category");
