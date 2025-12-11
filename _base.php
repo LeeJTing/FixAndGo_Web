@@ -149,9 +149,9 @@ function getUserProfilePicture($userId)
         $stmt->execute([$userId]);
         $result = $stmt->fetch();
         
-        // 检查是否有结果并且 file_path 不为空
+        // Check if there is a result and file_path is not empty
         if ($result && isset($result->file_path) && !empty($result->file_path)) {
-            // 确保路径以 / 开头
+            // Make sure the path begins with /
             $filePath = $result->file_path;
             if (substr($filePath, 0, 1) !== '/') {
                 $filePath = '/' . $filePath;
@@ -159,7 +159,7 @@ function getUserProfilePicture($userId)
             return $filePath;
         }
     } catch (Exception $e) {
-        // 如果查询出错，返回默认头像
+        // If the query fails, return the default avatar
         error_log("Profile picture error for user $userId: " . $e->getMessage());
     }
     
