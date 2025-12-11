@@ -138,14 +138,30 @@ function is_exists($value, $table, $field)
 function getUserProfilePicture($userId)
 {
     global $_db;
-    global $rootDir;
-    $filePath = "/images/profile/default_profile_picture.webp";
+    $defaultPath = "/FixAndGo_Web/images/profile/default_profile_picture.webp";
 
-    if ($userId) {
-        $stmt = $_db->prepare("SELECT file_path FROM profilepicture
-                            WHERE user_id = ?;");
-        $stmt->execute([$userId]);
-        $filePath = '/' . $stmt->fetch()->file_path;
+    if (!$userId) {
+        return $defaultPath;
     }
-    return $filePath;
+
+    try {
+        $stmt = $_db->prepare("SELECT file_path FROM profilepicture WHERE user_id = ?");
+        $stmt->execute([$userId]);
+        $result = $stmt->fetch();
+        
+        // 检查是否有结果并且 file_path 不为空
+        if ($result && isset($result->file_path) && !empty($result->file_path)) {
+            // 确保路径以 / 开头
+            $filePath = $result->file_path;
+            if (substr($filePath, 0, 1) !== '/') {
+                $filePath = '/' . $filePath;
+            }
+            return $filePath;
+        }
+    } catch (Exception $e) {
+        // 如果查询出错，返回默认头像
+        error_log("Profile picture error for user $userId: " . $e->getMessage());
+    }
+    
+    return $defaultPath;
 }
