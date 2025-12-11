@@ -1,5 +1,8 @@
-<?php include 'adminHeader.php'; ?>
-
+<?php 
+require '../../_base.php';
+include 'adminHeader.php';
+ ?>
+<link rel="stylesheet" href="../../css/adminDashboard.css">
 <!-- Top Bar -->
 <div class="admin-topbar">
     <input class="search-box" type="text" placeholder="Search orders, products, customers...">

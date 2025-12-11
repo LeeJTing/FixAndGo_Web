@@ -3,10 +3,10 @@
 require '../../_base.php';
 $_title = "Fix & Go | Product";
 include '../../_head.php';
-require '../../DAO/product_dao.php';
-$products = getProductListDao();
+require '../../controller/product-controller.php';
+$products = getProductList();
 $items = getCountAllProduct();
-$category = getAllCategoryDAO();
+$category = getAllCategory();
 ?>
 
 <body>
@@ -50,7 +50,7 @@ $category = getAllCategoryDAO();
                         <option value="LowtoHigh">Price: Low to High</option>
                         <option value="HightoLow">Price: High to Low</option>
                         <option value="newest">Newest First</option>
-                        <option  value="">Best Selling</option>
+                        <option value="">Best Selling</option>
                     </select>
                 </div>
 
@@ -62,8 +62,20 @@ $category = getAllCategoryDAO();
             <section class="products-content">
 
                 <div class="results-header">
-                    <h2>All Products</h2>
-                    <span class="results-count"><?= $items ?> items</span>
+                    <!-- Left: Title -->
+                    <div class="results-info">
+                        <h2>All Products</h2>
+                    </div>
+                    <!-- Right: Search Bar with Results Count Inside -->
+                    <div class="search-with-count">
+                        <div class="search-wrapper">
+                            <div>
+                                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                                <input type="text" id="searchInput" placeholder="Search products, SKU, code..." autocomplete="off">
+                            </div>
+                            <span class="results-count"><?= $items ?> items</span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="products-grid">

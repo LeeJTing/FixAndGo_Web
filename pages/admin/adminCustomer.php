@@ -1,7 +1,10 @@
-<?php include 'adminHeader.php'; ?>
-
+<?php
+require '../../_base.php';
+include 'adminHeader.php';
+?>
+<link rel="stylesheet" href="../../css/adminCustomer.css">
 <div class="customers-page">
-    
+
     <div class="customers-header">
         <div>
             <h1>Customers</h1>

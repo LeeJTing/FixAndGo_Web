@@ -9,7 +9,7 @@ function getAllProductFilterDao($category, $sort, $price)
     $sql = "SELECT p.*, c.category_name, pvm.file_path, pvm.alt
             FROM product p
             JOIN category c ON p.category_code = c.category_code
-            LEFT JOIN productvisualmedia pvm ON pvm.product_id = p.product_id
+            LEFT JOIN productvisualmedia pvm ON pvm.product_id = p.product_id AND pvm.is_show = 1
             WHERE 1=1";
     $param = [];
 
@@ -38,7 +38,7 @@ function getAllProductFilterDao($category, $sort, $price)
     return $stmt->fetchAll();
 }
 
-function getCountAllProduct()
+function getCountAllProductDao()
 {
     global $_db;
     $sql = "SELECT COUNT(*) AS items FROM product";
@@ -76,7 +76,7 @@ function getProductListDao()
 /**
  * Get single product by ID (for product detail page)
  */
-function getProductById($id)
+function getProductByIdDao($id)
 {
     global $_db;
     $stmt = $_db->prepare("SELECT 
@@ -121,7 +121,7 @@ function getProductReviews($product_id)
 /**
  * Get all images for a product (for detail page gallery)
  */
-function getProductImages($product_id)
+function getProductImagesDao($product_id)
 {
     global $_db;
     $stmt = $_db->prepare("SELECT file_path, alt, position 
@@ -168,7 +168,7 @@ function searchProducts($keyword)
     return $stmt->fetchAll();
 }
 
-function getAllCategoryDAO()
+function getAllCategoryDao()
 {
     global $_db;
     $stmt = $_db->query("SELECT * FROM category");
@@ -221,4 +221,46 @@ function updateProductById($id, $data)
         $errorMsg = $e->getMessage();
         return ['success' => false, 'errors' => [$errorMsg]];
     }
+}
+
+function getProductBySearchDao($keyword)
+{
+    global $_db;
+
+    $searchTerm = "%" . $keyword . "%";
+
+    $sql = "SELECT p.*,pvm.alt,pvm.file_path,c.category_name
+            FROM product p
+            JOIN category c ON c.category_code = p.category_code 
+            LEFT JOIN productvisualmedia pvm ON pvm.product_id = p.product_id AND pvm.is_show = 1
+            WHERE p.product_id LIKE ? 
+            OR p.product_name LIKE ? 
+            OR p.description LIKE ?     
+            OR c.category_name LIKE ?
+            OR p.unit_price LIKE ?       
+            OR p.product_point LIKE ?    
+            OR p.short_desc LIKE ?";
+
+    $stmt = $_db->prepare($sql);
+
+    $stmt->execute([
+        $searchTerm,
+        $searchTerm,
+        $searchTerm,
+        $searchTerm,
+        $searchTerm,
+        $searchTerm,
+        $searchTerm
+    ]);
+
+    return $stmt->fetchAll();
+}
+
+function deleteByProductId($id)
+{
+    global $_db;
+    $sql = "DELETE FROM product WHERE product_id = ?";
+
+    $stmt = $_db->prepare($sql);
+    $stmt->execute([$id]);
 }

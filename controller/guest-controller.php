@@ -4,12 +4,12 @@ require __DIR__ . '/../DAO/product_dao.php';
 
 function getGuestAllProduct()
 {
-    return getAllProduct();
+    return getProductListDao();
 }
 
 function getGuestAllCategory()
 {
-    return getAllCategory();
+    return getAllCategoryDAO();
 }
 
 function getGuestFilterItemByCategory() {}

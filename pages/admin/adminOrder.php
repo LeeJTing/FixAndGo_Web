@@ -1,6 +1,6 @@
 <?php
 require '../../_base.php';
-require '../../_head.php';
+include 'adminHeader.php';
 // Sample data (replace with real query later)
 $orders = [
     (object)[
@@ -50,7 +50,7 @@ $orders = [
     ],
 ];
 ?>
-<link rel="stylesheet" href="../../css/order-page.css">
+<link rel="stylesheet" href="../../css/adminOrder.css">
 
 <body>
 
@@ -119,4 +119,4 @@ $orders = [
     </div>
 
 </body>
-<?php include '../../_foot.php'; ?>
+<?php include 'adminFooter.php'; ?>

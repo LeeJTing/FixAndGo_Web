@@ -1,5 +1,5 @@
 <?php
-require '../../DAO/product_dao.php';
+require '../../controller/product-controller.php';
 include '../../_head.php';
 
 $id = $_GET['id'] ?? 0;

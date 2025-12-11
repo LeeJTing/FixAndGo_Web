@@ -5,6 +5,10 @@ $(document).ready(function () {
 
   loadProduct(currentCategory, currentSort, currentValue);
 
+  $("#searchInput").on("input", function () {
+    getSearchData($(this).val());
+  });
+
   $("#category_filter").on("change", function () {
     currentCategory = $(this).val();
     loadProduct(currentCategory, currentSort, currentValue);
@@ -87,6 +91,63 @@ function loadProduct(category, sortType, currentValue) {
       } else {
         $(".products-grid").html("<p>No products found.</p>");
       }
+    },
+  });
+}
+function getSearchData(value) {
+  $.ajax({
+    url: "../../controller/product-controller.php?function=Search",
+    type: "GET",
+    data: { search: value },
+    dataType: "json",
+    cache: false,
+    beforeSend: function () {
+      $(".products-grid").html("<p>Loading...</p>");
+    },
+    success: function (data) {
+      $(".products-grid").empty();
+
+      data.forEach((p) => {
+        const altText = p.alt_text || p.product_name;
+        const imagePath = "../../" + (p.file_path || "images/placeholder.jpg");
+        $(".products-grid").append(`
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="${imagePath}" alt="${altText}" loading="lazy">
+                        </div>
+
+                        <div class="product-info">
+                            <div class="product-category">
+                                ${p.category_name} <small>(${
+          p.category_code
+        })</small>
+                            </div>
+
+                            <h3 class="product-title">${p.product_name}</h3>
+
+                            <div class="product-price">
+                                RM ${parseFloat(p.unit_price).toFixed(2)}
+                            </div>
+      <div class="product-actions">
+                          <a href="product-detail.php?id=123" class="btn-update">
+                              Update Details
+                          </a>
+                          <button class="btn-delete" onclick="deleteProduct(123)">
+                              Delete
+                          </button>
+                      </div>
+                            
+                        </div>
+                    </div>
+                `);
+      });
+    },
+    error: function (xhr, status, error) {
+      console.error("AJAX Error:", status, error);
+      console.log("Server Response:", xhr.responseText);
+      $(".products-grid").html(
+        "<p style='color:red'>Error retrieving data. Check Console (F12).</p>"
+      );
     },
   });
 }
