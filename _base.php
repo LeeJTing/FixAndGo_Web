@@ -16,9 +16,13 @@ $rootDir = 'http://' . $_SERVER['HTTP_HOST'];
 function hash_password($password)
 {
     // Hash the password
-    $hashedPassword = password_hash($password, PASSWORD_ARGON2ID);
+    $options = [
+        'memory_cost' => 1 << 17,   // 131072 KB
+        'time_cost'   => 4,       // number of iterations
+        'threads'     => 2        // parallel threads
+    ];
 
-    return $password ? $hashedPassword : $password;
+    $hashedPassword = password_hash($password, PASSWORD_ARGON2ID, $options);
 }
 
 // Get session user ID
@@ -76,6 +80,23 @@ function redirect($url = null)
     $url ??= $_SERVER['REQUEST_URI'];
     header("Location: $url");
     exit();
+}
+
+// Get home link
+function homePageURL()
+{
+    global $rootDir;
+    $homelink = $rootDir . "/index.php";
+
+    if (temp('USER_ROLE') === 'Member') {
+        $homelink = $rootDir . '/pages/member/memberHome.php';
+    }
+
+    if (temp('USER_ROLE') === 'Admin') {
+        $homelink = $rootDir . '/pages/admin/adminHome.php';
+    }
+
+    return $homelink;
 }
 
 // Set or get temporary session variable
@@ -148,7 +169,7 @@ function getUserProfilePicture($userId)
         $stmt = $_db->prepare("SELECT file_path FROM profilepicture WHERE user_id = ?");
         $stmt->execute([$userId]);
         $result = $stmt->fetch();
-        
+
         // Check if there is a result and file_path is not empty
         if ($result && isset($result->file_path) && !empty($result->file_path)) {
             // Make sure the path begins with /
@@ -162,6 +183,6 @@ function getUserProfilePicture($userId)
         // If the query fails, return the default avatar
         error_log("Profile picture error for user $userId: " . $e->getMessage());
     }
-    
+
     return $defaultPath;
 }

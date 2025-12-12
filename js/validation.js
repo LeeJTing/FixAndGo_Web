@@ -65,3 +65,22 @@ function clearError(input) {
   field.removeClass("input-error");
   field.next(".error-msg").remove();
 }
+
+function passwordFormat(password){
+  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{8,12}$/;
+  return password.length >= 8 && password.length <= 12 && passwordRegex.test(password);
+}
+
+function userIDFormat(userID){
+  return userID.length >= 4 && userID.length <= 12 && !userID.includes("@") && !userID.includes(" ");
+}
+
+function userNameFormat(name){
+  const nameRegex =  /^[a-zA-Z\s]+$/;
+  return name.length >= 4 && name.length <= 50 && nameRegex.test(name); 
+}
+
+function emailFormat(email){
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return email.length > 1 && email.length <= 50 && emailRegex.test(email);
+}
