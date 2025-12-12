@@ -16,7 +16,13 @@ $rootDir = 'http://' . $_SERVER['HTTP_HOST'];
 function hash_password($password)
 {
     // Hash the password
-    $hashedPassword = password_hash($password, PASSWORD_ARGON2ID);
+    $options = [
+        'memory_cost' => 1<<17,   // 131072 KB
+        'time_cost'   => 4,       // number of iterations
+        'threads'     => 2        // parallel threads
+    ];
+
+    $hashedPassword = password_hash($password, PASSWORD_ARGON2ID, $options);
 
     return $password ? $hashedPassword : $password;
 }
@@ -76,6 +82,22 @@ function redirect($url = null)
     $url ??= $_SERVER['REQUEST_URI'];
     header("Location: $url");
     exit();
+}
+
+// Get home link
+function homePageURL(){
+    global $rootDir;
+    $homelink = $rootDir . "/index.php";
+
+    if (temp('USER_ROLE') === 'Member') {
+        $homelink = $rootDir . '/pages/member/memberHome.php';
+    }
+
+    if(temp('USER_ROLE') === 'Admin'){
+        $homelink = $rootDir . '/pages/admin/adminHome.php';
+    }
+
+    return $homelink;
 }
 
 // Set or get temporary session variable

@@ -1,15 +1,6 @@
 <?php
 // temp('USER_ID', "M001");
-$homelink = $rootDir . '/index.php';
-
-if (temp('USER_ID')) {
-    $homelink = $rootDir . '/pages/member/memberHome.php';
-    $current_page = basename($_SERVER['PHP_SELF']);
-    if ($current_page != 'memberHome.php') {
-        redirect($homelink);
-        exit();
-    }
-}
+$homelink = homePageURL();
 
 ?>
 <!DOCTYPE html>
@@ -43,7 +34,7 @@ if (temp('USER_ID')) {
             <ul class="flex">
                 <li><a href="<?= $homelink ?>">Home</a></li>
                 <li><a href="<?= $rootDir ?>#">Products</a></li>
-                <li><a href="<?= $rootDir ?>/pages/member/aboutUs.php">About</a></li>
+                <li><a href="<?= $rootDir ?>/pages/guest/aboutUs.php">About</a></li>
                 <li><a href="<?= $rootDir ?>">Contact</a></li>
             </ul>
         </nav>
@@ -87,7 +78,7 @@ if (temp('USER_ID')) {
                     <a href="<?= $rootDir ?>/pages/auth/login.php">
                         <i class="fa-solid fa-arrow-right-to-bracket"></i> Login
                     </a>
-                    <a href="<?= $rootDir ?>/pages/auth/register.php">
+                    <a href="<?= $rootDir ?>/pages/guest/register.php">
                         <i class="fa-solid fa-user-plus"></i> Register
                     </a>
                 </div>
@@ -104,7 +95,7 @@ if (temp('USER_ID')) {
             <ul>
                 <li><a href="<?= $homelink ?>">Home</a></li>
                 <li><a href="<?= $rootDir ?>#">Products</a></li>
-                <li><a href="<?= $rootDir ?>/pages/member/aboutUs.php">About</a></li>
+                <li><a href="<?= $rootDir ?>/pages/guest/aboutUs.php">About</a></li>
                 <li><a href="<?= $rootDir ?>">Contact</a></li>
             </ul>
         </div>
