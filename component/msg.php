@@ -1,18 +1,44 @@
 <?php
-function confirmAction($message, $actionUrl, $buttonLabel = "Confirm")
+function showMessage($type, $message)
 {
-    // Check if form was submitted
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirmed'])) {
-        return true;
+    $class = '';
+    $icon  = '';
+
+    switch ($type) {
+        case 'success':
+            $class = 'msg-success';
+            $icon  = '✔️';
+            break;
+        case 'warning':
+            $class = 'msg-warning';
+            $icon  = '⚠️';
+            break;
+        case 'error':
+            $class = 'msg-error';
+            $icon  = '❌';
+            break;
+        default:
+            $class = 'msg-info';
+            $icon  = 'ℹ️';
+            break;
     }
 
-    // Display the form
     echo <<<HTML
-    <form method="POST" action="$actionUrl" onsubmit="return confirm('$message');">
-        <input type="hidden" name="confirmed" value="1">
-        <button type="submit">$buttonLabel</button>
-    </form>
+    <div class="message {$class}">
+        <span class="icon">{$icon}</span>
+        <span class="text">{$message}</span>
+    </div>
     HTML;
+}
 
-    return false; // Not confirmed yet
+function displayFlashMessage()
+{
+    if (!empty($_SESSION['flash_message'])) {
+        $type = $_SESSION['flash_message']['type'] ?? 'info';
+        $text = $_SESSION['flash_message']['text'] ?? '';
+
+        showMessage(htmlspecialchars($type),  htmlspecialchars($text));
+        // Remove message after displaying
+        unset($_SESSION['flash_message']);
+    }
 }

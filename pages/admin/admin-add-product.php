@@ -1,10 +1,12 @@
 <?php
 require '../../controller/product-controller.php';
+require '../../component/msg.php';
 include 'adminHeader.php';
 $category = getAllCategory();
 $_title = "Fix & Go | Admin - Add Product";
+displayFlashMessage();
 ?>
-
+<link rel="stylesheet" href="../../css/msg.css">
 <link rel="stylesheet" href="../../css/admin-add-product.css">
 
 <main class="main-container admin-add-product">
@@ -17,7 +19,7 @@ $_title = "Fix & Go | Admin - Add Product";
 
     <form class="add-product-form" action="../../controller/admin-controller.php" enctype="multipart/form-data" method="POST">
         <div class="form-grid">
-
+            <input type="text" name="function" value="add" hidden>
             <!-- LEFT: IMAGE UPLOAD -->
             <div class="image-upload-section">
                 <h3>Product Images <span class="required">*</span></h3>
@@ -103,6 +105,10 @@ $_title = "Fix & Go | Admin - Add Product";
                         <label class="form-label">Product Point <span class="required">*</span></label>
                         <input type="number" name="point" class="form-input" value="100">
                     </div>
+                    <div class="form-group">
+                        <label class="form-label">Low Stock Number<span class="required">*</span></label>
+                        <input type="number" name="lowstock" class="form-input" value="100">
+                    </div>
                 </div>
                 <!-- Description -->
                 <div class="form-group">
@@ -125,5 +131,6 @@ $_title = "Fix & Go | Admin - Add Product";
 </main>
 <script src="../../js/file_validation.js"></script>
 <script src="../../js/validation.js"></script>
+<script src="../../js/confirmMsg.js"></script>
 <script src="../../js/admin-add-product.js"></script>
 <?php include 'adminFooter.php'; ?>

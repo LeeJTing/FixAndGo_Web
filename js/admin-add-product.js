@@ -1,6 +1,7 @@
 $(document).ready(function () {
   $(".add-product-form").on("submit", function (e) {
     e.preventDefault();
+    const form = this; // store reference to the form
 
     let isValidProductName = validateField("product_name", {
       required: true,
@@ -15,26 +16,21 @@ $(document).ready(function () {
       decimal: true,
     });
     let isValidCategory = validateField("category_id", { required: true });
-
     let isValidStock = validateField("stock", {
       required: true,
       number: true,
       positive: true,
     });
-
     let isValidStatus = validateField("status", { required: true });
-
     let isValidPoint = validateField("point", {
       required: true,
       number: true,
       positive: true,
     });
-
     let isValidDescription = validateField("description", {
       required: true,
       min: 20,
     });
-
     let isValidFile = validateFileInput("#productImages", {
       types: ["image/jpeg", "image/png", "image/gif"],
       maxSize: 2 * 1024 * 1024,
@@ -52,18 +48,28 @@ $(document).ready(function () {
       !isValidFile
     ) {
       return; // Stop submit
-    } else {
-      let mainImgSrc = $("#mainImg").attr("src");
-      if (mainImgSrc.includes("dark_image.jpg")) {
-        alert(
-          "No product image uploaded. The status of the product will be set to Inactive."
-        );
-        $("select[name='status']").val("0"); // force inactive
-      }
     }
 
-    // If OK → submit or AJAX
-    this.submit();
+    let mainImgSrc = $("#mainImg").attr("src");
+
+    if (mainImgSrc.includes("dark_image.jpg")) {
+      showConfirm(
+        "No product image uploaded. The status of the product will be set to Inactive.",
+        function (result) {
+          if (result) {
+            // User clicked Yes - allow submission
+            $("select[name='status']").val("0"); // force inactive
+            form.submit(); // submit the original form
+          } else {
+            // User clicked No - stay on page
+            document.querySelector('input[name="product_images"]').focus();
+          }
+        }
+      );
+    } else {
+      // If image is OK, submit normally
+      form.submit();
+    }
   });
 });
 let arrayImage = []; // Store all selected files

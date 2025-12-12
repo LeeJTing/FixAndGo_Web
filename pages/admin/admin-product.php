@@ -1,10 +1,15 @@
 <?php
+require_once '../../_base.php';
+include 'adminHeader.php';
 require '../../controller/admin-controller.php';
+require_once '../../component/msg.php';
 $products = getAdminProducts();
 $category = getAllCategory();
+displayFlashMessage();
 ?>
 
-<link rel="stylesheet" href="../../css/adminHome.css">
+<link rel="stylesheet" href="../../css/admin-product.css">
+<link rel="stylesheet" href="../../css/msg.css">
 
 <body>
     <main class="main-container admin-products">
@@ -40,5 +45,8 @@ $category = getAllCategory();
         </div>
     </main>
 
-    <script src="../../js/adminHome.js"></script>
+    <script src="../../js/admin-product.js"></script>
+    <script src="../../js/confirmMsg.js"></script>
 </body>
+<?php
+include 'adminFooter.php';

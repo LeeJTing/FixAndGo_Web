@@ -7,12 +7,10 @@ INSERT INTO `productvisualmedia` (product_id, position, file_path, alt, is_show,
 -- 2 Cross Pein Pin Hammer 14mm
 (2, 0, 'images/product/cross_pein_pin_hammer_14mm-0.jpg', 'Cross Pein Pin Hammer 14mm', 1, 'Image'),
 (2, 1, 'images/product/cross_pein_pin_hammer_14mm-1.jpg', 'Cross Pein Pin Hammer 14mm', 0, 'Image'),
-(2, 2, 'images/product/cross_pein_pin_hammer_14mm-2.jpg', 'Cross Pein Pin Hammer 14mm', 0, 'Image'),
 
 -- 3 Cross Pein Pin Hammer 18mm
 (3, 0, 'images/product/cross_pein_pin_hammer_18mm-0.jpg', 'Cross Pein Pin Hammer 18mm', 1, 'Image'),
 (3, 1, 'images/product/cross_pein_pin_hammer_18mm-1.jpg', 'Cross Pein Pin Hammer 18mm', 0, 'Image'),
-(3, 2, 'images/product/cross_pein_pin_hammer_18mm-2.jpg', 'Cross Pein Pin Hammer 18mm', 0, 'Image'),
 
 -- 4 Magnetic Claw Hammer
 (4, 0, 'images/product/magnetic_claw_hammer-0.jpg', 'Magnetic Claw Hammer', 1, 'Image'),

@@ -155,10 +155,10 @@ CREATE TABLE `payment` (
 
 CREATE TABLE `product` (
   `product_id` int(11) NOT NULL,
-  `product_name` varchar(50) NOT NULL,
+  `product_name` varchar(500) NOT NULL,
   `stock_quantity` int(11) NOT NULL DEFAULT 0,
   `description` varchar(10000) DEFAULT NULL,
-  `short_desc` varchar(50) DEFAULT NULL,
+  `short_desc` varchar(500) DEFAULT NULL,
   `unit_price` decimal(10,2) NOT NULL,
   `product_point` int(11) DEFAULT 0,
   `sold_number` int(11) NOT NULL DEFAULT 0,
@@ -521,6 +521,12 @@ COMMIT;
 
 ALTER TABLE `productvisualmedia` 
 MODIFY COLUMN `alt` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '';
+
+ALTER TABLE `product` 
+ADD COLUMN `isdeleted` BOOLEAN NOT NULL DEFAULT FALSE;
+
+ALTER TABLE `product` 
+ADD COLUMN `low_stock_threshold` INT(11) DEFAULT 10;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

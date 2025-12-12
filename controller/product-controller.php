@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/../_base.php';
+require_once __DIR__ . '/../_base.php';
 require __DIR__ . '/../DAO/product_dao.php';
 
 $function = $_GET['function'] ?? null;;

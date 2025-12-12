@@ -1,5 +1,5 @@
-<?php
 
+<?php
 /**
  * Get all products with category name
  */
@@ -10,7 +10,7 @@ function getAllProductFilterDao($category, $sort, $price)
             FROM product p
             JOIN category c ON p.category_code = c.category_code
             LEFT JOIN productvisualmedia pvm ON pvm.product_id = p.product_id AND pvm.is_show = 1
-            WHERE 1=1";
+            WHERE 1=1 AND p.isdeleted = 0 AND p.status = 'active'";
     $param = [];
 
     if (!empty($category)) {
@@ -41,7 +41,7 @@ function getAllProductFilterDao($category, $sort, $price)
 function getCountAllProductDao()
 {
     global $_db;
-    $sql = "SELECT COUNT(*) AS items FROM product";
+    $sql = "SELECT COUNT(*) AS items FROM product WHERE isdeleted = 0 AND status = 'active'";
     $stmt = $_db->query($sql);
     return (int)$stmt->fetch()->items;
 }
@@ -66,7 +66,7 @@ function getProductListDao()
             FROM product p
             JOIN category c ON p.category_code = c.category_code
             JOIN productvisualmedia pvm ON pvm.product_id = p.product_id 
-                AND pvm.is_show = 1 
+                AND pvm.is_show = 1 AND p.isdeleted = 0 AND p.status = 'active'
             ORDER BY p.product_id ASC";
 
     $stmt = $_db->query($sql);
@@ -81,27 +81,12 @@ function getProductByIdDao($id)
     global $_db;
     $stmt = $_db->prepare("SELECT 
                             p.*, 
-                            c.category_name,
-                            pvm.file_path,
-                            pvm.alt
+                            c.category_name
                            FROM product p 
                            JOIN category c ON p.category_code = c.category_code 
-                           JOIN productvisualmedia pvm ON pvm.product_id = p.product_id
-                           WHERE p.product_id = ? 
-                           LIMIT 1");
+                           WHERE p.isdeleted = 0 AND p.status = 'active' AND p.product_id = ? ");
     $stmt->execute([$id]);
-    return $stmt->fetch();  // Return false if not found
-}
-
-function getProductImageById($id)
-{
-    global $_db;
-    $stmt = $_db->prepare("SELECT file_path, alt 
-                           FROM productvisualmedia 
-                           WHERE product_id = ? 
-                           ");
-    $stmt->execute([$id]);
-    return $stmt->fetchAll(); // Returns object (consistent with your style)
+    return $stmt->fetch();
 }
 
 function getProductReviews($product_id)
@@ -124,14 +109,14 @@ function getProductReviews($product_id)
 function getProductImagesDao($product_id)
 {
     global $_db;
-    $stmt = $_db->prepare("SELECT file_path, alt, position 
-                           FROM productvisualmedia 
-                           WHERE product_id = ? AND is_show = 1 
-                           ORDER BY position ASC");
+    $stmt = $_db->prepare("SELECT pvm.file_path, pvm.alt, pvm.position 
+                           FROM productvisualmedia pvm
+                           JOIN product p ON p.product_id = pvm.product_id 
+                           WHERE pvm.product_id = ? 
+                            AND p.isdeleted = 0");
     $stmt->execute([$product_id]);
     return $stmt->fetchAll();
 }
-
 /**
  * Get products by category code
  */
@@ -145,6 +130,8 @@ function getProductsByCategoryDao($category_code)
                            JOIN category c ON p.category_code = c.category_code 
                            JOIN productvisualmedia pvm ON pvm.product_id = p.product_id
                            WHERE p.category_code = ? 
+                            AND p.isdeleted = 0
+                            AND p.status = 'active'
                            ORDER BY p.product_name ASC");
     $stmt->execute([$category_code]);
     return $stmt->fetchAll();
@@ -160,7 +147,9 @@ function searchProducts($keyword)
     $stmt = $_db->prepare("SELECT p.*, c.category_name 
                            FROM product p 
                            JOIN category c ON p.category_code = c.category_code 
-                           WHERE p.product_name LIKE ? 
+                           WHERE p.isdeleted = 0 
+                              AND p.status = 'active'
+                              AND p.product_name LIKE ? 
                               OR p.short_desc LIKE ? 
                               OR p.description LIKE ?
                            ORDER BY p.product_name");
@@ -175,53 +164,65 @@ function getAllCategoryDao()
     return $stmt->fetchAll();
 }
 
-function updateProductById($id, $data)
+function updateProductById($id, $name, $category, $price, $qty, $points, $short_desc, $desc, $status)
 {
     global $_db;
+    session_start(); // make sure session started
 
-    $name         = trim($data['product_name'] ?? '');
-    $category     = intval(trim($data['category_code'] ?? ''));   // ← could be code or ID
-    $price        = floatval($data['unit_price'] ?? 0);
-    $qty          = intval($data['stock_quantity'] ?? 0);
-    $points       = intval($data['product_point'] ?? 0);
-    $short_desc   = trim($data['short_desc'] ?? '');
-    $desc         = trim($data['description'] ?? '');
+    // Sanitize
+    $name       = mb_substr(trim($name), 0, 50);
+    $short_desc = mb_substr(trim($short_desc), 0, 90);
+    $price      = number_format(floatval($price), 2, '.', '');
 
-    $sql = "UPDATE product SET
-                product_name     = ?,
-                category_code    = ?,    
-                unit_price       = ?,
-                stock_quantity   = ?,
-                product_point    = ?,
-                short_desc       = ?,
-                description      = ?
-            WHERE product_id = ?";
+    $sql = "UPDATE product
+            SET product_name = :name,
+                short_desc = :short_desc,
+                category_code = :category_code,
+                unit_price = :price,
+                stock_quantity = :stock,
+                status = :status,
+                product_point = :point,
+                description = :description
+            WHERE product_id = :id";
 
     try {
         $stmt = $_db->prepare($sql);
         $executed = $stmt->execute([
-            $name,
-            $category,
-            $price,
-            $qty,
-            $points,
-            $short_desc,
-            $desc,
-            $id
+            ':name'         => $name,
+            ':short_desc'   => $short_desc,
+            ':category_code' => $category,
+            ':price'        => $price,
+            ':stock'        => $qty,
+            ':status'       => $status,
+            ':point'        => $points,
+            ':description'  => $desc,
+            ':id'           => $id
         ]);
 
-        $changed = $stmt->rowCount() > 0;
-
-        if ($executed && $changed) {
-            return ['success' => true];
+        if ($executed) {
+            $_SESSION['flash_message'] = [
+                'type' => 'success',
+                'text' => 'Product update executed successfully.'
+            ];
         } else {
-            return ['success' => false, 'errors' => ['No changes made (data same as before)']];
+            $_SESSION['flash_message'] = [
+                'type' => 'error',
+                'text' => 'Failed to execute update.'
+            ];
         }
+
+        header('Location: ../pages/admin/admin-product-update.php?id=' . $id);
+        exit;
     } catch (PDOException $e) {
-        $errorMsg = $e->getMessage();
-        return ['success' => false, 'errors' => [$errorMsg]];
+        $_SESSION['flash_message'] = [
+            'type' => 'error',
+            'text' => 'Database Error: ' . $e->getMessage()
+        ];
+        header('Location: ../pages/admin/admin-product-update.php?id=' . $id);
+        exit;
     }
 }
+
 
 function getProductBySearchDao($keyword)
 {
@@ -233,7 +234,9 @@ function getProductBySearchDao($keyword)
             FROM product p
             JOIN category c ON c.category_code = p.category_code 
             LEFT JOIN productvisualmedia pvm ON pvm.product_id = p.product_id AND pvm.is_show = 1
-            WHERE p.product_id LIKE ? 
+            WHERE p.isdeleted = 0 
+            AND p.status = 'active'
+            AND p.product_id LIKE ? 
             OR p.product_name LIKE ? 
             OR p.description LIKE ?     
             OR c.category_name LIKE ?
@@ -259,8 +262,81 @@ function getProductBySearchDao($keyword)
 function deleteByProductId($id)
 {
     global $_db;
-    $sql = "DELETE FROM product WHERE product_id = ?";
+    try {
+        $sql = "UPDATE product SET isdeleted = 1 WHERE product_id = ?";
+        $stmt = $_db->prepare($sql);
+        $stmt->execute([$id]);
 
-    $stmt = $_db->prepare($sql);
-    $stmt->execute([$id]);
+        return $stmt->rowCount() > 0;
+    } catch (PDOException $e) {
+        // Log error if needed
+        error_log("Error deleting product: " . $e->getMessage());
+        return false;
+    }
+}
+
+function deleteImageDao($img_path)
+{
+    global $_db;
+
+    try {
+        $sql = "DELETE FROM productvisualmedia WHERE file_path = ?";
+        $stmt = $_db->prepare($sql);
+        $stmt->execute([$img_path]);
+
+        return $stmt->rowCount() > 0;
+    } catch (PDOException $e) {
+        return false;
+    }
+}
+
+function addNewImage($file_path, $id, $name, $position)
+{
+    global $_db;
+
+    try {
+        $sql = "INSERT INTO productvisualmedia 
+                (product_id, position, file_path, alt, is_show, type)
+                VALUES (:id, :position, :file_path, :alt, 0, 'Image')";
+
+        $stmt = $_db->prepare($sql);
+        $stmt->execute([
+            ':id'       => $id,
+            ':position' => $position + 1,
+            ':file_path' => $file_path,
+            ':alt'      => $name
+        ]);
+
+        return true;
+    } catch (PDOException $e) {
+        return $e->getMessage(); // string, not array
+    }
+}
+
+function addNewProduct($product_name, $short_desc, $category_id, $price, $stock, $status, $point, $description)
+{
+    global $_db; // PDO connection
+
+    try {
+        // Insert product main info
+        $sql = "INSERT INTO products 
+                (product_name, short_desc, description, category_code, unit_price, stock_quantity, status, product_point) 
+                VALUES 
+                (:name, :short_desc, :description, :category_id, :price, :stock, :status, :point)";
+        $stmt = $_db->prepare($sql);
+        $stmt->execute([
+            ':name' => $product_name,
+            ':short_desc' => $short_desc,
+            ':description' => $description,
+            ':category_id' => $category_id,
+            ':price' => $price,
+            ':stock' => $stock,
+            ':status' =>  $status,
+            ':point' => $point
+        ]);
+        return true;
+    } catch (PDOException $e) {
+        error_log("Insert Product Error: " . $e->getMessage());
+        return false;
+    }
 }

@@ -1,0 +1,215 @@
+:root {
+  /* Backgrounds */
+  --color-bg-body: #0f172a;
+  --color-card-bg: #1e293b;
+  --color-input-bg: #1e293b;
+  --color-upload-bg: #1e293b;
+
+  /* Text */
+  --color-text-primary: #e2e8f0;
+  --color-text-heading: #f8fafc;
+  --color-text-label: #cbd5e1;
+  --color-text-muted: #94a3b8;
+  --color-text-placeholder: #64748b;
+
+  /* Borders & Lines */
+  --color-border: #334155;
+  --color-border-dashed: #475569;
+  --color-border-focus: #60a5fa;
+
+  /* Accents */
+  --color-primary: #f59e0b;
+  /* Amber - Save button */
+  --color-primary-hover: #d97706;
+  --color-focus: #60a5fa;
+  /* Blue accent */
+  --color-danger: #ef4444;
+  /* Red - delete */
+  --color-required: #f87171;
+
+  /* Gradients & Shadows */
+  --shadow-card: 0 20px 50px rgba(0, 0, 0, 0.5);
+  --shadow-input-focus: 0 0 0 5px rgba(96, 165, 250, 0.2);
+  --shadow-btn-primary: 0 10px 30px rgba(245, 158, 11, 0.4);
+}
+
+/* ============== ADMIN ADD PRODUCT – DARK THEME USING :root ============== */
+.admin-container {
+  max-width: 1200px;
+  margin: 1rem auto;
+  background: var(--color-card-bg);
+  border-radius: 24px;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.admin-header {
+  background: #0f172a;
+  color: white;
+  padding: 2rem;
+  text-align: center;
+}
+
+.admin-header h1 {
+  margin: 0;
+  font-size: 2.2rem;
+  font-weight: 700;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.6rem;
+  font-weight: 600;
+  color: var(--color-text-label);
+  font-size: 1.05rem;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid var(--color-border);
+  border-radius: 16px;
+  font-size: 1rem;
+  background: var(--color-input-bg);
+  color: var(--color-text-primary);
+  transition: all 0.3s ease;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-text-placeholder);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--color-border-focus);
+  box-shadow: var(--shadow-input-focus);
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.image-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.img-box {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 3px solid var(--color-border);
+  background: var(--color-upload-bg);
+}
+
+.img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.remove-img {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--color-danger);
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: all 0.3s;
+}
+
+.remove-img:hover {
+  background: #dc2626;
+  transform: scale(1.1);
+}
+
+.btn-group {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+
+.btn {
+  padding: 1rem 2.5rem;
+  border: none;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-save {
+  background: #10b981;
+  /* Keep green as requested */
+  color: white;
+}
+
+.btn-save:hover {
+  background: #059669;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+}
+
+.btn-cancel {
+  background: #475569;
+  color: white;
+}
+
+.btn-cancel:hover {
+  background: #334155;
+}
+
+/* Status Badges (if used) */
+.status-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.status-active {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.status-inactive {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--color-danger);
+}
+
+/* RESPONSIVE */
+@media (max-width: 992px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}

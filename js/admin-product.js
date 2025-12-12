@@ -70,7 +70,9 @@ function loadProduct(category, sortType, currentValue) {
                             </div>
 
                 <div class="product-actions">
-                    <a href="../pages/admin/product-update.php" class="btn-update">
+                    <a href="../admin/admin-product-update.php?id=${
+                      p.product_id
+                    }" class="btn-update">
                         Update Details
                     </a>
                     <button class="btn-delete" onclick="deleteItem(${
@@ -90,7 +92,18 @@ function loadProduct(category, sortType, currentValue) {
 }
 
 function deleteItem(id) {
-  window.location.href = "../../controller/delete-product.php?id=" + id;
+  showConfirm(
+    "Are you sure you want to delete this item?",
+    function (confirmed) {
+      if (confirmed) {
+        // Do delete action
+        window.location.href =
+          "../../controller/admin-controller.php?function=delete&id=" + id;
+      } else {
+        console.log("User cancelled delete.");
+      }
+    }
+  );
 }
 
 function getSearchData(value) {
@@ -110,7 +123,7 @@ function getSearchData(value) {
         const altText = p.alt_text || p.product_name;
         const imagePath = "../../" + (p.file_path || "images/placeholder.jpg");
         $(".products-grid").append(`
-                    <div class="product-card">
+             <div class="product-card">
                         <div class="product-image">
                             <img src="${imagePath}" alt="${altText}" loading="lazy">
                         </div>
@@ -127,19 +140,21 @@ function getSearchData(value) {
                             <div class="product-price">
                                 RM ${parseFloat(p.unit_price).toFixed(2)}
                             </div>
-      <div class="product-actions">
-                          <a href="product-detail.php?id=123" class="btn-update">
-                              Update Details
-                           <button class="btn-delete" onclick="deleteItem(${
-                             p.product_id
-                           })">
+
+                <div class="product-actions">
+                    <a href="../admin/admin-product-update.php?id=${
+                      p.product_id
+                    }" class="btn-update">
+                        Update Details
+                    </a>
+                    <button class="btn-delete" onclick="deleteItem(${
+                      p.product_id
+                    })">
                         Delete
                     </button>
-                      </div>
-                            
-                        </div>
-                    </div>
-                `);
+                </div>
+            </div>
+        `);
       });
     },
     error: function (xhr, status, error) {
