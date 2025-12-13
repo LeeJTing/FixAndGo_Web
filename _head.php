@@ -113,7 +113,8 @@ $homelink = homePageURL();
                 <div class="cart-total">
                     <strong>Total: <span id="cartTotalPrice">$0.00</span></strong>
                 </div>
-                <button class="btn-primary checkout-btn">Checkout</button>
+                <button><a href="<?= $rootDir ?>/pages/cart/cart.php">View Full Cart</a><button>
+                        <button class="btn-primary checkout-btn">Checkout</button>
             </div>
         </div>
 
