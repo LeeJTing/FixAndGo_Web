@@ -642,11 +642,13 @@ ALTER TABLE category
 ADD COLUMN img_path VARCHAR(255) AFTER category_name;
 
 INSERT INTO category (category_name, description, img_path) VALUES
+('No Category', 'Products without a specific category assigned', 'images/no-category.png'),
 ('Storage', 'Storage solutions, tool boxes, shelves and trolleys','images/storage.png'),
-('Stationery', 'Browse the widest range of stationery and office supplies all in one place! You will find everything from double sided tape and colored pencils, to filing folders and sticky notes. If you want the best deals available, you’re sure to find them here – highlighters, staplers, highlighters – we have it all.','images/stationary.png'),
+('Stationery', 'Browse the widest range of stationery and office supplies all in one place! You will find everything from double sided tape and colored pencils, to filing folders and sticky notes. If you want the best deals available, you're sure to find them here – highlighters, staplers, highlighters – we have it all.','images/stationary.png'),
 ('Automotive', 'We here at Mr DIY know that spending time and money on your car is an important investment. That is why we have a range of automotive goods and car accessories in our store to make sure you are getting the best out of your ride! Whether it be car mats, sun shades, car covers, car polishes or even the newest tech gadgets, our website has everything you need to get more from your vehicle.','images/automotive.png'),
-('Power & Hand Tools', 'Cordless screwdrivers, drills. saws. chisels hammers and measuring tapes','images/hardware_tools.png')
+('Power & Hand Tools', 'Cordless screwdrivers, drills, saws, chisels, hammers and measuring tapes','images/hardware_tools.png')
 ON DUPLICATE KEY UPDATE 
-    description = VALUES(description);
+    description = VALUES(description),
+    img_path = VALUES(img_path);
 
 

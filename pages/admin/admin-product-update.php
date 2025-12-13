@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="../../css/admin-product-update.css">
 <link rel="stylesheet" href="../../css/msg.css">
 <?php
-require '../../controller/product-controller.php';
+require '../../controller/admin-controller.php';
 require_once '../../component/msg.php';
 include 'adminHeader.php';
 
@@ -54,8 +54,12 @@ $images = getProductImages($id);
                     </div>
 
                     <div class="form-group">
-                        <label>Product Points (Optional)</label>
+                        <label>Product Points</label>
                         <input type="number" name="product_point" value="<?= $product->product_point ?? 0 ?>">
+                    </div>
+                    <div class="form-group">
+                        <label>Low Stock Number</label>
+                        <input type="number" name="low_stock" value="<?= $product->low_stock_threshold ?? 0 ?>">
                     </div>
                 </div>
 

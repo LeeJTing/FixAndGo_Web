@@ -35,7 +35,7 @@ $(document).ready(function () {
 });
 function loadProduct(category, sortType, currentValue) {
   $.ajax({
-    url: "../../controller/product-controller.php?function=allProduct",
+    url: "../../controller/admin-controller.php?function=allProduct",
     type: "GET",
     data: { category: category, sort: sortType, price: currentValue },
     dataType: "json",
@@ -108,7 +108,7 @@ function deleteItem(id) {
 
 function getSearchData(value) {
   $.ajax({
-    url: "../../controller/product-controller.php?function=Search",
+    url: "../../controller/admin-controller.php?function=Search",
     type: "GET",
     data: { search: value },
     dataType: "json",
@@ -166,18 +166,3 @@ function getSearchData(value) {
     },
   });
 }
-/*
-<form method="POST" action="../../controller/admin-controller.php" 
-                                      onsubmit="return confirm('Delete ${p.product_name.replace(
-                                        /'/g,
-                                        "\\'"
-                                      )}? This cannot be undone!');"
-                                      style="display:inline;">
-                                    <input type="hidden" name="product_id" value="${
-                                      p.product_id
-                                    }">
-                                    <button type="submit" name="delete_product" class="btn-delete">
-                                        Delete
-                                    </button>
-                                </form>
-                                */
