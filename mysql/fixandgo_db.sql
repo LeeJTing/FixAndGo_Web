@@ -31,7 +31,7 @@ USE `fixandgo_db`;
 
 CREATE TABLE `address` (
   `address_id` int(11) NOT NULL,
-  `addess_name` varchar(20) NOT NULL,
+  `address_name` varchar(20) NOT NULL,
   `user_id` varchar(12) NOT NULL,
   `address_one` varchar(255) NOT NULL,
   `address_two` varchar(255) DEFAULT NULL,
