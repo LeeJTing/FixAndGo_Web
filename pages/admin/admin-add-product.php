@@ -12,7 +12,7 @@ displayFlashMessage();
 <main class="main-container admin-add-product">
     <div class="page-header">
         <h1 class="page-title">Add New Product</h1>
-        <a href="products.php" class="btn-back">
+        <a href="../admin/admin-product.php" class="btn-back">
             <i class="fa-solid fa-arrow-left"></i> Back to Products
         </a>
     </div>
@@ -94,8 +94,8 @@ displayFlashMessage();
                     <div class="form-group">
                         <label class="form-label">Status</label>
                         <select name="status" class="form-input">
-                            <option value="1">Active</option>
-                            <option value="0">Inactive</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
                         </select>
                     </div>
                 </div>
@@ -107,7 +107,7 @@ displayFlashMessage();
                     </div>
                     <div class="form-group">
                         <label class="form-label">Low Stock Number<span class="required">*</span></label>
-                        <input type="number" name="lowstock" class="form-input" value="100">
+                        <input type="number" name="lowstock" class="form-input" value="0">
                     </div>
                 </div>
                 <!-- Description -->

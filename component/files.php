@@ -22,7 +22,7 @@ function uploadFiles($inputName, $targetDir = "../../images/product/", $allowedT
             $tmpPath      = $_FILES[$inputName]['tmp_name'][$i];
 
             // Use unique name (recommended)
-            $fileName = uniqid() . "-" . basename($originalName);
+            $fileName = basename($originalName);
 
             $targetFilePath = $targetDir . $fileName;
 

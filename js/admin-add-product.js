@@ -1,77 +1,120 @@
 $(document).ready(function () {
+  let existingProductNames = [];
+  $.getJSON(
+    "../../controller/admin-controller.php?function=getProductName",
+    function (data) {
+      if (data.status === "success") {
+        existingProductNames = data.products.map((name) => name.toLowerCase());
+      } else {
+        console.error("Failed to fetch product names:", data.message);
+      }
+    }
+  );
+
   $(".add-product-form").on("submit", function (e) {
     e.preventDefault();
-    const form = this; // store reference to the form
+    const form = this;
+    let productNameValue = $("input[name=product_name]").val().trim();
+    let isValidProductName = true;
 
-    let isValidProductName = validateField("product_name", {
-      required: true,
-      min: 10,
-    });
-    let isValidShort_desc = validateField("short_desc", {
-      required: true,
-      min: 10,
-    });
-    let isValidPrice = validateField("price", {
-      required: true,
-      decimal: true,
-    });
-    let isValidCategory = validateField("category_id", { required: true });
-    let isValidStock = validateField("stock", {
-      required: true,
-      number: true,
-      positive: true,
-    });
-    let isValidStatus = validateField("status", { required: true });
-    let isValidPoint = validateField("point", {
-      required: true,
-      number: true,
-      positive: true,
-    });
-    let isValidDescription = validateField("description", {
-      required: true,
-      min: 20,
-    });
-    let isValidFile = validateFileInput("#productImages", {
-      types: ["image/jpeg", "image/png", "image/gif"],
-      maxSize: 2 * 1024 * 1024,
-    });
-
-    if (
-      !isValidProductName ||
-      !isValidShort_desc ||
-      !isValidPrice ||
-      !isValidStock ||
-      !isValidStatus ||
-      !isValidCategory ||
-      !isValidPoint ||
-      !isValidDescription ||
-      !isValidFile
-    ) {
-      return; // Stop submit
+    if (existingProductNames.includes(productNameValue.toLowerCase())) {
+      showError(
+        $("input[name=product_name]"),
+        "This product name already exists."
+      );
+      return; // Stop here
     }
 
+    isValidProductName = validateField("product_name", {
+      required: true,
+      min: 10,
+    });
+
+    if (!isValidProductName) {
+      return;
+    }
+
+    let status = $("select[name=status]").val();
+    if (status === "active") {
+      let isValid = true;
+
+      isValid =
+        validateField("short_desc", { required: true, min: 10 }) && isValid;
+      isValid =
+        validateField("price", {
+          required: true,
+          decimal: true,
+          positive: true,
+        }) && isValid;
+      isValid = validateField("category_id", { required: true }) && isValid;
+      isValid =
+        validateField("stock", {
+          required: true,
+          number: true,
+          positive: true,
+        }) && isValid;
+      isValid =
+        validateField("point", {
+          required: true,
+          number: true,
+          positive: true,
+          minPrice: "price",
+        }) && isValid;
+      isValid =
+        validateField("description", { required: true, min: 20 }) && isValid;
+      isValid =
+        validateField("lowstock", {
+          required: true,
+          positive: true,
+          number: true,
+          Mimstock: true,
+        }) && isValid;
+      isValid =
+        validateFileInput("#productImages", {
+          types: ["image/jpeg", "image/png", "image/gif"],
+          maxSize: 2 * 1024 * 1024,
+        }) && isValid;
+
+      if (!isValid) {
+        return; // Stop here if validation fails
+      }
+    }
+
+    // Step 4: Check if product image exists
     let mainImgSrc = $("#mainImg").attr("src");
 
-    if (mainImgSrc.includes("dark_image.jpg")) {
-      showConfirm(
-        "No product image uploaded. The status of the product will be set to Inactive.",
-        function (result) {
-          if (result) {
-            // User clicked Yes - allow submission
-            $("select[name='status']").val("0"); // force inactive
-            form.submit(); // submit the original form
-          } else {
-            // User clicked No - stay on page
-            document.querySelector('input[name="product_images"]').focus();
+    if (
+      mainImgSrc.includes("dark_image.jpg") ||
+      mainImgSrc.includes("no-image.jpg")
+    ) {
+      // Only show warning if user tried to set status as active
+      if (status === "active") {
+        showConfirm(
+          "No product image uploaded. The status of the product will be set to Inactive. Continue?",
+          function (result) {
+            if (result) {
+              // User clicked Yes - force inactive and submit
+              $("select[name='status']").val("inactive");
+              form.submit();
+            } else {
+              // User clicked No - focus on file input
+              document.querySelector('input[name="product_images"]').focus();
+            }
           }
-        }
-      );
+        );
+      } else {
+        window.location.href =
+          "../controller/admin-controller.php?function=createTemporary";
+        // Status is already inactive, just submit
+        //form.submit();
+      }
     } else {
-      // If image is OK, submit normally
+      // Image exists, submit normally
       form.submit();
     }
   });
 });
+
 let arrayImage = []; // Store all selected files
 
 // File input change
@@ -128,7 +171,7 @@ $("#productImages").on("change", function (e) {
             };
             newReader.readAsDataURL(arrayImage[0]);
           } else {
-            $mainImg.attr("src", "../../images/no-image-dark.jpg");
+            $mainImg.attr("src", "../../images/no-image.jpg");
             $overlay.show();
           }
         }
