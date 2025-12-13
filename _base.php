@@ -22,7 +22,7 @@ function hash_password($password)
         'threads'     => 2        // parallel threads
     ];
 
-    $hashedPassword = password_hash($password, PASSWORD_ARGON2ID, $options);
+    return password_hash($password, PASSWORD_ARGON2ID, $options);
 }
 
 // Get session user ID
