@@ -1,6 +1,5 @@
 <?php
 temp('USER_ID', "M001");
-$homelink = homePageURL();
 
 ?>
 <!DOCTYPE html>
@@ -30,13 +29,13 @@ $homelink = homePageURL();
 
 <header>
     <div class="container flex justify-between">
-        <a href="<?= $homelink ?>" class="logo" data-link="home">
+        <a href="<?= homePageURL() ?>" class="logo" data-link="home">
             <img src="<?= $rootDir ?>/images/logo.png" alt="Logo" style="width: 70px; height: 90px;" />
             Fix&Go
         </a>
         <nav class="desktop-nav">
             <ul class="flex">
-                <li><a href="<?= $homelink ?>">Home</a></li>
+                <li><a href="<?= homePageURL() ?>">Home</a></li>
                 <li><a href="<?= $rootDir ?>#">Products</a></li>
                 <li><a href="<?= $rootDir ?>/pages/guest/aboutUs.php">About</a></li>
                 <li><a href="<?= $rootDir ?>">Contact</a></li>
@@ -79,7 +78,7 @@ $homelink = homePageURL();
                     <span>Guest</span>
                 </div>
                 <div class="profile-dropdown" id="profileDropdown">
-                    <a href="<?= $rootDir ?>/pages/auth/login.php">
+                    <a href="<?= $rootDir ?>/pages/guest/login.php">
                         <i class="fa-solid fa-arrow-right-to-bracket"></i> Login
                     </a>
                     <a href="<?= $rootDir ?>/pages/guest/register.php">
@@ -97,7 +96,7 @@ $homelink = homePageURL();
 
         <div class="mobile-dropdown" id="mobileDropdown">
             <ul>
-                <li><a href="<?= $homelink ?>">Home</a></li>
+                <li><a href="<?= homePageURL() ?>">Home</a></li>
                 <li><a href="<?= $rootDir ?>#">Products</a></li>
                 <li><a href="<?= $rootDir ?>/pages/guest/aboutUs.php">About</a></li>
                 <li><a href="<?= $rootDir ?>">Contact</a></li>

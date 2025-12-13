@@ -67,7 +67,7 @@ include "../../_head.php";
         </form>
         
         <div class="login-link">
-            Already have an account? <a href="<?= $rootDir ?>/login.php">Login In</a>
+            Already have an account? <a href="<?= $rootDir ?>/pages/guest/login.php">Login In</a>
         </div>
     </div>
     
