@@ -31,6 +31,7 @@ USE `fixandgo_db`;
 
 CREATE TABLE `address` (
   `address_id` int(11) NOT NULL,
+  `addess_name` varchar(20) NOT NULL,
   `user_id` varchar(12) NOT NULL,
   `address_one` varchar(255) NOT NULL,
   `address_two` varchar(255) DEFAULT NULL,
@@ -246,7 +247,7 @@ CREATE TABLE `users` (
   `user_id` varchar(12) NOT NULL,
   `user_name` varchar(50) NOT NULL,
   `user_role` enum('Member','Admin') NOT NULL DEFAULT 'Member',
-  `email` varchar(30) NOT NULL,
+  `email` varchar(50) NOT NULL,
   `hash_password` varchar(255) NOT NULL,
   `account_status` enum('Verified','Unverified','Blocked') NOT NULL DEFAULT 'Unverified'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -566,24 +567,24 @@ VALUES
 (9, 'M009'),
 (10, 'M010');
 
-INSERT INTO address (address_id, user_id, address_one, address_two, address_three, state, post_code, country)
+INSERT INTO address (address_id, user_id, address_name, address_one, address_two, address_three, state, post_code, country)
 VALUES
-(1, 'M001', '12 Jalan Meranti', 'Taman Bukit Indah', NULL, 'Selangor', '40100', 'Malaysia'),
-(2, 'M002', '28 Jalan Setia 5/3', 'Setia Alam', NULL, 'Selangor', '40170', 'Malaysia'),
-(3, 'M003', '55 Jalan Kempas 3', 'Taman Kempas', NULL, 'Johor', '81200', 'Malaysia'),
-(4, 'M004', '9 Jalan Lavender', 'Taman Putra Perdana', NULL, 'Selangor', '47130', 'Malaysia'),
-(5, 'M005', '21 Jalan Air Putih', NULL, NULL, 'Pahang', '25300', 'Malaysia'),
-(6, 'M006', '77 Jalan Tun Ahmad Zaidi', 'Lorong 2', NULL, 'Sarawak', '93050', 'Malaysia'),
-(7, 'M007', '35 Jalan Mawar 2A', 'Taman Sri Mawar', NULL, 'Negeri Sembilan', '71000', 'Malaysia'),
-(8, 'M008', '14 Jalan Sri Hartamas 1', NULL, NULL, 'Kuala Lumpur', '50480', 'Malaysia'),
-(9, 'M009', '68 Jalan Wong Ah Fook', 'Block B', 'Unit 12-03', 'Johor', '80000', 'Malaysia'),
-(10, 'M010', '5 Jalan Cenderawasih', 'Taman Desa Cemerlang', NULL, 'Johor', '81750', 'Malaysia'),
+(1, 'M001', 'Home', '12 Jalan Meranti', 'Taman Bukit Indah', NULL, 'Selangor', '40100', 'Malaysia'),
+(2, 'M002', 'Home', '28 Jalan Setia 5/3', 'Setia Alam', NULL, 'Selangor', '40170', 'Malaysia'),
+(3, 'M003', 'Home', '55 Jalan Kempas 3', 'Taman Kempas', NULL, 'Johor', '81200', 'Malaysia'),
+(4, 'M004', 'Home', '9 Jalan Lavender', 'Taman Putra Perdana', NULL, 'Selangor', '47130', 'Malaysia'),
+(5, 'M005', 'Home', '21 Jalan Air Putih', NULL, NULL, 'Pahang', '25300', 'Malaysia'),
+(6, 'M006', 'Home', '77 Jalan Tun Ahmad Zaidi', 'Lorong 2', NULL, 'Sarawak', '93050', 'Malaysia'),
+(7, 'M007', 'Home', '35 Jalan Mawar 2A', 'Taman Sri Mawar', NULL, 'Negeri Sembilan', '71000', 'Malaysia'),
+(8, 'M008', 'Home', '14 Jalan Sri Hartamas 1', NULL, NULL, 'Kuala Lumpur', '50480', 'Malaysia'),
+(9, 'M009', 'Home', '68 Jalan Wong Ah Fook', 'Block B', 'Unit 12-03', 'Johor', '80000', 'Malaysia'),
+(10, 'M010', 'Home', '5 Jalan Cenderawasih', 'Taman Desa Cemerlang', NULL, 'Johor', '81750', 'Malaysia'),
 
-(11, 'A001', '100 Jalan Persiaran Surian', 'Damansara Utama', NULL, 'Selangor', '47800', 'Malaysia'),
-(12, 'A002', '33 Jalan Bayu 4', 'Bandar Puteri', NULL, 'Selangor', '47100', 'Malaysia'),
-(13, 'A003', '9 Lorong Jelutong', NULL, NULL, 'Penang', '10250', 'Malaysia'),
-(14, 'A004', '22 Jalan Sultan Ismail', 'Menara Pintu', 'Level 10', 'Kuala Lumpur', '50250', 'Malaysia'),
-(15, 'A005', '50 Jalan Tok Janggut', NULL, NULL, 'Kelantan', '15150', 'Malaysia');
+(11, 'A001', 'Home', '100 Jalan Persiaran Surian', 'Damansara Utama', NULL, 'Selangor', '47800', 'Malaysia'),
+(12, 'A002', 'Home', '33 Jalan Bayu 4', 'Bandar Puteri', NULL, 'Selangor', '47100', 'Malaysia'),
+(13, 'A003', 'Home', '9 Lorong Jelutong', NULL, NULL, 'Penang', '10250', 'Malaysia'),
+(14, 'A004', 'Home', '22 Jalan Sultan Ismail', 'Menara Pintu', 'Level 10', 'Kuala Lumpur', '50250', 'Malaysia'),
+(15, 'A005', 'Home', '50 Jalan Tok Janggut', NULL, NULL, 'Kelantan', '15150', 'Malaysia');
 
 INSERT INTO userdevices (mac_address, device_name, user_id)
 VALUES
