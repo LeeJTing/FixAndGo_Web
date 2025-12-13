@@ -1,15 +1,16 @@
 <?php
 require "../../_base.php";
+$_SESSION['USER_ID'] = "M001";
 $_title = 'Fix & GO | Cart';
 include "../../_head.php";
-require "../../DAO/cart_dao.php";
+require_once "../../DAO/cart_dao.php";
 require "../../DAO/product_dao.php";
 require "../../DAO/profile_dao.php";
 
 // Determine user ID - use logged in user or generate guest session ID
 
-temp('USER_ID', "M001");
-$user_id = temp('USER_ID');
+
+$user_id = $_SESSION['USER_ID'] ?? null;
 if (!$user_id) {
     // For guest users, use session-based identifier
     if (!isset($_SESSION['guest_session_id'])) {
@@ -25,8 +26,9 @@ $total = 0;
 $selected_total = 0;
 
 // Get customer addresses (only if logged in)
-$addresses = temp('USER_ID') ? getAddressesByUserId(temp('USER_ID')) : [];
-
+// $addresses = temp('USER_ID') ? getAddressesByUserId(temp('USER_ID')) : [];
+$addresses = isset($_SESSION['USER_ID']) ? getAddressesByUserId($_SESSION['USER_ID']) : [];
+$address_count = is_array($addresses) ? count($addresses) : 0;
 foreach ($cart_items as $item) {
     $item->item_total = $item->unit_price * $item->qty;
     $total += $item->item_total;
@@ -92,7 +94,8 @@ foreach ($cart_items as $item) {
                         <input type="checkbox"
                             class="item-checkbox is-take-checkbox"
                             data-item-id="<?= $item->item_id ?>"
-                            <?= $item->is_take ? 'checked' : '' ?> />
+                            data-is-check="<?= isset($item->is_check) ? (int)$item->is_check : (int)($item->is_check ?? $item->is_take ?? 0) ?>"
+                            <?= (isset($item->is_check) ? $item->is_check : ($item->is_take ?? 0)) ? 'checked' : '' ?> />
                     </div>
 
                     <img src="<?= $rootDir ?>/<?= htmlspecialchars($item->file_path) ?>"
@@ -120,7 +123,6 @@ foreach ($cart_items as $item) {
 
                     <span class="product-total">RM <?= number_format($item->item_total, 2) ?></span>
 
-                    <!-- Remove button -->
                     <a href="javascript:void(0)"
                         class="delete-btn"
                         data-item-id="<?= $item->item_id ?>">
@@ -133,8 +135,7 @@ foreach ($cart_items as $item) {
 
     <!-- Cart Footer -->
     <?php if (!empty($cart_items)): ?>
-        <!-- Guest Notice Section -->
-        <?php if (!temp('USER_ID')): ?>
+        <?php if (!isset($_SESSION['USER_ID'])): ?>
             <div class="guest-checkout-notice">
                 <div class="notice-content">
                     <i class="fa-solid fa-info-circle"></i>
@@ -151,13 +152,13 @@ foreach ($cart_items as $item) {
             <div class="cart-address-section">
                 <h3 class="section-title">Delivery Address</h3>
 
-                <!-- Existing Addresses -->
+                <!-- Select Addresses Section -->
                 <?php if (!empty($addresses)): ?>
                     <div class="address-list">
                         <h4>Select Delivery Address:</h4>
                         <div class="address-options">
                             <?php foreach ($addresses as $address): ?>
-                                <div class="address-option">
+                                <div class="address-option" data-address-id="<?= $address->address_id ?>">
                                     <input type="radio"
                                         class="address-radio"
                                         id="address-<?= $address->address_id ?>"
@@ -166,7 +167,8 @@ foreach ($cart_items as $item) {
                                         data-address-id="<?= $address->address_id ?>">
                                     <label for="address-<?= $address->address_id ?>" class="address-label">
                                         <div class="address-details">
-                                            <p class="address-line"><strong><?= htmlspecialchars($address->address_one) ?></strong></p>
+                                            <p class="address-line"><strong><?= htmlspecialchars($address->address_name ?? $address->address_one) ?></strong></p>
+                                            <p class="address-line"><?= htmlspecialchars($address->address_one) ?></p>
                                             <?php if ($address->address_two): ?>
                                                 <p class="address-line"><?= htmlspecialchars($address->address_two) ?></p>
                                             <?php endif; ?>
@@ -176,22 +178,39 @@ foreach ($cart_items as $item) {
                                             <p class="address-line"><?= htmlspecialchars($address->post_code) ?> <?= htmlspecialchars($address->state) ?>, <?= htmlspecialchars($address->country) ?></p>
                                         </div>
                                     </label>
+
+                                    <div class="address-actions">
+                                        <button type="button" class="btn-edit edit-address-btn"
+                                            data-address-id="<?= $address->address_id ?>"
+                                            data-address-name="<?= htmlspecialchars($address->address_name) ?>"
+                                            data-address-one="<?= htmlspecialchars($address->address_one) ?>"
+                                            data-address-two="<?= htmlspecialchars($address->address_two) ?>"
+                                            data-address-three="<?= htmlspecialchars($address->address_three) ?>"
+                                            data-state="<?= htmlspecialchars($address->state) ?>"
+                                            data-post-code="<?= htmlspecialchars($address->post_code) ?>"
+                                            data-country="<?= htmlspecialchars($address->country) ?>">
+                                            Edit
+                                        </button>
+                                    </div>
                                 </div>
                             <?php endforeach; ?>
                         </div>
                     </div>
                 <?php endif; ?>
 
-                <!-- Add New Address Section -->
+                <!-- Add Address Section -->
                 <div class="add-new-address">
                     <button class="btn-toggle-form" id="toggleAddressForm">
                         <i class="fa-solid fa-plus"></i> Add New Address
                     </button>
 
                     <form id="newAddressForm" class="address-form hidden">
+                        <input type="hidden" id="address_id" name="address_id" value="">
                         <h4>Add New Delivery Address</h4>
 
                         <div class="form-group">
+                            <label for="address_name">Label (optional)</label>
+                            <input type="text" id="address_name" name="address_name" placeholder="Home, Office, etc.">
                             <label for="address_one">Address Line 1 *</label>
                             <input type="text"
                                 id="address_one"
@@ -262,10 +281,9 @@ foreach ($cart_items as $item) {
 
         <div class="cart-footer">
             <div class="total-section">
-                <span class="total-label">Cart Total: RM <?= number_format($total, 2) ?></span>
                 <span class="selected-total-label">Selected Total: RM <span id="selected-total"><?= number_format($selected_total, 2) ?></span></span>
             </div>
-            <a href="../checkout/checkout.php" class="checkout-btn">Proceed to Checkout (Selected Items)</a>
+            <a href="../checkout/checkout.php" class="checkout-btn">Proceed to Checkout</a>
         </div>
     <?php endif; ?>
 </main>

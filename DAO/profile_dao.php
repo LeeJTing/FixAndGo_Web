@@ -19,16 +19,21 @@ function getAddressById($address_id)
 }
 
 // Add a new address for a user
-function addAddress($user_id, $address_one, $address_two, $address_three, $state, $post_code, $country = 'Malaysia')
+function addAddress($user_id, $address_one, $address_two, $address_three, $state, $post_code, $country = 'Malaysia', $address_name = 'Home')
 {
     global $_db;
-    $stmt = $_db->prepare("
-        INSERT INTO address (user_id, address_one, address_two, address_three, state, post_code, country) 
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-    ");
-    return $stmt->execute([$user_id, $address_one, $address_two, $address_three, $state, $post_code, $country]);
+    try {
+        $stmt = $_db->prepare("
+            INSERT INTO address (address_name, user_id, address_one, address_two, address_three, state, post_code, country) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        ");
+        $stmt->execute([$address_name, $user_id, $address_one, $address_two, $address_three, $state, $post_code, $country]);
+        return (int) $_db->lastInsertId();
+    } catch (PDOException $e) {
+        error_log("Add address error: " . $e->getMessage());
+        return false;
+    }
 }
-
 // Update an existing address
 function updateAddress($address_id, $address_one, $address_two, $address_three, $state, $post_code, $country = 'Malaysia')
 {
@@ -41,6 +46,14 @@ function updateAddress($address_id, $address_one, $address_two, $address_three, 
     return $stmt->execute([$address_one, $address_two, $address_three, $state, $post_code, $country, $address_id]);
 }
 
+//make sure only 3 address at most per user
+function getAddressCountByUserId($user_id)
+{
+global $_db;
+$stmt=$stmt=$_db->prepare("SELECT COUNT(*) FROM address WHERE user_id = ?");
+$stmt->execute([$user_id]);
+return (int) $stmt->fetchColumn();
+}
 // Delete an address
 function deleteAddress($address_id)
 {
