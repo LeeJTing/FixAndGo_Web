@@ -569,139 +569,25 @@ ADD COLUMN `low_stock_threshold` INT(11) DEFAULT 10;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */
 ;
 
-INSERT INTO
-    users (
-        user_id,
-        user_name,
-        user_role,
-        email,
-        hash_password,
-        account_status
-    )
-VALUES
-    -- 10 Members
-    (
-        'M001',
-        'Evelyn Carter',
-        'Member',
-        'evelyn.carter@example.com',
-        'password123',
-        'Verified'
-    ),
-    (
-        'M002',
-        'Liam Johnson',
-        'Member',
-        'liam.johnson@example.com',
-        'password123',
-        'Verified'
-    ),
-    (
-        'M003',
-        'Olivia Bennett',
-        'Member',
-        'olivia.bennett@example.com',
-        'password123',
-        'Verified'
-    ),
-    (
-        'M004',
-        'Noah Williams',
-        'Member',
-        'noah.williams@example.com',
-        'password123',
-        'Verified'
-    ),
-    (
-        'M005',
-        'Ava Mitchell',
-        'Member',
-        'ava.mitchell@example.com',
-        'password123',
-        'Verified'
-    ),
-    (
-        'M006',
-        'Mason Rivera',
-        'Member',
-        'mason.rivera@example.com',
-        'password123',
-        'Verified'
-    ),
-    (
-        'M007',
-        'Sophia Turner',
-        'Member',
-        'sophia.turner@example.com',
-        'password123',
-        'Verified'
-    ),
-    (
-        'M008',
-        'James Parker',
-        'Member',
-        'james.parker@example.com',
-        'password123',
-        'Verified'
-    ),
-    (
-        'M009',
-        'Isabella Flores',
-        'Member',
-        'isabella.flores@example.com',
-        'password123',
-        'Verified'
-    ),
-    (
-        'M010',
-        'Benjamin Hayes',
-        'Member',
-        'benjamin.hayes@example.com',
-        'password123',
-        'Verified'
-    ),
-
--- 5 Admins
-(
-    'A001',
-    'Daniel Brooks',
-    'Admin',
-    'daniel.brooks@example.com',
-    'admin123',
-    'Verified'
-),
-(
-    'A002',
-    'Emma Collins',
-    'Admin',
-    'emma.collins@example.com',
-    'admin123',
-    'Verified'
-),
-(
-    'A003',
-    'Michael Scott',
-    'Admin',
-    'michael.scott@example.com',
-    'admin123',
-    'Verified'
-),
-(
-    'A004',
-    'Chloe Adams',
-    'Admin',
-    'chloe.adams@example.com',
-    'admin123',
-    'Verified'
-),
-(
-    'A005',
-    'Henry Watson',
-    'Admin',
-    'henry.watson@example.com',
-    'admin123',
-    'Verified'
-);
+INSERT INTO `users` (`user_id`, `user_name`, `user_role`, `email`, `hash_password`, `account_status`) VALUES
+('A001', 'Daniel Brooks', 'Admin', 'daniel.brooks@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
+('A0011', 'HELLO', 'Admin', 'benjamin11.hayes@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
+('A002', 'Emma Collins', 'Admin', 'emma.collins@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
+('A003', 'Michael Scott', 'Admin', 'michael.scott@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
+('A004', 'Chloe Adams', 'Admin', 'chloe.adams@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
+('A005', 'Henry Watson', 'Admin', 'henry.watson@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
+('M000123', 'TAN AH LEE', 'Member', 'lee.asjdiwq@gmail.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Unverified'),
+('M001', 'Evelyn Carter', 'Member', 'evelyn.carter@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
+('M002', 'Liam Johnson', 'Member', 'liam.johnson@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
+('M003', 'Olivia Bennett', 'Member', 'olivia.bennett@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
+('M004', 'Noah Williams', 'Member', 'noah.williams@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
+('M005', 'Ava Mitchell', 'Member', 'ava.mitchell@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
+('M006', 'Mason Rivera', 'Member', 'mason.rivera@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
+('M007', 'Sophia Turner', 'Member', 'sophia.turner@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
+('M008', 'James Parker', 'Member', 'james.parker@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
+('M009', 'Isabella Flores', 'Member', 'isabella.flores@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
+('M010', 'Benjamin Hayes', 'Member', 'benjamin.hayes@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
+('USER1', 'IDONTK', 'Member', 'm12123@gmail.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Unverified');
 
 INSERT INTO
     `cart` (cart_id, user_id)
