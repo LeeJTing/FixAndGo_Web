@@ -111,7 +111,7 @@ function homePageURL()
     }
 
     if (temp('USER_ROLE') === 'Admin') {
-        $homelink = $rootDir . '/pages/admin/adminHome.php';
+        $homelink = $rootDir . '/pages/admin/adminDashboard.php';
     }
 
     return $homelink;
