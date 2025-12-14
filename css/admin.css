@@ -77,8 +77,13 @@ body {
 }
 
 .sidebar-footer .avatar {
-  border-radius: 50%;
-  margin-bottom: 5px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    object-fit: cover;
+    border: 2px solid #334155;
+    display: block;
 }
 
 .admin-name {
@@ -120,6 +125,9 @@ body {
 }
 
 .avatar {
+  width: 40px;  
+  height: 40px;
   border-radius: 50%;
   margin-right: 10px;
+  object-fit: cover;
 }
