@@ -75,27 +75,26 @@ class CustomerDAO {
             
             // 生成新的 user_id
             if (!empty($data['custom_user_id'])) {
-                // 使用自定义 User ID
-                $userId = strtoupper(trim($data['custom_user_id']));
-                
-                // 验证格式：必须以 M 或 A 开头，后跟数字
-                if (!preg_match('/^[MA][0-9]{3,}$/', $userId)) {
-                    throw new Exception("Invalid User ID format. Must start with M or A followed by numbers.");
-                }
-                
-                // 检查 User ID 是否已存在
+                $userId = trim($data['custom_user_id']);
+
+                // 只做一件事：检查是否已存在
                 $stmt = $_db->prepare("SELECT COUNT(*) FROM users WHERE user_id = ?");
                 $stmt->execute([$userId]);
                 if ($stmt->fetchColumn() > 0) {
-                    throw new Exception("User ID already exists. Please choose a different ID.");
+                    throw new Exception("User ID already exists.");
                 }
             } else {
                 // 自动生成 User ID
-                $prefix = $data['user_role'] == 'Admin' ? 'A' : 'M';
-                $stmt = $_db->prepare("SELECT MAX(CAST(SUBSTRING(user_id, 2) AS UNSIGNED)) as max_id 
-                                    FROM users WHERE user_id LIKE ?");
-                $stmt->execute([$prefix . '%']);
+                $prefix = ($data['user_role'] === 'Admin') ? 'A' : 'M';
+
+                $stmt = $_db->prepare("
+                    SELECT MAX(CAST(SUBSTRING(user_id, 2) AS UNSIGNED)) AS max_id
+                    FROM users
+                    WHERE user_id REGEXP ?
+                ");
+                $stmt->execute(['^' . $prefix . '[0-9]{3}$']);
                 $result = $stmt->fetch();
+
                 $nextNum = ($result->max_id ?? 0) + 1;
                 $userId = $prefix . str_pad($nextNum, 3, '0', STR_PAD_LEFT);
             }

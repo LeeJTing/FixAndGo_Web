@@ -306,8 +306,7 @@ include 'adminHeader.php';
 
         <!-- User ID Input - Optional, will auto-generate if empty -->
             <label>User ID <span style="color: #94a3b8; font-size: 12px;">(Optional - Auto-generates M### if empty)</span></label>
-            <input type="text" name="custom_user_id" placeholder="e.g., M100 or leave empty for auto-generation" 
-                   pattern="[MA][0-9]{3,}" title="Must start with M or A followed by numbers">
+            <input type="text" name="custom_user_id" placeholder="Leave empty for auto-generation (or enter any unique ID)">
                    
             <label>User Role</label>
             <select name="user_role" id="modalUserRole" onchange="updateUserIdHint()">
@@ -343,7 +342,7 @@ include 'adminHeader.php';
 
             <div class="edit-panel-buttons">
                 <button type="button" class="cancel" onclick="closeAddModal()">Cancel</button>
-                <button type="submit" class="save">Add Customer</button>
+                <button type="submit" class="save">Add User</button>
             </div>
         </form>
     </div>
