@@ -3,21 +3,17 @@ require "../../_base.php";
 require '../../dao/security_dao.php';
 require "../../controller/login-controller.php";
 $_title = "Fix & Go | Login";
-
 include "../../_head.php";
 ?>
 
 <link rel="stylesheet" href="<?= $rootDir ?>/css/login.css">
 <script src="<?= $rootDir ?>/js/validation.js"></script>
 <script src="<?= $rootDir ?>/js/login.js"></script>
+<?php if ($error): ?>
 <script>
-    if(<?= $is_blocked ?>){
-        alert("Your account has been blocked!");
-    }
-    else{
-        alert("Invalid User ID/Email or wrong password!\nPlease try again");
-    }
+    alert("<?= htmlspecialchars($error) ?>");
 </script>
+<?php endif; ?>
 <main>
     <div class="login-form-container">
         <div class="logo">

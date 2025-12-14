@@ -2,7 +2,7 @@
 
 function getUserById($id){
     global $_db;
-    $stm = $_db->prepare("SELECT * FROM USERS WHERE user_id = ?");
+    $stm = $_db->prepare("SELECT * FROM USERS WHERE user_id=?;");
     $stm->execute([$id]);
 
     return $stm->fetch();
@@ -10,7 +10,7 @@ function getUserById($id){
 
 function getUserByEmail($email){
     global $_db;
-    $stm = $_db->prepare("SELECT * FROM USERS WHERE email = ?");
+    $stm = $_db->prepare("SELECT * FROM USERS WHERE email=?;");
     $stm->execute([$email]);
 
     return $stm->fetch();

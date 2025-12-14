@@ -1,7 +1,3 @@
-<?php
-temp('USER_ID', "M001");
-
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -22,6 +18,9 @@ temp('USER_ID', "M001");
 
     <?php if (temp('USER_ID')): ?>
         <script src="<?= $rootDir ?>/js/member.js"></script>
+        <script>
+            console.log('<?= temp('USER_ID') ?>')
+        </script>
     <?php else: ?>
         <script src="<?= $rootDir ?>/js/guest.js"></script>
     <?php endif; ?>
@@ -47,6 +46,9 @@ temp('USER_ID', "M001");
             <i class="fa-solid fa-bars"></i>
         </button>
         <div class="profile-wrapper">
+            <script>
+                console.log('<?= temp('USER_ID') ?>');
+            </script>
             <?php if (temp('USER_ID')): ?>
                 <!-- LOGGED IN USER -->
                 <div class="profile-icon logged-in" id="profileIcon">
@@ -68,7 +70,7 @@ temp('USER_ID', "M001");
                         <i class="fa-regular fa-heart"></i> Wishlist
                     </a>
                     <hr>
-                    <a href="<?= $rootDir ?>/pages/auth/logout.php" class="logout-btn">
+                    <a href="javascript:void(0)" class="logout-btn">
                         <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
                     </a>
                 </div>
@@ -330,5 +332,22 @@ temp('USER_ID', "M001");
                     });
             });
         });
+
+        $('.logout-btn').on('click', function (e) {
+        e.preventDefault();
+
+        logout = confirm("Click OK to confirm to exit!");
+        if (logout) {
+            $.post(ROOT_DIR + "/_logout.php", {
+                logout: true
+            }).done(function () {
+                window.location.href = ROOT_DIR + "/pages/guest/login.php";
+                console.log("posted");
+            }
+            ).fail(function () {
+                console.log("failed");
+            })
+        }
+    });
     })(jQuery);
 </script>
