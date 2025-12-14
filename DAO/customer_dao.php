@@ -3,8 +3,8 @@
 
 class CustomerDAO {
     
-    // 获取所有用户（支持搜索、筛选、排序）
-    public static function getAllCustomers($search = '', $status = '', $sortBy = 'user_id', $role = 'Member') {
+    // 获取所有用户（支持搜索、筛选、排序, 增加分页参数）
+    public static function getAllCustomers($search = '', $status = '', $sortBy = 'user_id', $role = 'Member', $limit = null, $offset = 0) {
         global $_db;
         
         $query = "SELECT u.*, up.contact_num, up.dob, up.gender, a.address_one, a.state 
@@ -40,6 +40,13 @@ class CustomerDAO {
         } else {
             // ID 和状态用降序 (最新的在前面)
             $query .= " ORDER BY u.$sortBy DESC";
+        }
+        
+        // 【新增分页逻辑】: 只有当 limit 不为空且大于 0 时，才添加 LIMIT 和 OFFSET
+        if (is_numeric($limit) && $limit > 0) {
+            $query .= " LIMIT ? OFFSET ?";
+            $params[] = (int)$limit;
+            $params[] = (int)$offset;
         }
         
         $stmt = $_db->prepare($query);
@@ -97,7 +104,12 @@ class CustomerDAO {
             $query = "INSERT INTO users (user_id, user_name, user_role, email, hash_password, account_status) 
                     VALUES (?, ?, ?, ?, ?, ?)";
             $stmt = $_db->prepare($query);
-            $hashedPassword = password_hash($data['password'], PASSWORD_DEFAULT);
+            $password = !empty($data['password']) 
+                ? $data['password'] 
+                : 'password123';
+
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
             $stmt->execute([
                 $userId,
                 $data['user_name'],
@@ -223,8 +235,9 @@ class CustomerDAO {
         $params = [$role];
         
         if (!empty($search)) {
-            $query .= " AND (user_name LIKE ? OR email LIKE ?)";
+            $query .= " AND (user_name LIKE ? OR email LIKE ? OR user_id LIKE ?)"; 
             $searchParam = "%{$search}%";
+            $params[] = $searchParam;
             $params[] = $searchParam;
             $params[] = $searchParam;
         }

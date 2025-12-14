@@ -25,16 +25,41 @@ $sortBy = get('sort', 'user_id');
 
 $roleFilter = get('role', 'Member');
 
+// ============== 新增分页逻辑 ==============
+$limit = 13; // 每页最大显示数量
+$page = (int)get('page', 1); // 获取当前页码，默认为第 1 页
+if ($page < 1) $page = 1;
+
+$offset = ($page - 1) * $limit; // 计算查询偏移量
+
+// 计算当前页显示的起始和结束编号
+$startNum = $offset + 1;
+
 $queryParams = http_build_query([
     'search' => $search,
     'status' => $status,
     'sort'   => $sortBy,
-    'role'   => $roleFilter
+    'role'   => $roleFilter,
+    'page'   => $page
 ]);
 
-// 获取用户列表（只显示 Members）
-$customers = CustomerDAO::getAllCustomers($search, $status, $sortBy, $roleFilter);
+// 获取总用户数（用于计算总页数）
 $totalCustomers = CustomerDAO::getTotalCount($search, $status, $roleFilter);
+
+// 计算总页数
+$totalPages = ceil($totalCustomers / $limit);
+
+// 【修改此处】: 获取用户列表，传入 $limit 和 $offset 以实现分页
+$customers = CustomerDAO::getAllCustomers($search, $status, $sortBy, $roleFilter, $limit, $offset);
+
+// 如果没有用户，则 $startNum 应该为 0
+if ($totalCustomers == 0) {
+    $startNum = 0;
+    $endNum = 0;
+} else {
+    $startNum = $offset + 1;
+    $endNum = min($offset + count($customers), $totalCustomers);
+}
 
 // 获取选中的用户（用于编辑面板）
 $selectedCustomer = null;
@@ -161,10 +186,37 @@ include 'adminHeader.php';
 
                 <!-- Table Footer -->
                 <div class="table-footer">
-                    <p>Showing <?= count($customers) ?> of <?= $totalCustomers ?> results</p>
+                    <p>Showing <?= $startNum ?> to <?= $endNum ?> of <?= $totalCustomers ?> results</p>
                     <div class="pagination">
-                        <button>&lt;</button>
-                        <button>&gt;</button>
+                        <?php 
+                        // 用于构建分页链接的基础查询参数（排除 'page'）
+                        $baseQueryParams = http_build_query([
+                            'search' => $search,
+                            'status' => $status,
+                            'sort'   => $sortBy,
+                            'role'   => $roleFilter,
+                        ]);
+                        ?>
+                        
+                        <a href="?page=<?= max(1, $page - 1) ?>&<?= $baseQueryParams ?>" 
+                            class="pagination-btn <?= $page <= 1 ? 'disabled' : '' ?>">
+                            &lt;
+                        </a>
+
+                        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                            <?php
+                            $editParam = $selectedCustomer ? '&edit=' . $selectedCustomer->user_id : '';
+                            ?>
+                            <a href="?page=<?= $i ?>&<?= $baseQueryParams ?><?= $editParam ?>"
+                                class="pagination-btn <?= $i == $page ? 'active' : '' ?>">
+                                <?= $i ?>
+                            </a>
+                        <?php endfor; ?>
+
+                        <a href="?page=<?= min($totalPages, $page + 1) ?>&<?= $baseQueryParams ?>" 
+                            class="pagination-btn <?= $page >= $totalPages ? 'disabled' : '' ?>">
+                            &gt;
+                        </a>
                     </div>
                 </div>
             </div>
@@ -201,7 +253,9 @@ include 'adminHeader.php';
                 </div>
 
                 <!-- User ID - Read Only -->
-                <label>User ID</label>
+                <label>User ID<span style="color: #94a3b8; font-size: 12px;">(Optional - Auto-generates 
+                    <span id="modalPrefixHint" style="font-weight: bold;">M</span>### if empty)
+                </span></label>
                 <input type="text" value="<?= htmlspecialchars($selectedCustomer->user_id) ?>" readonly 
                     style="background: #0f172a; color: #94a3b8; cursor: not-allowed;">
 
