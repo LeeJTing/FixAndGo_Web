@@ -32,7 +32,8 @@ if ($function === 'Search') {
     header('Location: ../pages/admin/admin-product.php');
     exit;
 } else if ($function === 'getProductName') {
-    $productNames = getProductName();
+    $updateId = get('id') ?? null;
+    $productNames = getProductName($updateId);
 
     if ($productNames !== false) {
         echo json_encode([
@@ -80,7 +81,7 @@ if ($function === 'Search') {
 
         if ($status === 'inactive') {
 
-            
+
             $isAddProduct = addNewProduct($product_name, $short_desc, $category_id, $price, $stock, $status, $point, $description);
             if ($isAddProduct) {
                 $_SESSION['flash_message'] = [
@@ -144,7 +145,6 @@ if ($function === 'Search') {
             exit;
         }
     } else if ($post_function === 'update') {
-        $count = count(getProductImagesDao($id));
         $name       = mb_substr(trim(post('product_name') ?? ''), 0, 50);
         $category   = intval(trim(post('category_code') ?? ''));
         $price      = number_format(floatval(post('unit_price') ?? 0), 2, '.', '');
@@ -153,21 +153,20 @@ if ($function === 'Search') {
         $short_desc = mb_substr(trim(post('short_desc') ?? ''), 0, 90);
         $status     = trim(post('status') ?? '');
         $desc       = trim(post('description') ?? '');
-        $lowStock   = (int) post('lowstock');
+        $lowStock   = (int) post('low_stock');
         if (!empty($_FILES['new_images']['name'][0])) {
 
             // Upload files
             $uploadedFiles = uploadFiles('new_images', "../images/product/");
             // Insert uploaded images
             foreach ($uploadedFiles as $file) {
-                $countAppearProduct_update = count(getProductImagesDao($product_id));
+                $countAppearProduct_update = count(getProductImagesDao($id));
                 if ($countAppearProduct_update === 0) {
-                    $result = addNewImage($file, $id, $name, $count, 1);
+                    $result = addNewImage($file, $id, $name, $countAppearProduct_update, 1);
                 } else {
                     // $file should be a string like "images/product/xxxx.png"
-                    $result = addNewImage($file, $id, $name, $count, 0);
+                    $result = addNewImage($file, $id, $name, $countAppearProduct_update, 0);
                 }
-                $count++;
 
                 if ($result !== true) {
                     echo "❌ Error adding image: ";
@@ -235,4 +234,8 @@ function getProductList()
 function getProductImages($id)
 {
     return getProductImagesAdminDao($id);
+}
+function getSpecificProductImage($id)
+{
+    return getProductImagesDao($id);
 }

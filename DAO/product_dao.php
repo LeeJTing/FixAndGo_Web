@@ -551,14 +551,24 @@ function addNewProduct($product_name, $short_desc, $category_id, $price, $stock,
     }
 }
 
-function getProductName()
+function getProductName($product_id = null)
 {
     global $_db;
     try {
-        $stmt = $_db->query("SELECT product_name FROM product");
+        if ($product_id === null) {
+            // If no ID provided, return all product names
+            $stmt = $_db->query("SELECT product_name FROM product");
+        } else {
+            // Exclude the product with given ID
+            $sql = "SELECT product_name FROM product WHERE product_id != ?";
+            $stmt = $_db->prepare($sql);
+            $stmt->execute([$product_id]);
+        }
+
         $products = $stmt->fetchAll(PDO::FETCH_COLUMN);
         return $products;
     } catch (PDOException $e) {
+        error_log("Get Product Names Error: " . $e->getMessage());
         return false;
     }
 }

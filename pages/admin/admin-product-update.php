@@ -8,7 +8,7 @@ include 'adminHeader.php';
 $id = $_GET['id'] ?? 0;
 $product = getProductById($id);
 $categories = getAllCategory();
-$images = getProductImages($id);
+$images = getSpecificProductImage($id) ?? null;
 ?>
 
 <body>
@@ -16,7 +16,7 @@ $images = getProductImages($id);
     <div class="admin-container">
         <div class="admin-header">
             <h1><i class="fa-solid fa-screwdriver-wrench"></i> Edit Product</h1>
-            <p>Product ID: #<?= sprintf("%04d", $product->product_id) ?> • Last updated: <?= date('d M Y') ?></p>
+            <p>Product ID: #<?= $product->product_id ?> • Last updated: <?= date('d M Y') ?></p>
         </div>
 
         <form id="updateProductForm" method="POST" enctype="multipart/form-data" action="../../controller/admin-controller.php">
@@ -89,7 +89,7 @@ $images = getProductImages($id);
                             <!-- Existing images from DB -->
                             <?php foreach ($images as $img): ?>
                                 <div class="img-box existing-img" data-filename="<?= htmlspecialchars($img->file_path) ?>">
-                                    <img src="../../<?= htmlspecialchars($img->file_path) ?>" alt="<?= $img->alt ?>">
+                                    <img id="mainImg" src="../../<?= htmlspecialchars($img->file_path) ?>" alt="<?= $img->alt ?>">
                                     <button type="button" class="remove-img">×</button>
                                 </div>
                             <?php endforeach; ?>
@@ -121,6 +121,8 @@ $images = getProductImages($id);
     </div>
 
 </body>
+<script src="../../js/file_validation.js"></script>
+<script src="../../js/validation.js"></script>
 <script src="../../js/confirmMsg.js"></script>
 <script src="../../js/admin-product-update.js"></script>
 <?php include 'adminFooter.php'; ?>
