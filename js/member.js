@@ -1,29 +1,43 @@
+$(document).ready(function () {
+  $(document).on("click", "#profileIcon", function (e) {
+    e.stopPropagation();
 
-$(document).ready(function() {
-    // Only run if user is logged in (cart button exists)
-    const $cartIcon = $('#cartIcon');
-    if ($cartIcon.length) {
-        $cartIcon.on('click', function(e) {
-            e.preventDefault();
-            $('#cartSidebar').addClass('open');
-            $('#cartOverlay').addClass('active');
-            $('body').css('overflow', 'hidden'); // prevent scroll
-        });
+    const $dropdown = $("#profileDropdown");
+    const $arrow = $(this).find(".dropdown-arrow");
+
+    $dropdown.toggleClass("active");
+    if ($arrow.length) {
+      $arrow.toggleClass("rotated");
     }
+  });
+  // ================= CART SIDEBAR =================
+  const $cartIcon = $("#cartIcon");
+  if ($cartIcon.length) {
+    $cartIcon.on("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation(); // 🔥 IMPORTANT
 
-    // Close cart sidebar
-    $('.close-cart, #cartOverlay').on('click', function() {
-        $('#cartSidebar').removeClass('open');
-        $('#cartOverlay').removeClass('active');
-        $('body').css('overflow', 'auto');
+      $("#cartSidebar").addClass("open");
+      $("#cartOverlay").addClass("active");
+      $("body").css("overflow", "hidden");
     });
+  }
 
-    // Optional: Close with Escape key
-    $(document).on('keydown', function(e) {
-        if (e.key === "Escape") {
-            $('#cartSidebar').removeClass('open');
-            $('#cartOverlay').removeClass('active');
-            $('body').css('overflow', 'auto');
-        }
+  // Close cart sidebar
+  if ($(".close-cart, #cartOverlay").length) {
+    $(".close-cart, #cartOverlay").on("click", function () {
+      $("#cartSidebar").removeClass("open");
+      $("#cartOverlay").removeClass("active");
+      $("body").css("overflow", "auto");
     });
+  }
+
+  // Close cart with ESC
+  $(document).on("keydown", function (e) {
+    if (e.key === "Escape") {
+      $("#cartSidebar").removeClass("open");
+      $("#cartOverlay").removeClass("active");
+      $("body").css("overflow", "auto");
+    }
+  });
 });

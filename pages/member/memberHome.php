@@ -7,5 +7,3 @@ include '../homepage.php';
 
 
 <?php include "../../_foot.php" ?>
-<script src="<?= $rootDir ?>/js/script.js"></script>
-<script src="<?= $rootDir ?>/js/member.js"></script>

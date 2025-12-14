@@ -3,8 +3,8 @@
 
 class CustomerDAO {
     
-    // 获取所有用户（支持搜索、筛选、排序）
-    public static function getAllCustomers($search = '', $status = '', $sortBy = 'user_id', $role = 'Member') {
+    // 获取所有用户（支持搜索、筛选、排序, 增加分页参数）
+    public static function getAllCustomers($search = '', $status = '', $sortBy = 'user_id', $role = 'Member', $limit = null, $offset = 0) {
         global $_db;
         
         $query = "SELECT u.*, up.contact_num, up.dob, up.gender, a.address_one, a.state 
@@ -42,6 +42,13 @@ class CustomerDAO {
             $query .= " ORDER BY u.$sortBy DESC";
         }
         
+        // 【新增分页逻辑】: 只有当 limit 不为空且大于 0 时，才添加 LIMIT 和 OFFSET
+        if (is_numeric($limit) && $limit > 0) {
+            $query .= " LIMIT ? OFFSET ?";
+            $params[] = (int)$limit;
+            $params[] = (int)$offset;
+        }
+        
         $stmt = $_db->prepare($query);
         $stmt->execute($params);
         return $stmt->fetchAll();
@@ -67,19 +74,41 @@ class CustomerDAO {
             $_db->beginTransaction();
             
             // 生成新的 user_id
-            $prefix = $data['user_role'] == 'Admin' ? 'A' : 'M';
-            $stmt = $_db->prepare("SELECT MAX(CAST(SUBSTRING(user_id, 2) AS UNSIGNED)) as max_id 
-                                   FROM users WHERE user_id LIKE ?");
-            $stmt->execute([$prefix . '%']);
-            $result = $stmt->fetch();
-            $nextNum = ($result->max_id ?? 0) + 1;
-            $userId = $prefix . str_pad($nextNum, 3, '0', STR_PAD_LEFT);
+            if (!empty($data['custom_user_id'])) {
+                $userId = trim($data['custom_user_id']);
+
+                // 只做一件事：检查是否已存在
+                $stmt = $_db->prepare("SELECT COUNT(*) FROM users WHERE user_id = ?");
+                $stmt->execute([$userId]);
+                if ($stmt->fetchColumn() > 0) {
+                    throw new Exception("User ID already exists.");
+                }
+            } else {
+                // 自动生成 User ID
+                $prefix = ($data['user_role'] === 'Admin') ? 'A' : 'M';
+
+                $stmt = $_db->prepare("
+                    SELECT MAX(CAST(SUBSTRING(user_id, 2) AS UNSIGNED)) AS max_id
+                    FROM users
+                    WHERE user_id REGEXP ?
+                ");
+                $stmt->execute(['^' . $prefix . '[0-9]{3}$']);
+                $result = $stmt->fetch();
+
+                $nextNum = ($result->max_id ?? 0) + 1;
+                $userId = $prefix . str_pad($nextNum, 3, '0', STR_PAD_LEFT);
+            }
             
             // 插入 users 表
             $query = "INSERT INTO users (user_id, user_name, user_role, email, hash_password, account_status) 
-                      VALUES (?, ?, ?, ?, ?, ?)";
+                    VALUES (?, ?, ?, ?, ?, ?)";
             $stmt = $_db->prepare($query);
-            $hashedPassword = password_hash($data['password'], PASSWORD_DEFAULT);
+            $password = !empty($data['password']) 
+                ? $data['password'] 
+                : 'password123';
+
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
             $stmt->execute([
                 $userId,
                 $data['user_name'],
@@ -105,6 +134,7 @@ class CustomerDAO {
             return true;
         } catch (Exception $e) {
             $_db->rollBack();
+            error_log("Create Customer Error: " . $e->getMessage());
             return false;
         }
     }
@@ -204,8 +234,9 @@ class CustomerDAO {
         $params = [$role];
         
         if (!empty($search)) {
-            $query .= " AND (user_name LIKE ? OR email LIKE ?)";
+            $query .= " AND (user_name LIKE ? OR email LIKE ? OR user_id LIKE ?)"; 
             $searchParam = "%{$search}%";
+            $params[] = $searchParam;
             $params[] = $searchParam;
             $params[] = $searchParam;
         }

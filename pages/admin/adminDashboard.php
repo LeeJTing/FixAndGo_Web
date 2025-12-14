@@ -1,15 +1,34 @@
 <?php 
 require '../../_base.php';
+
+// 获取当前登录用户信息
+$currentUser = getCurrentUser();
+if (!$currentUser) {
+    $currentUser = (object)[
+        'user_id' => null,
+        'user_name' => 'Guest',
+        'user_role' => 'Guest'
+    ];
+}
+
+// 获取用户头像
+$userProfilePic = $currentUser->user_id ? getUserProfilePicture($currentUser->user_id) : $pathPrefix . '/images/profile/default_profile_picture.webp';
+
 include 'adminHeader.php';
- ?>
+
+?>
 <link rel="stylesheet" href="../../css/adminDashboard.css">
-<!-- Top Bar -->
 <div class="admin-topbar">
     <input class="search-box" type="text" placeholder="Search orders, products, customers...">
 
     <div class="profile-area">
-        <img src="https://i.pravatar.cc/40" class="avatar">
-        <span>Admin</span>
+        <img src="<?= htmlspecialchars($userProfilePic) ?>" 
+             class="avatar" 
+             alt="<?= htmlspecialchars($currentUser->user_name) ?>"
+             width="36" height="36" 
+             style="width: 36px; height: 36px; object-fit: cover; border-radius: 50%;"
+             onerror="this.src='<?= $pathPrefix ?>/images/profile/default_profile_picture.webp'">
+        <span><?= htmlspecialchars($currentUser->user_name) ?></span>
     </div>
 </div>
 

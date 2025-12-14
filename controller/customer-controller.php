@@ -74,6 +74,7 @@ class CustomerController {
     public static function handleCreate() {
         if (is_post()) {
             $data = [
+                'custom_user_id' => post('custom_user_id'), // 新增：自定义 User ID
                 'user_name' => post('user_name'),
                 'email' => post('email'),
                 'password' => post('password', 'password123'),
@@ -93,7 +94,7 @@ class CustomerController {
                 temp('success', 'Customer created successfully!');
                 redirect('adminCustomer.php');
             } else {
-                temp('error', 'Failed to create customer');
+                temp('error', 'Failed to create customer. Check if User ID already exists.');
                 redirect('adminCustomer.php');
             }
         }

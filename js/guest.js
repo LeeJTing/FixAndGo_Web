@@ -10,16 +10,15 @@ $(document).ready(function () {
     alert("Please log in to checkout.");
     window.location.href = "/pages/auth/login.php";
   });
+  $(document).on("click", "#profileIcon", function (e) {
+    e.stopPropagation();
 
-  // Profile dropdown toggle
-  $("#profileIcon").on("click", function () {
-    $("#profileDropdown").toggleClass("open");
-  });
+    const $dropdown = $("#profileDropdown");
+    const $arrow = $(this).find(".dropdown-arrow");
 
-  // Close dropdown when clicking away
-  $(document).on("click", function (e) {
-    if (!$(e.target).closest("#profileIcon, #profileDropdown").length) {
-      $("#profileDropdown").removeClass("open");
+    $dropdown.toggleClass("active");
+    if ($arrow.length) {
+      $arrow.toggleClass("rotated");
     }
   });
 });

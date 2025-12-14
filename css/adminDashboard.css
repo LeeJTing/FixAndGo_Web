@@ -1,3 +1,53 @@
+/* Admin Topbar */
+.admin-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.search-box {
+    width: 600px;
+    max-width: 800px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #475569;
+    background: #1e293b;
+    color: #f1f5f9;
+    font-size: 14px;
+}
+
+.search-box:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+/* Profile Area in Topbar */
+.profile-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    background: #1e293b;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.profile-area:hover {
+    background: #334155;
+}
+
+.profile-area .avatar {
+    border: 2px solid #3b82f6;
+}
+
+.profile-area span {
+    color: #e2e8f0;
+    font-size: 14px;
+    font-weight: 500;
+}
+
 /* CONTENT */
 .page-title {
     font-size: 26px;

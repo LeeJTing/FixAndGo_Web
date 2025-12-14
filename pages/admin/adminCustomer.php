@@ -23,9 +23,43 @@ $search = get('search');
 $status = get('status', 'All');
 $sortBy = get('sort', 'user_id');
 
-// 获取用户列表（只显示 Members）
-$customers = CustomerDAO::getAllCustomers($search, $status, $sortBy, 'Member');
-$totalCustomers = CustomerDAO::getTotalCount($search, $status, 'Member');
+$roleFilter = get('role', 'Member');
+
+// ============== 新增分页逻辑 ==============
+$limit = 13; // 每页最大显示数量
+$page = (int)get('page', 1); // 获取当前页码，默认为第 1 页
+if ($page < 1) $page = 1;
+
+$offset = ($page - 1) * $limit; // 计算查询偏移量
+
+// 计算当前页显示的起始和结束编号
+$startNum = $offset + 1;
+
+$queryParams = http_build_query([
+    'search' => $search,
+    'status' => $status,
+    'sort'   => $sortBy,
+    'role'   => $roleFilter,
+    'page'   => $page
+]);
+
+// 获取总用户数（用于计算总页数）
+$totalCustomers = CustomerDAO::getTotalCount($search, $status, $roleFilter);
+
+// 计算总页数
+$totalPages = ceil($totalCustomers / $limit);
+
+// 【修改此处】: 获取用户列表，传入 $limit 和 $offset 以实现分页
+$customers = CustomerDAO::getAllCustomers($search, $status, $sortBy, $roleFilter, $limit, $offset);
+
+// 如果没有用户，则 $startNum 应该为 0
+if ($totalCustomers == 0) {
+    $startNum = 0;
+    $endNum = 0;
+} else {
+    $startNum = $offset + 1;
+    $endNum = min($offset + count($customers), $totalCustomers);
+}
 
 // 获取选中的用户（用于编辑面板）
 $selectedCustomer = null;
@@ -53,10 +87,10 @@ include 'adminHeader.php';
     
     <div class="customers-header">
         <div>
-            <h1>Customers</h1>
-            <p>Manage customer accounts, view purchase history, and handle support.</p>
+            <h1>Users Management</h1>
+            <p>Manage all user accounts (Members and Admins).</p>
             <button class="add-btn" onclick="showAddModal()">
-                <span>＋</span> Add Customer
+                <span>＋</span> Add User
             </button>
         </div>
     </div>
@@ -74,6 +108,11 @@ include 'adminHeader.php';
                     <input type="text" name="search" placeholder="Search by name, email, or ID..." 
                            value="<?= htmlspecialchars($search) ?>">
                 </div>
+
+                <select name="role" class="filter-select" onchange="this.form.submit()">
+                    <option value="Member" <?= $roleFilter == 'Member' ? 'selected' : '' ?>>Role: Member</option>
+                    <option value="Admin" <?= $roleFilter == 'Admin' ? 'selected' : '' ?>>Role: Admin</option>
+                </select>
 
                 <select name="status" class="filter-select" onchange="this.form.submit()">
                     <option value="All" <?= $status == 'All' ? 'selected' : '' ?>>Status: All</option>
@@ -114,7 +153,7 @@ include 'adminHeader.php';
                         <?php else: ?>
                             <?php foreach ($customers as $customer): ?>
                             <tr class="<?= ($selectedCustomer && $selectedCustomer->user_id == $customer->user_id) ? 'selected' : '' ?>" 
-                                onclick="window.location.href='?edit=<?= $customer->user_id ?>'" 
+                                onclick="window.location.href='?edit=<?= $customer->user_id ?>&<?= $queryParams ?>'"
                                 style="cursor: pointer;">
                                 <td><?= htmlspecialchars($customer->user_id) ?></td>
                                 <td class="<?= ($selectedCustomer && $selectedCustomer->user_id == $customer->user_id) ? 'highlight' : '' ?>">
@@ -134,8 +173,8 @@ include 'adminHeader.php';
                                     </span>
                                 </td>
                                 <td onclick="event.stopPropagation();">
-                                    <a href="?edit=<?= $customer->user_id ?>" class="btn-edit">Edit</a>
-                                    <a href="?action=delete&id=<?= $customer->user_id ?>" 
+                                    <a href="?edit=<?= $customer->user_id ?>&<?= $queryParams ?>" class="btn-edit">Edit</a>
+                                    <a href="?action=delete&id=<?= $customer->user_id ?>&<?= $queryParams ?>"
                                     onclick="return confirm('Are you sure you want to delete this customer?')" 
                                     class="btn-delete">Delete</a>
                                 </td>
@@ -147,10 +186,37 @@ include 'adminHeader.php';
 
                 <!-- Table Footer -->
                 <div class="table-footer">
-                    <p>Showing <?= count($customers) ?> of <?= $totalCustomers ?> results</p>
+                    <p>Showing <?= $startNum ?> to <?= $endNum ?> of <?= $totalCustomers ?> results</p>
                     <div class="pagination">
-                        <button>&lt;</button>
-                        <button>&gt;</button>
+                        <?php 
+                        // 用于构建分页链接的基础查询参数（排除 'page'）
+                        $baseQueryParams = http_build_query([
+                            'search' => $search,
+                            'status' => $status,
+                            'sort'   => $sortBy,
+                            'role'   => $roleFilter,
+                        ]);
+                        ?>
+                        
+                        <a href="?page=<?= max(1, $page - 1) ?>&<?= $baseQueryParams ?>" 
+                            class="pagination-btn <?= $page <= 1 ? 'disabled' : '' ?>">
+                            &lt;
+                        </a>
+
+                        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                            <?php
+                            $editParam = $selectedCustomer ? '&edit=' . $selectedCustomer->user_id : '';
+                            ?>
+                            <a href="?page=<?= $i ?>&<?= $baseQueryParams ?><?= $editParam ?>"
+                                class="pagination-btn <?= $i == $page ? 'active' : '' ?>">
+                                <?= $i ?>
+                            </a>
+                        <?php endfor; ?>
+
+                        <a href="?page=<?= min($totalPages, $page + 1) ?>&<?= $baseQueryParams ?>" 
+                            class="pagination-btn <?= $page >= $totalPages ? 'disabled' : '' ?>">
+                            &gt;
+                        </a>
                     </div>
                 </div>
             </div>
@@ -170,15 +236,11 @@ include 'adminHeader.php';
                     <div class="avatar">
                         <?php 
                         $profilePic = getUserProfilePicture($selectedCustomer->user_id);
-                        // 确保路径正确
-                        if (empty($profilePic) || $profilePic == '/') {
-                            $profilePic = '/images/profile/default_profile_picture.webp';
-                        }
                         ?>
-                        <img src="../../<?= htmlspecialchars($profilePic) ?>"
-                        alt="Profile" 
-                        style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;"
-                        onerror="this.onerror=null; this.src='../../images/profile/default_profile_picture.webp';">
+                        <img src="<?= htmlspecialchars($profilePic) ?>"
+                            alt="Profile"
+                            style="width:100%;height:100%;object-fit:cover;border-radius:50%;"
+                            onerror="this.onerror=null;this.src='<?= $pathPrefix ?>/images/profile/default_profile_picture.webp';">
                         <label for="profile_image" class="avatar-upload-icon">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
                                 <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
@@ -189,6 +251,13 @@ include 'adminHeader.php';
                     </div>
                     <p>JPG, GIF, PNG or WEBP. 1MB max.</p>
                 </div>
+
+                <!-- User ID - Read Only -->
+                <label>User ID<span style="color: #94a3b8; font-size: 12px;">(Optional - Auto-generates 
+                    <span id="modalPrefixHint" style="font-weight: bold;">M</span>### if empty)
+                </span></label>
+                <input type="text" value="<?= htmlspecialchars($selectedCustomer->user_id) ?>" readonly 
+                    style="background: #0f172a; color: #94a3b8; cursor: not-allowed;">
 
                 <label>Full Name</label>
                 <input type="text" name="user_name" value="<?= htmlspecialchars($selectedCustomer->user_name) ?>" required>
@@ -217,7 +286,7 @@ include 'adminHeader.php';
                 </select>
 
                 <div class="edit-panel-buttons">
-                    <a href="adminCustomer.php" class="cancel">Cancel</a>
+                    <a href="adminCustomer.php?<?= $queryParams ?>" class="cancel">Cancel</a>
                     <button type="submit" class="save">Save Changes</button>
                 </div>
             </form>
@@ -234,6 +303,17 @@ include 'adminHeader.php';
         <h3>Add New Customer</h3>
         
         <form method="POST" action="?action=create" enctype="multipart/form-data">
+
+        <!-- User ID Input - Optional, will auto-generate if empty -->
+            <label>User ID <span style="color: #94a3b8; font-size: 12px;">(Optional - Auto-generates M### if empty)</span></label>
+            <input type="text" name="custom_user_id" placeholder="Leave empty for auto-generation (or enter any unique ID)">
+                   
+            <label>User Role</label>
+            <select name="user_role" id="modalUserRole" onchange="updateUserIdHint()">
+                <option value="Member">Member</option>
+                <option value="Admin">Admin</option>
+            </select>
+
             <label>Full Name</label>
             <input type="text" name="user_name" required>
 
@@ -262,14 +342,29 @@ include 'adminHeader.php';
 
             <div class="edit-panel-buttons">
                 <button type="button" class="cancel" onclick="closeAddModal()">Cancel</button>
-                <button type="submit" class="save">Add Customer</button>
+                <button type="submit" class="save">Add User</button>
             </div>
         </form>
     </div>
 </div>
 
 <script>
+function updateUserIdHint() {
+    const roleSelect = document.getElementById('modalUserRole');
+    const prefixHint = document.getElementById('modalPrefixHint');
+    if (roleSelect && prefixHint) {
+        const selectedRole = roleSelect.value;
+        prefixHint.textContent = (selectedRole === 'Admin') ? 'A' : 'M';
+    }
+}
+
 function showAddModal() {
+    // 确保每次打开时角色选择器和提示都重置为 Member (默认)
+    const roleSelect = document.getElementById('modalUserRole');
+    if (roleSelect) {
+        roleSelect.value = 'Member';
+        updateUserIdHint();
+    }
     document.getElementById('addCustomerModal').style.display = 'flex';
 }
 
@@ -283,6 +378,7 @@ window.onclick = function(event) {
         modal.style.display = 'none';
     }
 }
+document.addEventListener('DOMContentLoaded', updateUserIdHint);
 </script>
 
 <?php include 'adminFooter.php'; ?>
