@@ -2,14 +2,6 @@ $(document).ready(function () {
   var productId = $("#productId").val();
   let newFiles = []; // Array for newly selected files
 
-  // Function to update input element with newFiles
-  function updateInputFiles() {
-    const dataTransfer = new DataTransfer();
-    newFiles.forEach((file) => dataTransfer.items.add(file));
-    $("#newImagesInput")[0].files = dataTransfer.files;
-    console.log("Current new_images[] files:", $("#newImagesInput")[0].files);
-  }
-
   // Handle new files selection
   $("#newImagesInput").on("change", function (e) {
     const files = Array.from(this.files);
@@ -78,3 +70,10 @@ $(document).ready(function () {
     );
   });
 });
+// Function to update input element with newFiles
+function updateInputFiles() {
+  const dataTransfer = new DataTransfer();
+  newFiles.forEach((file) => dataTransfer.items.add(file));
+  $("#newImagesInput")[0].files = dataTransfer.files;
+  console.log("Current new_images[] files:", $("#newImagesInput")[0].files);
+}

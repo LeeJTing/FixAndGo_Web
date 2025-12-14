@@ -1,4 +1,12 @@
 $(document).ready(function () {
+  $("select[name='status']").on("change", function () {
+    if ($(this).val() === "inactive") {
+      $("select[name='category_id']").val(5);
+    } else {
+      $("select[name='category_id']").val("");
+    }
+  });
+
   let existingProductNames = [];
   $.getJSON(
     "../../controller/admin-controller.php?function=getProductName",
@@ -16,6 +24,14 @@ $(document).ready(function () {
     const form = this;
     let productNameValue = $("input[name=product_name]").val().trim();
     let isValidProductName = true;
+    let status = $("select[name=status]").val();
+    let price = parseFloat($("input[name=price]").val()) || 0;
+    let point = parseFloat($("input[name=point]").val()) || 0;
+    let stock = parseInt($("input[name=stock]").val(), 10) || 0;
+    let lowStock = parseInt($("input[name=lowstock]").val(), 10) || 0;
+
+    // Step 4: Check if product image exists
+    let mainImgSrc = $("#mainImg").attr("src");
 
     if (existingProductNames.includes(productNameValue.toLowerCase())) {
       showError(
@@ -33,9 +49,30 @@ $(document).ready(function () {
     if (!isValidProductName) {
       return;
     }
-
-    let status = $("select[name=status]").val();
-    if (status === "active") {
+    if (
+      mainImgSrc.includes("dark_image.jpg") ||
+      mainImgSrc.includes("no-image.jpg")
+    ) {
+      // Only show warning if user tried to set status as active
+      if (status === "active") {
+        showConfirm(
+          "No product image uploaded. The status of the product will be set to Inactive. Continue?",
+          function (result) {
+            if (result) {
+              // User clicked Yes - force inactive and submit
+              $("select[name='status']").val("inactive");
+              $("select[name='category_id']").val(5);
+              form.submit();
+            } else {
+              // User clicked No - focus on file input
+              document.querySelector('input[name="product_images"]').focus();
+            }
+          }
+        );
+      } else {
+        form.submit();
+      }
+    } else {
       let isValid = true;
 
       isValid =
@@ -78,37 +115,21 @@ $(document).ready(function () {
       if (!isValid) {
         return; // Stop here if validation fails
       }
-    }
-
-    // Step 4: Check if product image exists
-    let mainImgSrc = $("#mainImg").attr("src");
-
-    if (
-      mainImgSrc.includes("dark_image.jpg") ||
-      mainImgSrc.includes("no-image.jpg")
-    ) {
-      // Only show warning if user tried to set status as active
-      if (status === "active") {
-        showConfirm(
-          "No product image uploaded. The status of the product will be set to Inactive. Continue?",
-          function (result) {
-            if (result) {
-              // User clicked Yes - force inactive and submit
-              $("select[name='status']").val("inactive");
-              form.submit();
-            } else {
-              // User clicked No - focus on file input
-              document.querySelector('input[name="product_images"]').focus();
-            }
-          }
+      if (point > price) {
+        showError(
+          $("input[name=point]"),
+          "The Product Point cannot be greater than Product Price."
         );
-      } else {
-        window.location.href =
-          "../controller/admin-controller.php?function=createTemporary";
-        // Status is already inactive, just submit
-        //form.submit();
+        return false; // stop further processing
       }
-    } else {
+      if (lowStock > stock) {
+        showError(
+          $("input[name=lowstock]"),
+          "The Low Stock Handling Value cannot greater than stock quantity."
+        );
+        return false; // stop further processing
+      }
+
       // Image exists, submit normally
       form.submit();
     }

@@ -31,11 +31,11 @@ function getCurrentUser()
 {
     global $_db;
     $userId = get_session_id();
-    
+
     if ($userId === 'Guest') {
         return null;
     }
-    
+
     try {
         $stmt = $_db->prepare("SELECT u.*, up.gender, up.contact_num 
                                FROM users u 
@@ -193,7 +193,7 @@ function getUserProfilePicture($userId)
 
         if ($result && isset($result->file_path) && !empty($result->file_path)) {
             $filePath = $result->file_path;
-            
+
             // 1. Make sure it starts with /
             if (substr($filePath, 0, 1) !== '/') {
                 $filePath = '/' . $filePath;
@@ -202,11 +202,11 @@ function getUserProfilePicture($userId)
             // 2. Intelligent splicing prefix
             // If a prefix (XAMPP) is currently needed and there is no prefix in the path, add it
             if ($pathPrefix && strpos($filePath, $pathPrefix) !== 0) {
-                 return $pathPrefix . $filePath;
+                return $pathPrefix . $filePath;
             }
             // If the prefix (:8000) is not needed at present, but there is a prefix in the path, remove it
             else if (!$pathPrefix && strpos($filePath, '/FixAndGo_Web') === 0) {
-                 return str_replace('/FixAndGo_Web', '', $filePath);
+                return str_replace('/FixAndGo_Web', '', $filePath);
             }
 
             return $filePath;
