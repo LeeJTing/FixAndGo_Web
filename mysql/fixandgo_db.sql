@@ -569,23 +569,143 @@ ADD COLUMN `low_stock_threshold` INT(11) DEFAULT 10;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */
 ;
 
-INSERT INTO `users` (`user_id`, `user_name`, `user_role`, `email`, `hash_password`, `account_status`) VALUES
-('A001', 'Daniel Brooks', 'Admin', 'daniel.brooks@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
-('A0011', 'HELLO', 'Admin', 'benjamin11.hayes@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
-('A002', 'Emma Collins', 'Admin', 'emma.collins@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
-('A003', 'Michael Scott', 'Admin', 'michael.scott@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
-('A004', 'Chloe Adams', 'Admin', 'chloe.adams@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
-('A005', 'Henry Watson', 'Admin', 'henry.watson@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
-('M001', 'Evelyn Carter', 'Member', 'evelyn.carter@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
-('M002', 'Liam Johnson', 'Member', 'liam.johnson@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
-('M003', 'Olivia Bennett', 'Member', 'olivia.bennett@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
-('M004', 'Noah Williams', 'Member', 'noah.williams@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
-('M005', 'Ava Mitchell', 'Member', 'ava.mitchell@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
-('M006', 'Mason Rivera', 'Member', 'mason.rivera@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
-('M007', 'Sophia Turner', 'Member', 'sophia.turner@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
-('M008', 'James Parker', 'Member', 'james.parker@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
-('M009', 'Isabella Flores', 'Member', 'isabella.flores@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
-('M010', 'Benjamin Hayes', 'Member', 'benjamin.hayes@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified');
+INSERT INTO
+    `users` (
+        `user_id`,
+        `user_name`,
+        `user_role`,
+        `email`,
+        `hash_password`,
+        `account_status`
+    )
+VALUES (
+        'A001',
+        'Daniel Brooks',
+        'Admin',
+        'daniel.brooks@example.com',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
+        'Verified'
+    ),
+    (
+        'A0011',
+        'HELLO',
+        'Admin',
+        'benjamin11.hayes@example.com',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
+        'Verified'
+    ),
+    (
+        'A002',
+        'Emma Collins',
+        'Admin',
+        'emma.collins@example.com',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
+        'Verified'
+    ),
+    (
+        'A003',
+        'Michael Scott',
+        'Admin',
+        'michael.scott@example.com',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
+        'Verified'
+    ),
+    (
+        'A004',
+        'Chloe Adams',
+        'Admin',
+        'chloe.adams@example.com',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
+        'Verified'
+    ),
+    (
+        'A005',
+        'Henry Watson',
+        'Admin',
+        'henry.watson@example.com',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
+        'Verified'
+    ),
+    (
+        'M001',
+        'Evelyn Carter',
+        'Member',
+        'evelyn.carter@example.com',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
+        'Verified'
+    ),
+    (
+        'M002',
+        'Liam Johnson',
+        'Member',
+        'liam.johnson@example.com',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
+        'Verified'
+    ),
+    (
+        'M003',
+        'Olivia Bennett',
+        'Member',
+        'olivia.bennett@example.com',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
+        'Verified'
+    ),
+    (
+        'M004',
+        'Noah Williams',
+        'Member',
+        'noah.williams@example.com',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
+        'Verified'
+    ),
+    (
+        'M005',
+        'Ava Mitchell',
+        'Member',
+        'ava.mitchell@example.com',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
+        'Verified'
+    ),
+    (
+        'M006',
+        'Mason Rivera',
+        'Member',
+        'mason.rivera@example.com',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
+        'Verified'
+    ),
+    (
+        'M007',
+        'Sophia Turner',
+        'Member',
+        'sophia.turner@example.com',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
+        'Verified'
+    ),
+    (
+        'M008',
+        'James Parker',
+        'Member',
+        'james.parker@example.com',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
+        'Verified'
+    ),
+    (
+        'M009',
+        'Isabella Flores',
+        'Member',
+        'isabella.flores@example.com',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
+        'Verified'
+    ),
+    (
+        'M010',
+        'Benjamin Hayes',
+        'Member',
+        'benjamin.hayes@example.com',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
+        'Verified'
+    );
 
 INSERT INTO
     `cart` (cart_id, user_id)
@@ -1014,19 +1134,41 @@ INSERT INTO
 ALTER TABLE category
 ADD COLUMN img_path VARCHAR(255) AFTER category_name;
 
-<<<<<<< HEAD
-INSERT INTO category (category_name, description, img_path) VALUES
-('No Category', 'Products without a specific category assigned', 'images/no-category.png'),
-('Storage', 'Storage solutions, tool boxes, shelves and trolleys','images/storage.png'),
-('Stationery', 'Browse the widest range of stationery and office supplies all in one place! You will find everything from double sided tape and colored pencils, to filing folders and sticky notes. If you want the best deals available, you're sure to find them here – highlighters, staplers, highlighters – we have it all.','images/stationary.png'),
-('Automotive', 'We here at Mr DIY know that spending time and money on your car is an important investment. That is why we have a range of automotive goods and car accessories in our store to make sure you are getting the best out of your ride! Whether it be car mats, sun shades, car covers, car polishes or even the newest tech gadgets, our website has everything you need to get more from your vehicle.','images/automotive.png'),
-('Power & Hand Tools', 'Cordless screwdrivers, drills, saws, chisels, hammers and measuring tapes','images/hardware_tools.png')
-ON DUPLICATE KEY UPDATE 
+INSERT INTO
+    category (
+        category_name,
+        description,
+        img_path
+    )
+VALUES (
+        'No Category',
+        'Products without a specific category assigned',
+        'images/no-category.png'
+    ),
+    (
+        'Storage',
+        'Storage solutions, tool boxes, shelves and trolleys',
+        'images/storage.png'
+    ),
+    (
+        'Stationery',
+        'Browse the widest range of stationery and office supplies all in one place! You will find everything from double sided tape and colored pencils, to filing folders and sticky notes. If you want the best deals available, you are sure to find them here – highlighters, staplers, highlighters – we have it all.',
+        'images/stationary.png'
+    ),
+    (
+        'Automotive',
+        'We here at Mr DIY know that spending time and money on your car is an important investment. That is why we have a range of automotive goods and car accessories in our store to make sure you are getting the best out of your ride! Whether it be car mats, sun shades, car covers, car polishes or even the newest tech gadgets, our website has everything you need to get more from your vehicle.',
+        'images/automotive.png'
+    ),
+    (
+        'Power & Hand Tools',
+        'Cordless screwdrivers, drills, saws, chisels, hammers and measuring tapes',
+        'images/hardware_tools.png'
+    )
+ON DUPLICATE KEY UPDATE
     description = VALUES(description),
     img_path = VALUES(img_path);
 
-
-=======
 INSERT INTO
     category (
         category_name,
@@ -1055,4 +1197,3 @@ VALUES (
     )
 ON DUPLICATE KEY UPDATE
     description = VALUES(description);
->>>>>>> 119145a78fc61823b23e293187eb274fbf3d0618
