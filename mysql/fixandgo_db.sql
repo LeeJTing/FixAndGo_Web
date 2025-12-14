@@ -576,7 +576,6 @@ INSERT INTO `users` (`user_id`, `user_name`, `user_role`, `email`, `hash_passwor
 ('A003', 'Michael Scott', 'Admin', 'michael.scott@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
 ('A004', 'Chloe Adams', 'Admin', 'chloe.adams@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
 ('A005', 'Henry Watson', 'Admin', 'henry.watson@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
-('M000123', 'TAN AH LEE', 'Member', 'lee.asjdiwq@gmail.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Unverified'),
 ('M001', 'Evelyn Carter', 'Member', 'evelyn.carter@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
 ('M002', 'Liam Johnson', 'Member', 'liam.johnson@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
 ('M003', 'Olivia Bennett', 'Member', 'olivia.bennett@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
@@ -586,8 +585,7 @@ INSERT INTO `users` (`user_id`, `user_name`, `user_role`, `email`, `hash_passwor
 ('M007', 'Sophia Turner', 'Member', 'sophia.turner@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
 ('M008', 'James Parker', 'Member', 'james.parker@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
 ('M009', 'Isabella Flores', 'Member', 'isabella.flores@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
-('M010', 'Benjamin Hayes', 'Member', 'benjamin.hayes@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified'),
-('USER1', 'IDONTK', 'Member', 'm12123@gmail.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Unverified');
+('M010', 'Benjamin Hayes', 'Member', 'benjamin.hayes@example.com', 'a172ffc990129fe6f68b50f6037c54a1894ee3fd', 'Verified');
 
 INSERT INTO
     `cart` (cart_id, user_id)
