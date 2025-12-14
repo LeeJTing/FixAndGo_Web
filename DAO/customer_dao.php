@@ -116,19 +116,29 @@ class CustomerDAO {
         try {
             $_db->beginTransaction();
             
-            // 更新 users 表
-            $query = "UPDATE users 
-                      SET user_name = ?, email = ?, account_status = ?
-                      WHERE user_id = ?";
-            $stmt = $_db->prepare($query);
-            $stmt->execute([
+            // 1. 构建动态 SQL 查询
+            $query = "UPDATE users SET user_name = ?, email = ?, account_status = ?";
+            $params = [
                 $data['user_name'],
                 $data['email'],
-                $data['account_status'],
-                $id
-            ]);
+                $data['account_status']
+            ];
+
+            // ✅ 核心逻辑：只有当密码不为空时，才更新密码字段
+            if (!empty($data['password'])) {
+                $query .= ", hash_password = ?";
+                // 必须进行哈希加密
+                $params[] = password_hash($data['password'], PASSWORD_DEFAULT);
+            }
+
+            $query .= " WHERE user_id = ?";
+            $params[] = $id;
+
+            // 执行 users 表更新
+            $stmt = $_db->prepare($query);
+            $stmt->execute($params);
             
-            // 更新或插入 userprofile
+            // 2. 更新或插入 userprofile (这部分保持不变)
             $stmt = $_db->prepare("SELECT user_id FROM userprofile WHERE user_id = ?");
             $stmt->execute([$id]);
             
@@ -146,6 +156,7 @@ class CustomerDAO {
             return true;
         } catch (Exception $e) {
             $_db->rollBack();
+            error_log("Update Error: " . $e->getMessage()); // 建议加上错误日志
             return false;
         }
     }

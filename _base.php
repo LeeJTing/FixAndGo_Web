@@ -8,6 +8,8 @@ session_start();
 // ============================================================================
 $rootDir = 'http://' . $_SERVER['HTTP_HOST'];
 
+$pathPrefix = (strpos($_SERVER['SCRIPT_NAME'], '/FixAndGo_Web') === 0) ? '/FixAndGo_Web' : '';
+
 // ============================================================================
 // General Page Functions
 // ============================================================================
@@ -15,20 +17,36 @@ $rootDir = 'http://' . $_SERVER['HTTP_HOST'];
 // hashing password
 function hash_password($password)
 {
-    // Hash the password
-    $options = [
-        'memory_cost' => 1 << 17,   // 131072 KB
-        'time_cost'   => 4,       // number of iterations
-        'threads'     => 2        // parallel threads
-    ];
-
-    return password_hash($password, PASSWORD_ARGON2ID, $options);
+    return sha1($password);
 }
 
 // Get session user ID
 function get_session_id()
 {
-    return !$_SESSION['USER_ID'] ? 'Guest' : $_SESSION['USER_ID'];
+    return isset($_SESSION['USER_ID']) && !empty($_SESSION['USER_ID']) ? $_SESSION['USER_ID'] : 'Guest';
+}
+
+// Get current logged in user info
+function getCurrentUser()
+{
+    global $_db;
+    $userId = get_session_id();
+    
+    if ($userId === 'Guest') {
+        return null;
+    }
+    
+    try {
+        $stmt = $_db->prepare("SELECT u.*, up.gender, up.contact_num 
+                               FROM users u 
+                               LEFT JOIN userprofile up ON u.user_id = up.user_id 
+                               WHERE u.user_id = ?");
+        $stmt->execute([$userId]);
+        return $stmt->fetch();
+    } catch (Exception $e) {
+        error_log("Error fetching current user: " . $e->getMessage());
+        return null;
+    }
 }
 
 // Is GET request?
@@ -159,7 +177,10 @@ function is_exists($value, $table, $field)
 function getUserProfilePicture($userId)
 {
     global $_db;
-    $defaultPath = "/FixAndGo_Web/images/profile/default_profile_picture.webp";
+    global $pathPrefix; // 【key】Introduce the defined global variable
+
+    // Modify the default path using a variable
+    $defaultPath = $pathPrefix . "/images/profile/default_profile_picture.webp";
 
     if (!$userId) {
         return $defaultPath;
@@ -170,17 +191,27 @@ function getUserProfilePicture($userId)
         $stmt->execute([$userId]);
         $result = $stmt->fetch();
 
-        // Check if there is a result and file_path is not empty
         if ($result && isset($result->file_path) && !empty($result->file_path)) {
-            // Make sure the path begins with /
             $filePath = $result->file_path;
+            
+            // 1. Make sure it starts with /
             if (substr($filePath, 0, 1) !== '/') {
                 $filePath = '/' . $filePath;
             }
+
+            // 2. Intelligent splicing prefix
+            // If a prefix (XAMPP) is currently needed and there is no prefix in the path, add it
+            if ($pathPrefix && strpos($filePath, $pathPrefix) !== 0) {
+                 return $pathPrefix . $filePath;
+            }
+            // If the prefix (:8000) is not needed at present, but there is a prefix in the path, remove it
+            else if (!$pathPrefix && strpos($filePath, '/FixAndGo_Web') === 0) {
+                 return str_replace('/FixAndGo_Web', '', $filePath);
+            }
+
             return $filePath;
         }
     } catch (Exception $e) {
-        // If the query fails, return the default avatar
         error_log("Profile picture error for user $userId: " . $e->getMessage());
     }
 

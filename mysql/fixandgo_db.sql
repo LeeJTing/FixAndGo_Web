@@ -570,22 +570,68 @@ ADD COLUMN `low_stock_threshold` INT(11) DEFAULT 10;
 ;
 
 INSERT INTO
-    users (
-        user_id,
-        user_name,
-        user_role,
-        email,
-        hash_password,
-        account_status
+    `users` (
+        `user_id`,
+        `user_name`,
+        `user_role`,
+        `email`,
+        `hash_password`,
+        `account_status`
     )
-VALUES
-    -- 10 Members
+VALUES (
+        'A001',
+        'Daniel Brooks',
+        'Admin',
+        'daniel.brooks@example.com',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
+        'Verified'
+    ),
+    (
+        'A0011',
+        'HELLO',
+        'Admin',
+        'benjamin11.hayes@example.com',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
+        'Verified'
+    ),
+    (
+        'A002',
+        'Emma Collins',
+        'Admin',
+        'emma.collins@example.com',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
+        'Verified'
+    ),
+    (
+        'A003',
+        'Michael Scott',
+        'Admin',
+        'michael.scott@example.com',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
+        'Verified'
+    ),
+    (
+        'A004',
+        'Chloe Adams',
+        'Admin',
+        'chloe.adams@example.com',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
+        'Verified'
+    ),
+    (
+        'A005',
+        'Henry Watson',
+        'Admin',
+        'henry.watson@example.com',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
+        'Verified'
+    ),
     (
         'M001',
         'Evelyn Carter',
         'Member',
         'evelyn.carter@example.com',
-        'password123',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
         'Verified'
     ),
     (
@@ -593,7 +639,7 @@ VALUES
         'Liam Johnson',
         'Member',
         'liam.johnson@example.com',
-        'password123',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
         'Verified'
     ),
     (
@@ -601,7 +647,7 @@ VALUES
         'Olivia Bennett',
         'Member',
         'olivia.bennett@example.com',
-        'password123',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
         'Verified'
     ),
     (
@@ -609,7 +655,7 @@ VALUES
         'Noah Williams',
         'Member',
         'noah.williams@example.com',
-        'password123',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
         'Verified'
     ),
     (
@@ -617,7 +663,7 @@ VALUES
         'Ava Mitchell',
         'Member',
         'ava.mitchell@example.com',
-        'password123',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
         'Verified'
     ),
     (
@@ -625,7 +671,7 @@ VALUES
         'Mason Rivera',
         'Member',
         'mason.rivera@example.com',
-        'password123',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
         'Verified'
     ),
     (
@@ -633,7 +679,7 @@ VALUES
         'Sophia Turner',
         'Member',
         'sophia.turner@example.com',
-        'password123',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
         'Verified'
     ),
     (
@@ -641,7 +687,7 @@ VALUES
         'James Parker',
         'Member',
         'james.parker@example.com',
-        'password123',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
         'Verified'
     ),
     (
@@ -649,7 +695,7 @@ VALUES
         'Isabella Flores',
         'Member',
         'isabella.flores@example.com',
-        'password123',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
         'Verified'
     ),
     (
@@ -657,51 +703,9 @@ VALUES
         'Benjamin Hayes',
         'Member',
         'benjamin.hayes@example.com',
-        'password123',
+        'a172ffc990129fe6f68b50f6037c54a1894ee3fd',
         'Verified'
-    ),
-
--- 5 Admins
-(
-    'A001',
-    'Daniel Brooks',
-    'Admin',
-    'daniel.brooks@example.com',
-    'admin123',
-    'Verified'
-),
-(
-    'A002',
-    'Emma Collins',
-    'Admin',
-    'emma.collins@example.com',
-    'admin123',
-    'Verified'
-),
-(
-    'A003',
-    'Michael Scott',
-    'Admin',
-    'michael.scott@example.com',
-    'admin123',
-    'Verified'
-),
-(
-    'A004',
-    'Chloe Adams',
-    'Admin',
-    'chloe.adams@example.com',
-    'admin123',
-    'Verified'
-),
-(
-    'A005',
-    'Henry Watson',
-    'Admin',
-    'henry.watson@example.com',
-    'admin123',
-    'Verified'
-);
+    );
 
 INSERT INTO
     `cart` (cart_id, user_id)
@@ -1156,4 +1160,6 @@ VALUES (
         'Cordless screwdrivers, drills. saws. chisels hammers and measuring tapes',
         'images/hardware_tools.png'
     ),
-('Uncategorized', 'Products that have not been assigned to a specific category', 'images/no-image.jpg')
+    ('Uncategorized', 'Products that have not been assigned to a specific category', 'images/no-image.png')
+ON DUPLICATE KEY UPDATE
+    description = VALUES(description);
