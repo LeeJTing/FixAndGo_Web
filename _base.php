@@ -15,14 +15,7 @@ $rootDir = 'http://' . $_SERVER['HTTP_HOST'];
 // hashing password
 function hash_password($password)
 {
-    // Hash the password
-    $options = [
-        'memory_cost' => 1 << 17,   // 131072 KB
-        'time_cost'   => 4,       // number of iterations
-        'threads'     => 2        // parallel threads
-    ];
-
-    return password_hash($password, PASSWORD_ARGON2ID, $options);
+    return sha1($password);
 }
 
 // Get session user ID

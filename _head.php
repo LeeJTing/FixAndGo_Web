@@ -106,7 +106,7 @@ temp('USER_ID', "M001");
         <!-- Sliding Cart Sidebar -->
         <?php
         require_once __DIR__ . '/DAO/cart_dao.php';
-        $user_id = $_SESSION['USER_ID'] ?? null;
+        $user_id = temp("USER_ID") ?? null;
         if (!$user_id) {
             if (!isset($_SESSION['guest_session_id'])) {
                 $_SESSION['guest_session_id'] = 'guest_' . session_id();
