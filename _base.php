@@ -124,7 +124,7 @@ function temp($key, $value = null)
         $_SESSION["temp_$key"] = $value;
     } else {
         $value = $_SESSION["temp_$key"] ?? null;
-        // unset($_SESSION["temp_$key"]);
+        //unset($_SESSION["temp_$key"]);
         return $value;
     }
 }

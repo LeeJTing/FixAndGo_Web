@@ -20,17 +20,17 @@ $userProfilePic = $currentUser->user_id ? getUserProfilePicture($currentUser->us
 
     <ul class="menu">
         <li><a href="adminDashboard.php" class="<?= basename($_SERVER['PHP_SELF']) == 'adminDashboard.php' ? 'active' : '' ?>">Dashboard</a></li>
-        <li><a href="adminOrder.php" class="<?= basename($_SERVER['PHP_SELF']) == 'adminOrder.php' ? 'active' : '' ?>">Orders</a></li>
-        <li><a href="admin-add-product.php" class="<?= basename($_SERVER['PHP_SELF']) == 'admin-add-product.php' ? 'active' : '' ?>">Products</a></li>
+        <li><a href="admin-order.php" class="<?= basename($_SERVER['PHP_SELF']) == 'admin-order.php' ? 'active' : '' ?>">Orders</a></li>
+        <li><a href="admin-product.php" class="<?= basename($_SERVER['PHP_SELF']) == 'admin-product.php' ? 'active' : '' ?>">Products</a></li>
         <li><a href="adminCustomer.php" class="<?= basename($_SERVER['PHP_SELF']) == 'adminCustomer.php' ? 'active' : '' ?>">Customer</a></li>
         <li><a href="analytics.php" class="<?= basename($_SERVER['PHP_SELF']) == 'analytics.php' ? 'active' : '' ?>">Analytics</a></li>
     </ul>
 
     <div class="sidebar-footer">
-        <img src="<?= htmlspecialchars($userProfilePic) ?>" 
-            class="avatar" 
+        <img src="<?= htmlspecialchars($userProfilePic) ?>"
+            class="avatar"
             alt="<?= htmlspecialchars($currentUser->user_name) ?>"
-            width="45" height="45"  style="width: 45px; height: 45px; object-fit: cover;" 
+            width="45" height="45" style="width: 45px; height: 45px; object-fit: cover;"
             onerror="this.src='<?= $pathPrefix ?>/images/profile/default_profile_picture.webp'">
         <p class="admin-name">
             <?= htmlspecialchars($currentUser->user_name) ?><br>
