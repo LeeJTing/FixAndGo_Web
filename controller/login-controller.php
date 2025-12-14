@@ -22,7 +22,7 @@ if (is_post()) {
             $success = true;
             
             temp('USER_ID', $user->user_id);
-            temp('USER_NAME', $user->name);
+            temp('USER_NAME', $user->user_name);
             temp('USER_ROLE', $user->user_role);
             temp('EMAIL', $user->email);
             temp('ACCOUNT_STATUS', $user->account_status);
@@ -43,7 +43,7 @@ if (is_post()) {
             $success = true;
 
             temp('USER_ID', $user->user_id);
-            temp('USER_NAME', $user->name);
+            temp('USER_NAME', $user->user_name);
             temp('USER_ROLE', $user->user_role);
             temp('EMAIL', $user->email);
             temp('ACCOUNT_STATUS', $user->account_status);

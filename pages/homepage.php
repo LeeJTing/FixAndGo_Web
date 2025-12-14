@@ -1,8 +1,8 @@
   <?php
     $controllerPath = __DIR__ . '/../controller/guest-controller.php';
     require $controllerPath;
-    $category = getAllCategoryDAO();
-    $product = getProductListDao();
+    $category = getGuestAllCategory();
+    $product = getGuestAllProduct();
     if (basename($_SERVER['PHP_SELF']) != "memberHomepage.php") {
         $path = "../../";
     } else {
@@ -55,9 +55,6 @@
                 ?>
                   <article class="product-card">
                       <div class="product-image">
-                          <button class="favorite-btn" aria-label="Add to wishlist" title="Add to wishlist">
-                              <i class="fa-regular fa-heart"></i>
-                          </button>
                           <img src="<?= $path ?><?= $item->file_path ?>"
                               alt="<?= $item->alt_text ?>"
                               class="product-img">
@@ -82,10 +79,3 @@
               <?php endforeach; ?>
           </div>
   </section>
-
-
-  <script>
-      $(document).on("click", ".favorite-btn", function() {
-          $(this).find("i").toggleClass("changeColor");
-      });
-  </script>
