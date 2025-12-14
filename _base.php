@@ -177,9 +177,9 @@ function is_exists($value, $table, $field)
 function getUserProfilePicture($userId)
 {
     global $_db;
-    global $pathPrefix; // 【关键】引入刚才定义的全局变量
+    global $pathPrefix; // 【key】Introduce the defined global variable
 
-    // 修改默认路径，使用变量
+    // Modify the default path using a variable
     $defaultPath = $pathPrefix . "/images/profile/default_profile_picture.webp";
 
     if (!$userId) {
@@ -194,23 +194,17 @@ function getUserProfilePicture($userId)
         if ($result && isset($result->file_path) && !empty($result->file_path)) {
             $filePath = $result->file_path;
             
-            // 如果数据库存的是完整路径（包含 FixAndGo_Web），在 :8000 环境下需要去掉它
-            // 如果数据库存的是相对路径（images/...），我们需要加上 $pathPrefix
-            
-            // 假设数据库存的是 "/images/profile/xxx.jpg" 或 "images/profile/xxx.jpg"
-            // 我们统一处理：
-            
-            // 1. 确保开头有 /
+            // 1. Make sure it starts with /
             if (substr($filePath, 0, 1) !== '/') {
                 $filePath = '/' . $filePath;
             }
 
-            // 2. 智能拼接前缀
-            // 如果当前需要前缀(XAMPP)，且路径里没有前缀，就加上
+            // 2. Intelligent splicing prefix
+            // If a prefix (XAMPP) is currently needed and there is no prefix in the path, add it
             if ($pathPrefix && strpos($filePath, $pathPrefix) !== 0) {
                  return $pathPrefix . $filePath;
             }
-            // 如果当前不需要前缀(:8000)，但路径里有前缀，就去掉
+            // If the prefix (:8000) is not needed at present, but there is a prefix in the path, remove it
             else if (!$pathPrefix && strpos($filePath, '/FixAndGo_Web') === 0) {
                  return str_replace('/FixAndGo_Web', '', $filePath);
             }
