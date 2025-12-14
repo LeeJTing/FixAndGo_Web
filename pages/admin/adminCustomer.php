@@ -184,15 +184,11 @@ include 'adminHeader.php';
                     <div class="avatar">
                         <?php 
                         $profilePic = getUserProfilePicture($selectedCustomer->user_id);
-                        // 确保路径正确
-                        if (empty($profilePic) || $profilePic == '/') {
-                            $profilePic = '/images/profile/default_profile_picture.webp';
-                        }
                         ?>
-                        <img src="../../<?= htmlspecialchars($profilePic) ?>"
-                        alt="Profile" 
-                        style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;"
-                        onerror="this.onerror=null; this.src='../../images/profile/default_profile_picture.webp';">
+                        <img src="<?= htmlspecialchars($profilePic) ?>"
+                            alt="Profile"
+                            style="width:100%;height:100%;object-fit:cover;border-radius:50%;"
+                            onerror="this.onerror=null;this.src='<?= $pathPrefix ?>/images/profile/default_profile_picture.webp';">
                         <label for="profile_image" class="avatar-upload-icon">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
                                 <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
