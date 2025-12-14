@@ -225,8 +225,8 @@
 
 .avatar-upload-icon {
     position: absolute;
-    bottom: 0;
-    right: 0;
+    bottom: -5px;
+    right: -5px;
     width: 32px;
     height: 32px;
     background: #3b82f6;
@@ -236,6 +236,11 @@
     justify-content: center;
     cursor: pointer;
     border: 3px solid #0f172a;
+}
+
+.avatar-upload-icon svg {
+    /* 使用 transform 向上移动 1 像素，修正视觉上的偏低 */
+    transform: translateY(5px); 
 }
 
 .avatar-upload-icon:hover {

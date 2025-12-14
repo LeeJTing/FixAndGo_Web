@@ -198,6 +198,9 @@ include 'adminHeader.php';
 
                 <label>Phone Number</label>
                 <input type="text" name="contact_num" value="<?= htmlspecialchars($selectedCustomer->contact_num ?? '') ?>">
+                    
+                <label>New Password</label>
+                <input type="password" name="password" placeholder="Leave empty to keep current password">
 
                 <label>Gender</label>
                 <select name="gender">
