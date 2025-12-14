@@ -22,7 +22,7 @@ $userProfilePic = $currentUser->user_id ? getUserProfilePicture($currentUser->us
         <li><a href="adminDashboard.php" class="<?= basename($_SERVER['PHP_SELF']) == 'adminDashboard.php' ? 'active' : '' ?>">Dashboard</a></li>
         <li><a href="adminOrder.php" class="<?= basename($_SERVER['PHP_SELF']) == 'adminOrder.php' ? 'active' : '' ?>">Orders</a></li>
         <li><a href="admin-add-product.php" class="<?= basename($_SERVER['PHP_SELF']) == 'admin-add-product.php' ? 'active' : '' ?>">Products</a></li>
-        <li><a href="adminCustomer.php" class="<?= basename($_SERVER['PHP_SELF']) == 'adminCustomer.php' ? 'active' : '' ?>">Customer</a></li>
+        <li><a href="adminCustomer.php" class="<?= basename($_SERVER['PHP_SELF']) == 'adminCustomer.php' ? 'active' : '' ?>">User</a></li>
         <li><a href="analytics.php" class="<?= basename($_SERVER['PHP_SELF']) == 'analytics.php' ? 'active' : '' ?>">Analytics</a></li>
     </ul>
 

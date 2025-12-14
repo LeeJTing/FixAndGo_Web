@@ -67,17 +67,35 @@ class CustomerDAO {
             $_db->beginTransaction();
             
             // 生成新的 user_id
-            $prefix = $data['user_role'] == 'Admin' ? 'A' : 'M';
-            $stmt = $_db->prepare("SELECT MAX(CAST(SUBSTRING(user_id, 2) AS UNSIGNED)) as max_id 
-                                   FROM users WHERE user_id LIKE ?");
-            $stmt->execute([$prefix . '%']);
-            $result = $stmt->fetch();
-            $nextNum = ($result->max_id ?? 0) + 1;
-            $userId = $prefix . str_pad($nextNum, 3, '0', STR_PAD_LEFT);
+            if (!empty($data['custom_user_id'])) {
+                // 使用自定义 User ID
+                $userId = strtoupper(trim($data['custom_user_id']));
+                
+                // 验证格式：必须以 M 或 A 开头，后跟数字
+                if (!preg_match('/^[MA][0-9]{3,}$/', $userId)) {
+                    throw new Exception("Invalid User ID format. Must start with M or A followed by numbers.");
+                }
+                
+                // 检查 User ID 是否已存在
+                $stmt = $_db->prepare("SELECT COUNT(*) FROM users WHERE user_id = ?");
+                $stmt->execute([$userId]);
+                if ($stmt->fetchColumn() > 0) {
+                    throw new Exception("User ID already exists. Please choose a different ID.");
+                }
+            } else {
+                // 自动生成 User ID
+                $prefix = $data['user_role'] == 'Admin' ? 'A' : 'M';
+                $stmt = $_db->prepare("SELECT MAX(CAST(SUBSTRING(user_id, 2) AS UNSIGNED)) as max_id 
+                                    FROM users WHERE user_id LIKE ?");
+                $stmt->execute([$prefix . '%']);
+                $result = $stmt->fetch();
+                $nextNum = ($result->max_id ?? 0) + 1;
+                $userId = $prefix . str_pad($nextNum, 3, '0', STR_PAD_LEFT);
+            }
             
             // 插入 users 表
             $query = "INSERT INTO users (user_id, user_name, user_role, email, hash_password, account_status) 
-                      VALUES (?, ?, ?, ?, ?, ?)";
+                    VALUES (?, ?, ?, ?, ?, ?)";
             $stmt = $_db->prepare($query);
             $hashedPassword = password_hash($data['password'], PASSWORD_DEFAULT);
             $stmt->execute([
@@ -105,6 +123,7 @@ class CustomerDAO {
             return true;
         } catch (Exception $e) {
             $_db->rollBack();
+            error_log("Create Customer Error: " . $e->getMessage());
             return false;
         }
     }

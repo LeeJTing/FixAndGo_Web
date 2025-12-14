@@ -38,6 +38,8 @@
     left: 20px;
     right: 20px;
     color: #cbd5e1;
+    display: flex;
+    align-items: center; /* 垂直居中对齐 */
 }
 
 .sidebar-footer .avatar {

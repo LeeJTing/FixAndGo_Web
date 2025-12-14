@@ -23,9 +23,18 @@ $search = get('search');
 $status = get('status', 'All');
 $sortBy = get('sort', 'user_id');
 
+$roleFilter = get('role', 'Member');
+
+$queryParams = http_build_query([
+    'search' => $search,
+    'status' => $status,
+    'sort'   => $sortBy,
+    'role'   => $roleFilter
+]);
+
 // 获取用户列表（只显示 Members）
-$customers = CustomerDAO::getAllCustomers($search, $status, $sortBy, 'Member');
-$totalCustomers = CustomerDAO::getTotalCount($search, $status, 'Member');
+$customers = CustomerDAO::getAllCustomers($search, $status, $sortBy, $roleFilter);
+$totalCustomers = CustomerDAO::getTotalCount($search, $status, $roleFilter);
 
 // 获取选中的用户（用于编辑面板）
 $selectedCustomer = null;
@@ -53,10 +62,10 @@ include 'adminHeader.php';
     
     <div class="customers-header">
         <div>
-            <h1>Customers</h1>
-            <p>Manage customer accounts, view purchase history, and handle support.</p>
+            <h1>Users Management</h1>
+            <p>Manage all user accounts (Members and Admins).</p>
             <button class="add-btn" onclick="showAddModal()">
-                <span>＋</span> Add Customer
+                <span>＋</span> Add User
             </button>
         </div>
     </div>
@@ -74,6 +83,11 @@ include 'adminHeader.php';
                     <input type="text" name="search" placeholder="Search by name, email, or ID..." 
                            value="<?= htmlspecialchars($search) ?>">
                 </div>
+
+                <select name="role" class="filter-select" onchange="this.form.submit()">
+                    <option value="Member" <?= $roleFilter == 'Member' ? 'selected' : '' ?>>Role: Member</option>
+                    <option value="Admin" <?= $roleFilter == 'Admin' ? 'selected' : '' ?>>Role: Admin</option>
+                </select>
 
                 <select name="status" class="filter-select" onchange="this.form.submit()">
                     <option value="All" <?= $status == 'All' ? 'selected' : '' ?>>Status: All</option>
@@ -114,7 +128,7 @@ include 'adminHeader.php';
                         <?php else: ?>
                             <?php foreach ($customers as $customer): ?>
                             <tr class="<?= ($selectedCustomer && $selectedCustomer->user_id == $customer->user_id) ? 'selected' : '' ?>" 
-                                onclick="window.location.href='?edit=<?= $customer->user_id ?>'" 
+                                onclick="window.location.href='?edit=<?= $customer->user_id ?>&<?= $queryParams ?>'"
                                 style="cursor: pointer;">
                                 <td><?= htmlspecialchars($customer->user_id) ?></td>
                                 <td class="<?= ($selectedCustomer && $selectedCustomer->user_id == $customer->user_id) ? 'highlight' : '' ?>">
@@ -134,8 +148,8 @@ include 'adminHeader.php';
                                     </span>
                                 </td>
                                 <td onclick="event.stopPropagation();">
-                                    <a href="?edit=<?= $customer->user_id ?>" class="btn-edit">Edit</a>
-                                    <a href="?action=delete&id=<?= $customer->user_id ?>" 
+                                    <a href="?edit=<?= $customer->user_id ?>&<?= $queryParams ?>" class="btn-edit">Edit</a>
+                                    <a href="?action=delete&id=<?= $customer->user_id ?>&<?= $queryParams ?>"
                                     onclick="return confirm('Are you sure you want to delete this customer?')" 
                                     class="btn-delete">Delete</a>
                                 </td>
@@ -190,6 +204,11 @@ include 'adminHeader.php';
                     <p>JPG, GIF, PNG or WEBP. 1MB max.</p>
                 </div>
 
+                <!-- User ID - Read Only -->
+                <label>User ID</label>
+                <input type="text" value="<?= htmlspecialchars($selectedCustomer->user_id) ?>" readonly 
+                    style="background: #0f172a; color: #94a3b8; cursor: not-allowed;">
+
                 <label>Full Name</label>
                 <input type="text" name="user_name" value="<?= htmlspecialchars($selectedCustomer->user_name) ?>" required>
 
@@ -217,7 +236,7 @@ include 'adminHeader.php';
                 </select>
 
                 <div class="edit-panel-buttons">
-                    <a href="adminCustomer.php" class="cancel">Cancel</a>
+                    <a href="adminCustomer.php?<?= $queryParams ?>" class="cancel">Cancel</a>
                     <button type="submit" class="save">Save Changes</button>
                 </div>
             </form>
@@ -234,6 +253,18 @@ include 'adminHeader.php';
         <h3>Add New Customer</h3>
         
         <form method="POST" action="?action=create" enctype="multipart/form-data">
+
+        <!-- User ID Input - Optional, will auto-generate if empty -->
+            <label>User ID <span style="color: #94a3b8; font-size: 12px;">(Optional - Auto-generates M### if empty)</span></label>
+            <input type="text" name="custom_user_id" placeholder="e.g., M100 or leave empty for auto-generation" 
+                   pattern="[MA][0-9]{3,}" title="Must start with M or A followed by numbers">
+                   
+            <label>User Role</label>
+            <select name="user_role" id="modalUserRole" onchange="updateUserIdHint()">
+                <option value="Member">Member</option>
+                <option value="Admin">Admin</option>
+            </select>
+
             <label>Full Name</label>
             <input type="text" name="user_name" required>
 
@@ -269,7 +300,22 @@ include 'adminHeader.php';
 </div>
 
 <script>
+function updateUserIdHint() {
+    const roleSelect = document.getElementById('modalUserRole');
+    const prefixHint = document.getElementById('modalPrefixHint');
+    if (roleSelect && prefixHint) {
+        const selectedRole = roleSelect.value;
+        prefixHint.textContent = (selectedRole === 'Admin') ? 'A' : 'M';
+    }
+}
+
 function showAddModal() {
+    // 确保每次打开时角色选择器和提示都重置为 Member (默认)
+    const roleSelect = document.getElementById('modalUserRole');
+    if (roleSelect) {
+        roleSelect.value = 'Member';
+        updateUserIdHint();
+    }
     document.getElementById('addCustomerModal').style.display = 'flex';
 }
 
@@ -283,6 +329,7 @@ window.onclick = function(event) {
         modal.style.display = 'none';
     }
 }
+document.addEventListener('DOMContentLoaded', updateUserIdHint);
 </script>
 
 <?php include 'adminFooter.php'; ?>
