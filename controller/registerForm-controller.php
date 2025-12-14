@@ -46,6 +46,7 @@ if(is_post()){
         temp('USER_ROLE', 'Member');
         temp('USER_NAME', $userName);
         temp('USER_EMAIL', $email);
+        temp('ACCOUNT_STATUS', 'Unverified');
 
         redirect(homePageURL());
     }
