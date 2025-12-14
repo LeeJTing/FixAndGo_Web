@@ -22,7 +22,7 @@ $response = ['success' => false, 'message' => ''];
 // Ensure we return JSON even if something later emits a warning
 try {
     // Only allow logged-in users to add addresses
-    $user_id = $_SESSION['USER_ID'] ?? null;
+    $user_id = temp('USER_ID') ?? null;
     if (!$user_id) {
         $response['message'] = 'You must be logged in to add addresses';
         ob_end_clean();

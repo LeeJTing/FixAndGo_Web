@@ -65,3 +65,22 @@ function getCartByUserId($user_id)
     $stmt->execute([$user_id]);
     return $stmt->fetch();
 }
+function getCheckedCartItems($cart_id)
+{
+    global $_db;
+    $stmt = $_db->prepare("
+        SELECT ci.*, p.product_name, p.unit_price, p.stock_quantity
+        FROM cartitem ci
+        JOIN product p ON ci.product_id = p.product_id
+        WHERE ci.cart_id = ? AND ci.is_check = 1
+    ");
+    $stmt->execute([$cart_id]);
+    return $stmt->fetchAll(PDO::FETCH_OBJ);
+}
+
+function clearCheckedCartItems($cart_id)
+{
+    global $_db;
+    $stmt = $_db->prepare("DELETE FROM cartitem WHERE cart_id = ? AND is_check = 1");
+    return $stmt->execute([$cart_id]);
+}

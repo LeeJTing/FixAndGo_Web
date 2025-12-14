@@ -50,7 +50,7 @@ function updateAddress($address_id, $address_one, $address_two, $address_three, 
 function getAddressCountByUserId($user_id)
 {
 global $_db;
-$stmt=$stmt=$_db->prepare("SELECT COUNT(*) FROM address WHERE user_id = ?");
+$stmt=$_db->prepare("SELECT COUNT(*) FROM address WHERE user_id = ?");
 $stmt->execute([$user_id]);
 return (int) $stmt->fetchColumn();
 }

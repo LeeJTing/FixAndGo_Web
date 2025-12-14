@@ -1,6 +1,7 @@
 (function ($) {
   function recalcHeaderCart() {
     // Recalculate total only for items checked (is_check)
+    // But count should show total number of items regardless of is_check
     let total = 0;
     let count = 0;
     $("#cartItems .cart-item").each(function () {
@@ -8,9 +9,13 @@
       const checked = $it.find(".is-check-checkbox").is(":checked");
       const qty = parseInt($it.find(".product-quantity-display").text()) || 0;
       const price = parseFloat($it.data("price")) || 0;
+      
+      // Count all items (for cart count badge)
+      count += 1;
+      
+      // Total only includes checked items (for checkout total)
       if (checked) {
         total += qty * price;
-        count += 1;
       }
     });
     $("#cartTotalPrice").text("RM " + total.toFixed(2));
@@ -38,6 +43,12 @@
     $(document).on("click", "#cartItems .qty-btn", function (e) {
       e.preventDefault();
       const $btn = $(this);
+      
+      // Prevent action if button is disabled
+      if ($btn.hasClass("disabled")) {
+        return false;
+      }
+      
       const $item = $btn.closest(".cart-item");
       const itemId = $item.data("item-id");
       let qty = parseInt($item.find(".product-quantity-display").text()) || 0;
@@ -54,6 +65,15 @@
             $item.find(".product-quantity-display").text(qty);
             const price = parseFloat($item.data("price")) || 0;
             $item.find(".product-total").text((price * qty).toFixed(2));
+            
+            // Update disabled state for minus button
+            const $minusBtn = $item.find(".qty-btn.minus");
+            if (qty <= 1) {
+              $minusBtn.addClass("disabled");
+            } else {
+              $minusBtn.removeClass("disabled");
+            }
+            
             recalcHeaderCart();
           } else {
             alert("Error: " + (resp.error || "Failed to update quantity"));
