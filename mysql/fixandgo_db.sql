@@ -902,6 +902,75 @@ VALUES (
         'Malaysia'
     );
 
+    INSERT INTO address (
+    address_id,
+    user_id,
+    address_name,
+    address_one,
+    address_two,
+    address_three,
+    state,
+    post_code,
+    country
+)
+VALUES
+(
+    16,
+    'M001',
+    'Home',
+    '12 Jalan Meranti',
+    'Taman Bukit Indah',
+    NULL,
+    'Selangor',
+    '40100',
+    'Malaysia'
+),
+(
+    17,
+    'M001',
+    'Office',
+    'Level 5, Menara Sentral',
+    'Jalan Tun Razak',
+    NULL,
+    'Kuala Lumpur',
+    '50400',
+    'Malaysia'
+),
+(
+    18,
+    'M002',
+    'Home',
+    '8 Jalan Kenanga',
+    'Taman Melawati',
+    NULL,
+    'Kuala Lumpur',
+    '53100',
+    'Malaysia'
+),
+(
+    19,
+    'M003',
+    'Home',
+    '22 Jalan Indah 3',
+    'Taman Sri Gombak',
+    NULL,
+    'Selangor',
+    '68100',
+    'Malaysia'
+),
+(
+    20,
+    'M004',
+    'Shipping Address',
+    'No 15, Lorong Batu Nilam',
+    'Bukit Tinggi',
+    NULL,
+    'Selangor',
+    '41200',
+    'Malaysia'
+);
+
+
 INSERT INTO
     userdevices (
         mac_address,

@@ -31,7 +31,7 @@ $total_quantity = array_sum(array_map(fn($i) => $i->qty, $items));
         <!-- HEADER -->
         <div class="order-header">
             <div>
-                <p class="order-id">Order #<?= htmlspecialchars($order->order_id) ?></p>
+                <p class="order-id">Order ID: <?= htmlspecialchars($order->order_id) ?></p>
                 <p class="order-date">
                     <?= date('d M Y', strtotime($order->order_at)) ?><br>
                     <small><?= date('h:i A', strtotime($order->order_at)) ?></small>
@@ -80,10 +80,9 @@ $total_quantity = array_sum(array_map(fn($i) => $i->qty, $items));
 
         <!-- FOOTER -->
         <div class="order-footer">
-            <a href="order-detail.php?id=<?= $order->order_id ?>" class="btn-view">
-                View Details
+            <a href="member-order-history.php" class="btn-view">
+                Back to Order History
             </a>
-            <button class="btn-reorder">Reorder</button>
         </div>
 
     </div>

@@ -39,6 +39,50 @@
   --shadow-btn-primary: 0 10px 30px rgba(245, 158, 11, 0.4);
 }
 
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0.8rem;
+  margin-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+}
+.pagination-info {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+.pagination-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+.page-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid #cbd5e1;
+  background: white;
+  color: #334155;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+.page-btn:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+.page-btn.active {
+  background: var(
+    --primary-color,
+    #000a2e
+  ); /* Fallback color if variable missing */
+  color: white;
+  border-color: var(--primary-color, #000a2e);
+}
+.page-btn.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  background: #f8fafc;
+}
+
 .admin-container {
   max-width: 1400px;
   margin: 2rem auto;
@@ -229,3 +273,4 @@
     color: var(--color-text-muted);
   }
 }
+

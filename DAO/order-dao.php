@@ -116,13 +116,14 @@ function getAllOrdersAdmin()
     }
 }
 
-function getOrderById($id)
+function getOrderByIdDao($id)
 {
     global $_db;
 
     try {
         $sql = "SELECT 
                     o.order_id,
+                    o.user_id,
                     o.order_at,
                     u.user_name,
                     u.email,
@@ -142,7 +143,7 @@ function getOrderById($id)
         $stmt = $_db->prepare($sql);
         $stmt->execute([$id]);
 
-        return $stmt->fetchAll(PDO::FETCH_OBJ); // Changed to fetchAll
+        return $stmt->fetch(PDO::FETCH_OBJ); // Changed to fetchAll
     } catch (PDOException $e) {
         error_log("Get All Orders Admin Error: " . $e->getMessage());
         return [];
@@ -218,7 +219,91 @@ function getOrderWithSelectedAddress(int $orderId)
 
     return $stmt->fetch(PDO::FETCH_OBJ);
 }
+function getMemberAddressDao($user_id, $order_id = null)
+{
+    global $_db;
 
+    // Base query: Select all addresses for this user
+    $sql = "SELECT a.* FROM address a 
+            WHERE a.user_id = ?";
+
+    $params = [$user_id];
+
+    if ($order_id) {
+        $sql .= " AND a.address_id NOT IN (
+                    SELECT address_id FROM orders WHERE order_id = ?
+                  )";
+        $params[] = $order_id;
+    }
+
+    $stmt = $_db->prepare($sql);
+    $stmt->execute($params);
+
+    return $stmt->fetchAll(PDO::FETCH_OBJ);
+}
+
+function updateOrderAddress($order_id, $new_address_id)
+{
+    global $_db;
+
+    // Optional: Update 'updated_at' timestamp if you have that column
+    $sql = "UPDATE orders 
+            SET address_id = ? 
+            WHERE order_id = ?";
+
+    $stmt = $_db->prepare($sql);
+
+    // Returns true on success, false on failure
+    return $stmt->execute([$new_address_id, $order_id]);
+}
+
+function updateOrderDate($order_id, $estimated_date)
+{
+    global $_db;
+
+    try {
+        $sql = "UPDATE orders 
+                SET order_at = ? 
+                WHERE order_id = ?";
+
+        $stmt = $_db->prepare($sql);
+
+        // Returns true on success, false on failure
+        return $stmt->execute([$estimated_date, $order_id]);
+    } catch (PDOException $e) {
+        // Log the error for debugging (optional)
+        error_log("Failed to update order date for order_id {$order_id}: " . $e->getMessage());
+
+        // Return false to indicate failure
+        return false;
+    }
+}
+
+
+function deleteOrder($order_id)
+{
+    global $_db;
+
+    try {
+        $_db->beginTransaction(); // Start a transaction
+
+        // 1. First, delete items linked to this order
+        $sqlItems = "DELETE FROM order_items WHERE order_id = ?";
+        $stmtItems = $_db->prepare($sqlItems);
+        $stmtItems->execute([$order_id]);
+
+        // 2. Then, delete the order itself
+        $sqlOrder = "DELETE FROM orders WHERE order_id = ?";
+        $stmtOrder = $_db->prepare($sqlOrder);
+        $stmtOrder->execute([$order_id]);
+
+        $_db->commit(); // Save changes
+        return true;
+    } catch (Exception $e) {
+        $_db->rollBack(); // Undo if something goes wrong
+        return false;
+    }
+}
 
 function getMemberOrderHistory($user_id)
 {
@@ -251,7 +336,8 @@ function getMemberOrderHistory($user_id)
     }
 }
 
-function createPaymentPendingDao($order_id, $payment_method) {
+function createPaymentPendingDao($order_id, $payment_method)
+{
     global $_db;
     // payment_method enum in DB: Cash / Credit Card / Debit Card / Bank Transfer / PayPal  (from your SQL)
     // We'll map your UI values into DB values
@@ -269,7 +355,8 @@ function createPaymentPendingDao($order_id, $payment_method) {
     return $stmt->execute([$order_id, $pm]);
 }
 
-function getOrderDetailsForUserDao($order_id, $user_id) {
+function getOrderDetailsForUserDao($order_id, $user_id)
+{
     global $_db;
     $stmt = $_db->prepare("
         SELECT o.*, p.payment_method, p.paid_at,
@@ -284,37 +371,42 @@ function getOrderDetailsForUserDao($order_id, $user_id) {
     return $stmt->fetch(PDO::FETCH_OBJ);
 }
 
-function markOrderPaidDao($order_id, $user_id) {
+function markOrderPaidDao($order_id, $user_id)
+{
     global $_db;
     $stmt = $_db->prepare("UPDATE orders SET payment_status='Paid', status='Processing' WHERE order_id=? AND user_id=?");
     return $stmt->execute([$order_id, $user_id]);
 }
 
-function markPaymentPaidDao($order_id) {
+function markPaymentPaidDao($order_id)
+{
     global $_db;
     $stmt = $_db->prepare("UPDATE payment SET paid_at = NOW() WHERE order_id = ?");
     return $stmt->execute([$order_id]);
 }
-function saveStripeSessionIdDao($order_id, $stripe_session_id) {
-  global $_db;
-  $stmt = $_db->prepare("UPDATE payment SET stripe_session_id=? WHERE order_id=?");
-  return $stmt->execute([$stripe_session_id, $order_id]);
+function saveStripeSessionIdDao($order_id, $stripe_session_id)
+{
+    global $_db;
+    $stmt = $_db->prepare("UPDATE payment SET stripe_session_id=? WHERE order_id=?");
+    return $stmt->execute([$stripe_session_id, $order_id]);
 }
 
-function saveStripePaymentIntentIdDao($order_id, $pi) {
-  global $_db;
-  $stmt = $_db->prepare("UPDATE payment SET stripe_payment_intent_id=? WHERE order_id=?");
-  return $stmt->execute([$pi, $order_id]);
+function saveStripePaymentIntentIdDao($order_id, $pi)
+{
+    global $_db;
+    $stmt = $_db->prepare("UPDATE payment SET stripe_payment_intent_id=? WHERE order_id=?");
+    return $stmt->execute([$pi, $order_id]);
 }
 
-function paymentExistsForOrderDao($order_id) {
-  global $_db;
-  $stmt = $_db->prepare("SELECT 1 FROM payment WHERE order_id=? LIMIT 1");
-  $stmt->execute([$order_id]);
-  return (bool)$stmt->fetchColumn();
+function paymentExistsForOrderDao($order_id)
+{
+    global $_db;
+    $stmt = $_db->prepare("SELECT 1 FROM payment WHERE order_id=? LIMIT 1");
+    $stmt->execute([$order_id]);
+    return (bool)$stmt->fetchColumn();
 }
 
-function createOrderDao($user_id, $address_id, $total_price, $payment_status='Pending', $status='Pending', $utilize_point=0)
+function createOrderDao($user_id, $address_id, $total_price, $payment_status = 'Pending', $status = 'Pending', $utilize_point = 0)
 {
     global $_db;
     $stmt = $_db->prepare("

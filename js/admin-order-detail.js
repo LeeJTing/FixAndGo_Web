@@ -1,75 +1,74 @@
 $(document).ready(function () {
-  // Handle status update form submission
-  $("#statusUpdateForm").on("submit", function (e) {
-    e.preventDefault();
+  // Edit button click
+  $(".btn-text-edit").on("click", function () {
+    const userId = $(this).data("user-id"); // Use data attribute
+    const orderId = $(this).data("order-id"); // Use data attribute
+    $("#form_order_id").val(orderId);
 
-    const formData = {
-      order_id: $('input[name="order_id"]').val(),
-      order_status: $("#order_status").val(),
-      payment_status: $("#payment_status").val(),
-    };
+    // Show modal
+    $("#address-form-overlay").fadeIn(200).css("display", "flex");
+    $("body").css("overflow", "hidden");
 
-    // Show loading state
-    const $btn = $(".btn-update");
-    const originalText = $btn.html();
-    $btn
-      .html('<i class="fas fa-spinner fa-spin"></i> Updating...')
-      .prop("disabled", true);
-
+    // AJAX call to fetch addresses
     $.ajax({
-      url: "../../controller/admin-controller.php?function=updateOrderStatus",
-      type: "POST",
-      data: formData,
+      url: "../../controller/order-controller.php",
+      type: "GET",
+      data: {
+        action: "getAddress",
+        user_id: userId,
+        order_id: orderId,
+      },
       dataType: "json",
       success: function (response) {
-        if (response.status === "success") {
-          showNotification("Order status updated successfully!", "success");
+        const container = $("#address-list-container");
+        container.empty(); // Clear previous content
 
-          // Update status badges on the page
-          setTimeout(function () {
-            location.reload();
-          }, 1500);
-        } else {
-          showNotification(
-            response.message || "Failed to update order status",
-            "error"
-          );
-          $btn.html(originalText).prop("disabled", false);
+        if (response.addresses && response.addresses.length > 0) {
+          response.addresses.forEach((addr) => {
+            const addrTwo = addr.address_two ? addr.address_two + "<br>" : "";
+            const addrThree = addr.address_three
+              ? addr.address_three + "<br>"
+              : "";
+
+            const html = `
+                            <label class="address-option">
+                                <input type="radio" name="address" value="${addr.address_id}">
+                                <div class="address-details">
+                                    <strong>${addr.address_name}</strong><br>
+                                    ${addr.address_one}<br>
+                                    ${addrTwo}
+                                    ${addrThree}
+                                    ${addr.post_code}, ${addr.state}<br>
+                                    ${addr.country}
+                                </div>
+                            </label>
+                        `;
+            container.append(html);
+          });
         }
       },
-      error: function (xhr, status, error) {
-        console.error("AJAX Error:", error);
-        showNotification(
-          "Failed to update order status. Please try again.",
-          "error"
+      error: function () {
+        $("#address-list-container").html(
+          '<p style="color:red; text-align:center;">Failed to load addresses</p>'
         );
-        $btn.html(originalText).prop("disabled", false);
       },
     });
   });
 
-  // Show notification function
-  function showNotification(message, type) {
-    const notification = $("<div>")
-      .addClass("notification")
-      .addClass(
-        type === "success" ? "notification-success" : "notification-error"
-      )
-      .html(
-        `
-        <i class="fas fa-${
-          type === "success" ? "check-circle" : "exclamation-circle"
-        }"></i>
-        <span>${message}</span>
-      `
-      )
-      .appendTo("body")
-      .fadeIn(300);
+  // Cancel button
+  $(".btn-cancel").on("click", function () {
+    hideAddressForm();
+  });
 
-    setTimeout(function () {
-      notification.fadeOut(300, function () {
-        $(this).remove();
-      });
-    }, 3000);
+  // Clicking outside modal closes it
+  $("#address-form-overlay").on("click", function (event) {
+    if (event.target.id === "address-form-overlay") {
+      hideAddressForm();
+    }
+  });
+
+  function hideAddressForm() {
+    $("#address-form-overlay").fadeOut(200);
+    $("body").css("overflow", "auto");
   }
 });

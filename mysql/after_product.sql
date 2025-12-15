@@ -4,11 +4,11 @@
 
 -- 1. ORDERS (6 completed orders from different customers)
 INSERT INTO `orders` (`order_id`, `user_id`, `order_at`, `payment_status`, `status`, `total_price`, `utilize_point`, `address_id`) VALUES
-(1, 'M001', '2025-10-15 08:22:10', 'Paid', 'Delivered', 289.70, 0, 1),
-(2, 'M002', '2025-10-20 14:35:45', 'Paid', 'Delivered', 179.80, 1, 2),
-(3, 'M004', '2025-11-01 11:10:22', 'Paid', 'Delivered', 499.70, 0, 4),
-(4, 'M007', '2025-11-05 19:45:30', 'Paid', 'Shipping', 119.80, 0, 7),
-(5, 'M009', '2025-11-12 09:18:55', 'Paid', 'Processing', 349.80, 1, 9),
+(1, 'M001', '2025-10-15 08:22:10', 'Paid', 'Delivered', 399.70, 0, 1),
+(2, 'M002', '2025-10-20 14:35:45', 'Paid', 'Delivered', 285.70, 1, 2),
+(3, 'M004', '2025-11-01 11:10:22', 'Paid', 'Delivered', 689.70, 0, 4),
+(4, 'M007', '2025-11-05 19:45:30', 'Paid', 'Shipping', 149.80, 0, 7),
+(5, 'M009', '2025-11-12 09:18:55', 'Paid', 'Processing', 469.80, 1, 9),
 (6, 'M010', '2025-11-18 16:27:13', 'Paid', 'Delivered', 89.90, 0, 10);
 
 -- 2. ORDER ITEMS (what they actually bought)
@@ -42,10 +42,10 @@ INSERT INTO `orderitem` (`order_id`, `product_id`, `qty`, `unit_price`) VALUES
 -- 3. PAYMENTS (all paid successfully)
 INSERT INTO `payment` (`payment_id`, `order_id`, `payment_method`, `paid_at`) VALUES
 (1, 1, 'Credit Card', '2025-10-15 08:25:00'),
-(2, 2, 'Bank Transfer', '2025-10-20 14:40:12'),
+(2, 2, 'Loyalty Points', '2025-10-20 14:40:12'),
 (3, 3, 'Credit Card', '2025-11-01 11:15:30'),
 (4, 4, 'Cash', '2025-11-05 19:50:00'),
-(5, 5, 'Debit Card', '2025-11-12 09:22:10'),
+(5, 5, 'Loyalty Points', '2025-11-12 09:22:10'),
 (6, 6, 'Credit Card', '2025-11-18 16:30:05');
 
 -- 4. CURRENT CART ITEMS (what people still have in cart — not yet ordered)

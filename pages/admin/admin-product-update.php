@@ -61,6 +61,10 @@ $images = getSpecificProductImage($id) ?? null;
                         <label>Low Stock Number</label>
                         <input type="number" name="low_stock" value="<?= $product->low_stock_threshold ?? 0 ?>">
                     </div>
+                    <div class="form-group">
+                        <label>Sold Number</label>
+                        <input type="number"  value="<?= $product->sold_number ?? 0 ?>"disabled>
+                    </div>
                 </div>
 
                 <!-- Right Column -->

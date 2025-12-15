@@ -2,7 +2,25 @@
 require '../../_base.php';
 require '../../controller/order-controller.php';
 include 'adminHeader.php';
-$orders = getOrderHistoryAdmin();
+$all_orders = getOrderHistoryAdmin();
+
+// 2. Pagination Configuration
+$limit = 3; // Number of items per page
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+if ($page < 1) $page = 1;
+
+// 3. Calculate Total Pages
+$total_records = count($all_orders);
+$total_pages = ceil($total_records / $limit);
+
+// Ensure page doesn't exceed total pages
+if ($page > $total_pages && $total_pages > 0) {
+    $page = $total_pages;
+}
+
+// 4. Slice the array to get only items for the current page
+$offset = ($page - 1) * $limit;
+$orders = array_slice($all_orders, $offset, $limit);
 ?>
 <link rel="stylesheet" href="../../css/admin-order.css">
 
@@ -14,7 +32,6 @@ $orders = getOrderHistoryAdmin();
             <p>View and manage all customer orders</p>
         </div>
 
-        <!-- Orders Table -->
         <table class="orders-table">
             <thead>
                 <tr>
@@ -89,12 +106,52 @@ $orders = getOrderHistoryAdmin();
                 <?php else: ?>
                     <tr>
                         <td colspan="9" style="text-align: center; padding: 3rem; color: var(--color-text-muted);">
-                            <strong>No orders found or data format error</strong>
+                            <strong>No orders found</strong>
                         </td>
                     </tr>
                 <?php endif; ?>
             </tbody>
         </table>
+
+        <?php if ($total_pages > 1): ?>
+            <div class="pagination-container">
+                <div class="pagination-info">
+                    Showing <strong><?= $offset + 1 ?></strong> to <strong><?= min($offset + $limit, $total_records) ?></strong> of <strong><?= $total_records ?></strong> orders
+                </div>
+
+                <div class="pagination-controls">
+                    <a href="?page=<?= $page - 1 ?>" class="page-btn <?= ($page <= 1) ? 'disabled' : '' ?>">
+                        &laquo; Prev
+                    </a>
+
+                    <?php
+                    $start = max(1, $page - 2);
+                    $end = min($total_pages, $page + 2);
+
+                    if ($start > 1) {
+                        echo '<a href="?page=1" class="page-btn">1</a>';
+                        if ($start > 2) echo '<span style="padding:0.5rem">...</span>';
+                    }
+
+                    for ($i = $start; $i <= $end; $i++): ?>
+                        <a href="?page=<?= $i ?>" class="page-btn <?= ($i == $page) ? 'active' : '' ?>">
+                            <?= $i ?>
+                        </a>
+                    <?php endfor;
+
+                    if ($end < $total_pages) {
+                        if ($end < $total_pages - 1) echo '<span style="padding:0.5rem">...</span>';
+                        echo '<a href="?page=' . $total_pages . '" class="page-btn">' . $total_pages . '</a>';
+                    }
+                    ?>
+
+                    <a href="?page=<?= $page + 1 ?>" class="page-btn <?= ($page >= $total_pages) ? 'disabled' : '' ?>">
+                        Next &raquo;
+                    </a>
+                </div>
+            </div>
+        <?php endif; ?>
+
     </div>
 
     <script>
