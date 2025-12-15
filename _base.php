@@ -30,7 +30,7 @@ function get_session_id()
 function getCurrentUser()
 {
     global $_db;
-    $userId = get_session_id();
+    $userId = temp('USER_ID');
 
     if ($userId === 'Guest') {
         return null;

@@ -250,3 +250,133 @@ function getMemberOrderHistory($user_id)
         return false;
     }
 }
+
+function createPaymentPendingDao($order_id, $payment_method) {
+    global $_db;
+    // payment_method enum in DB: Cash / Credit Card / Debit Card / Bank Transfer / PayPal  (from your SQL)
+    // We'll map your UI values into DB values
+    $map = [
+        'Cash' => 'Cash',
+        'Credit/Debit Card' => 'Credit Card',
+        'Online Banking' => 'Bank Transfer',
+    ];
+    $pm = $map[$payment_method] ?? 'Cash';
+
+    $stmt = $_db->prepare("
+        INSERT INTO payment (order_id, payment_method, paid_at)
+        VALUES (?, ?, NULL)
+    ");
+    return $stmt->execute([$order_id, $pm]);
+}
+
+function getOrderDetailsForUserDao($order_id, $user_id) {
+    global $_db;
+    $stmt = $_db->prepare("
+        SELECT o.*, p.payment_method, p.paid_at,
+               a.address_name, a.address_one, a.address_two, a.address_three, a.state, a.post_code, a.country
+        FROM orders o
+        LEFT JOIN payment p ON o.order_id = p.order_id
+        LEFT JOIN address a ON o.address_id = a.address_id
+        WHERE o.order_id = ? AND o.user_id = ?
+        LIMIT 1
+    ");
+    $stmt->execute([$order_id, $user_id]);
+    return $stmt->fetch(PDO::FETCH_OBJ);
+}
+
+function markOrderPaidDao($order_id, $user_id) {
+    global $_db;
+    $stmt = $_db->prepare("UPDATE orders SET payment_status='Paid', status='Processing' WHERE order_id=? AND user_id=?");
+    return $stmt->execute([$order_id, $user_id]);
+}
+
+function markPaymentPaidDao($order_id) {
+    global $_db;
+    $stmt = $_db->prepare("UPDATE payment SET paid_at = NOW() WHERE order_id = ?");
+    return $stmt->execute([$order_id]);
+}
+function saveStripeSessionIdDao($order_id, $stripe_session_id) {
+  global $_db;
+  $stmt = $_db->prepare("UPDATE payment SET stripe_session_id=? WHERE order_id=?");
+  return $stmt->execute([$stripe_session_id, $order_id]);
+}
+
+function saveStripePaymentIntentIdDao($order_id, $pi) {
+  global $_db;
+  $stmt = $_db->prepare("UPDATE payment SET stripe_payment_intent_id=? WHERE order_id=?");
+  return $stmt->execute([$pi, $order_id]);
+}
+
+function paymentExistsForOrderDao($order_id) {
+  global $_db;
+  $stmt = $_db->prepare("SELECT 1 FROM payment WHERE order_id=? LIMIT 1");
+  $stmt->execute([$order_id]);
+  return (bool)$stmt->fetchColumn();
+}
+
+function createOrderDao($user_id, $address_id, $total_price, $payment_status='Pending', $status='Pending', $utilize_point=0)
+{
+    global $_db;
+    $stmt = $_db->prepare("
+        INSERT INTO orders (user_id, payment_status, status, total_price, utilize_point, address_id)
+        VALUES (?, ?, ?, ?, ?, ?)
+    ");
+    $stmt->execute([$user_id, $payment_status, $status, $total_price, $utilize_point, $address_id]);
+    return (int)$_db->lastInsertId();
+}
+
+function addOrderItemDao($order_id, $product_id, $qty, $unit_price)
+{
+    global $_db;
+    $stmt = $_db->prepare("
+        INSERT INTO orderitem (order_id, product_id, qty, unit_price)
+        VALUES (?, ?, ?, ?)
+    ");
+    return $stmt->execute([$order_id, $product_id, $qty, $unit_price]);
+}
+
+function getOrderByIdAndUserDao($order_id, $user_id)
+{
+    global $_db;
+    $stmt = $_db->prepare("SELECT * FROM orders WHERE order_id=? AND user_id=? LIMIT 1");
+    $stmt->execute([$order_id, $user_id]);
+    return $stmt->fetch(PDO::FETCH_OBJ);
+}
+
+function getPaymentRowByOrderIdDao($order_id)
+{
+    global $_db;
+    $stmt = $_db->prepare("SELECT * FROM payment WHERE order_id=? LIMIT 1");
+    $stmt->execute([$order_id]);
+    return $stmt->fetch(PDO::FETCH_OBJ);
+}
+
+function markOrderPaidByOrderIdDao($order_id)
+{
+    global $_db;
+    $stmt = $_db->prepare("UPDATE orders SET payment_status='Paid', status='Processing' WHERE order_id=?");
+    return $stmt->execute([$order_id]);
+}
+
+function insertPaymentForOrderDao($order_id, $payment_method_enum_value)
+{
+    global $_db;
+    // must match enum in your DB: Cash / Credit Card / Debit Card / Bank Transfer / PayPal :contentReference[oaicite:3]{index=3}
+    $stmt = $_db->prepare("INSERT INTO payment (order_id, payment_method) VALUES (?, ?)");
+    return $stmt->execute([$order_id, $payment_method_enum_value]);
+}
+function getOrderWithAddressByIdAndUserDao($order_id, $user_id)
+{
+    global $_db;
+    $stmt = $_db->prepare("
+        SELECT o.*,
+               a.address_name, a.address_one, a.address_two, a.address_three,
+               a.state, a.post_code, a.country
+        FROM orders o
+        JOIN address a ON a.address_id = o.address_id
+        WHERE o.order_id = ? AND o.user_id = ?
+        LIMIT 1
+    ");
+    $stmt->execute([$order_id, $user_id]);
+    return $stmt->fetch(PDO::FETCH_OBJ);
+}

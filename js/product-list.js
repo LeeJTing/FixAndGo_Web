@@ -59,9 +59,6 @@ function loadProduct(category, sortType, currentValue) {
           $(".products-grid").append(`
             <div class="product-card">
                 <div class="product-image">
-                    <button class="favorite-btn" aria-label="Add to wishlist" title="Add to wishlist">
-                        <i class="fa-regular fa-heart"></i>
-                    </button>
                     <img src="../../${
                       p.file_path
                     }" alt="${p.alt_text}" loading="lazy" width="200">
@@ -128,14 +125,18 @@ function getSearchData(value) {
                             <div class="product-price">
                                 RM ${parseFloat(p.unit_price).toFixed(2)}
                             </div>
-      <div class="product-actions">
-                          <a href="product-detail.php?id=123" class="btn-update">
-                              Update Details
-                          </a>
-                          <button class="btn-delete" onclick="deleteProduct(123)">
-                              Delete
-                          </button>
-                      </div>
+                          <div class="product-actions">
+                              <a href="product-detail.php?id=${
+                                p.product_id
+                              }" class="btn-view">View</a>
+                              <button class="btn-cart add-to-cart" 
+                                  data-id="${p.product_id}" 
+                                  data-name="${p.product_name}" 
+                                  data-price="${p.unit_price}" 
+                                  data-image="../../${p.file_path}">
+                                  <i class="fa-solid fa-cart-shopping"></i>
+                              </button>
+                          </div>
                             
                         </div>
                     </div>

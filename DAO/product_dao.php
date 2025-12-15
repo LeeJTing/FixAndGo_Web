@@ -254,6 +254,13 @@ function getAllCategoryDao()
     return $stmt->fetchAll();
 }
 
+function getAllCategoryGuestDao()
+{
+    global $_db;
+    $stmt = $_db->query("SELECT * FROM category WHERE is_show = 1");
+    return $stmt->fetchAll();
+}
+
 function updateProductById(
     $id,
     $name,
@@ -570,5 +577,23 @@ function getProductName($product_id = null)
     } catch (PDOException $e) {
         error_log("Get Product Names Error: " . $e->getMessage());
         return false;
+    }
+}
+
+function getLowStockProduct()
+{
+    global $_db;
+    try {
+        $sql = "SELECT product_id, product_name 
+                FROM product
+                WHERE stock_quantity <= low_stock_threshold
+                AND status = 'active' 
+                AND isdeleted = 0";
+
+        $stmt = $_db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    } catch (PDOException $e) {
+        echo "DB Error: " . $e->getMessage();
     }
 }

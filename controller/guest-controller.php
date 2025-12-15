@@ -9,7 +9,5 @@ function getGuestAllProduct()
 
 function getGuestAllCategory()
 {
-    return getAllCategoryDAO();
+    return getAllCategoryGuestDao();
 }
-
-function getGuestFilterItemByCategory() {}

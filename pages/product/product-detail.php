@@ -2,26 +2,25 @@
 require '../../_base.php';
 $_title = 'Fix & Go | Product';
 include '../../_head.php';
-require '../../DAO/product_dao.php';
+require '../../controller/product-controller.php';
 $id = get('id') ?? 0;
 $product = getProductById($id);
 
 if (!$product) {
     die("<h1>Product not found!</h1>");
 }
-$mainImage = getProductImageById($id);
+$mainImage = getProductImages($id);
 ?>
 <link rel="stylesheet" href="../../css/product-detail.css">
 <script src="../../js/product-detail.js"></script>
 
 <body>
     <div class="detail-container">
-        <div class="breadcrumb">
-            <a href="../product-list.php">All Products</a> →
-            <a href="#"><?= htmlspecialchars($product->category_name) ?></a> →
-            <strong><?= htmlspecialchars($product->product_name) ?></strong>
+        <div class="back-to-products">
+            <a href="/pages/product/product-list.php" class="btn-back">
+                <i class="fa-solid fa-arrow-left"></i> Back to Products
+            </a>
         </div>
-
         <div class="detail-grid">
             <!-- Gallery -->
             <div class="gallery-container">
@@ -45,10 +44,6 @@ $mainImage = getProductImageById($id);
                         alt="<?= htmlspecialchars($mainImage->alt ?? $product->product_name) ?>"
                         id="mainImg"
                         class="main-product-image">
-                    <!-- Favorite button on top-right -->
-                    <button class="favorite-btn" aria-label="Add to wishlist">
-                        <i class="fa-regular fa-heart"></i>
-                    </button>
                 </div>
             </div>
 
@@ -108,7 +103,7 @@ $mainImage = getProductImageById($id);
 
                 <!-- Small footer info -->
                 <div class="meta-info">
-                    Product ID: #<?= sprintf("%04d", $product->product_id) ?>
+                    Product ID: <?= $product->product_id ?>
                     • Sold <?= $product->sold_number ?? 0 ?> times
                 </div>
             </div>

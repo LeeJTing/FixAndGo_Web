@@ -11,17 +11,27 @@
   padding: 0 1rem;
 }
 
-.breadcrumb {
-  margin-bottom: 1.2rem;
-  color: var(--gray);
-  font-size: 0.95rem;
+.back-to-products {
+  margin-bottom: 1.5rem;
 }
-.breadcrumb a {
-  color: var(--gray);
+
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--bg-card);
+  color: var(--text-color);
+  border-radius: 6px;
   text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
 }
-.breadcrumb a:hover {
-  color: var(--orange);
+
+.btn-back:hover {
+  background-color: var(--primary-color);
+  color: #fff;
+  transform: translateY(-2px);
 }
 
 .detail-grid {

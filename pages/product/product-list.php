@@ -50,7 +50,6 @@ $category = getAllCategory();
                         <option value="LowtoHigh">Price: Low to High</option>
                         <option value="HightoLow">Price: High to Low</option>
                         <option value="newest">Newest First</option>
-                        <option value="">Best Selling</option>
                     </select>
                 </div>
 

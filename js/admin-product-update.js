@@ -130,7 +130,7 @@ $(document).ready(function () {
             categorySelect,
             "Please select a valid category for the product."
           );
-          return false; // stop further processing
+          return false; 
         }
       }
       if (!hasValidProductImage()) {
@@ -147,16 +147,15 @@ $(document).ready(function () {
             }
           }
         );
-        return; // stop submit
+        return;
       }
 
-      // ✅ Image exists → proceed
       form.submit();
     }
   });
 });
 
-let newFiles = []; // Array for newly selected files
+let newFiles = []; 
 $(document).ready(function () {
   var productId = $("#productId").val();
 

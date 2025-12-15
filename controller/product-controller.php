@@ -39,7 +39,7 @@ function getCountAllProduct()
 
 function getAllCategory()
 {
-    return getAllCategoryDao();
+    return getAllCategoryGuestDao();
 }
 
 function getProductImages($id)

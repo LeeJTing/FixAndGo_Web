@@ -14,50 +14,6 @@ $orders = getOrderHistoryAdmin();
             <p>View and manage all customer orders</p>
         </div>
 
-        <!-- Stats Bar -->
-        <div class="stats-bar">
-            <div class="stat-card">
-                <h3><?= is_array($orders) ? count($orders) : 0 ?></h3>
-                <p>Total Orders</p>
-            </div>
-            <div class="stat-card">
-                <h3>
-                    <?php
-                    if (is_array($orders) && !empty($orders)) {
-                        $totalRevenue = 0;
-                        foreach ($orders as $order) {
-                            if (is_object($order) && isset($order->total_price)) {
-                                $totalRevenue += $order->total_price;
-                            }
-                        }
-                        echo $totalRevenue;
-                    } else {
-                        echo '0';
-                    }
-                    ?>
-                </h3>
-                <p>Total Revenue (RM)</p>
-            </div>
-            <div class="stat-card">
-                <h3>
-                    <?php
-                    if (is_array($orders) && !empty($orders)) {
-                        $totalItems = 0;
-                        foreach ($orders as $order) {
-                            if (is_object($order) && isset($order->total_items)) {
-                                $totalItems += $order->total_items;
-                            }
-                        }
-                        echo $totalItems;
-                    } else {
-                        echo '0';
-                    }
-                    ?>
-                </h3>
-                <p>Total Items</p>
-            </div>
-        </div>
-
         <!-- Orders Table -->
         <table class="orders-table">
             <thead>
@@ -78,10 +34,10 @@ $orders = getOrderHistoryAdmin();
                     <?php foreach ($orders as $order): ?>
                         <?php if (is_object($order) && isset($order->order_id)): ?>
                             <tr>
-                                <td data-label="Order ID"><strong>#<?= $order->order_id ?></strong></td>
+                                <td data-label="Order ID"><strong><?= $order->order_id ?></strong></td>
 
                                 <td data-label="Customer">
-                                    <a href="../admin/admin-order-detail.php?id=<?= $order->order_id ?>">
+                                    <a style="text-decoration:none; color:var(--color-text-primary);" href="../admin/admin-order-detail.php?id=<?= $order->order_id ?>">
                                         <div><strong><?= htmlspecialchars($order->user_name ?? 'Unknown') ?></strong></div>
                                     </a>
                                 </td>
@@ -144,7 +100,7 @@ $orders = getOrderHistoryAdmin();
     <script>
         function viewOrderDetails(orderId) {
             if (orderId > 0) {
-                window.location.href = 'order-details.php?id=' + orderId;
+                window.location.href = '../admin/admin-order-detail.php?id=' + orderId;
             } else {
                 alert('Invalid order ID');
             }

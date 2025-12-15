@@ -303,18 +303,9 @@ function initAddressManagement() {
   const toggleFormBtn = $("#toggleAddressForm");
   const addressForm = $("#newAddressForm");
   const cancelFormBtn = $("#cancelAddressForm");
-  // disable add if already 3 addresses
-  const existingCount = $(".address-option").length;
-  if (existingCount >= 3) {
-    $("#toggleAddressForm").hide();
-    // keep the form in DOM so editing remains possible; just keep it hidden
-    $("#newAddressForm").addClass("hidden");
-    if (!$(".address-limit-msg").length) {
-      $(".address-list").before(
-        '<div class="address-limit-msg">You can add up to 3 addresses only.</div>'
-      );
-    }
-  }
+
+  // Check address limit on initialization
+  updateAddressLimit();
   // Toggle address form
   toggleFormBtn.on("click", function () {
     addressForm.toggleClass("hidden");
@@ -445,6 +436,9 @@ function saveNewAddress() {
         $("#newAddressForm")[0].reset();
         $("#address_id").val("");
         $("#newAddressForm").addClass("hidden");
+
+        // Check and update address limit after adding
+        updateAddressLimit();
       } else {
         showAddressMessage(
           response.message || "Failed to save address",
@@ -517,6 +511,25 @@ function addAddressToList(addressData) {
   `;
 
   addressList.append(html);
+
+  // Update address limit after adding
+  updateAddressLimit();
+}
+
+function updateAddressLimit() {
+  const existingCount = $(".address-option").length;
+  if (existingCount >= 3) {
+    $("#toggleAddressForm").hide();
+    $("#newAddressForm").addClass("hidden");
+    if (!$(".address-limit-msg").length) {
+      $(".address-list").before(
+        '<div class="address-limit-msg">You can add up to 3 addresses only.</div>'
+      );
+    }
+  } else {
+    $("#toggleAddressForm").show();
+    $(".address-limit-msg").remove();
+  }
 }
 
 function showAddressMessage(message, type) {
@@ -554,3 +567,66 @@ function escapeHtml(text) {
 }
 
 // Note: edit-address-btn handler is registered inside initAddressManagement()
+
+function proceedToCheckout() {
+  // 1) Must have at least 1 checked item
+  let selectedCount = 0;
+  $(".cart-item").each(function () {
+    if ($(this).find(".is-take-checkbox").is(":checked")) selectedCount++;
+  });
+
+  if (selectedCount === 0) {
+    alert("Please select at least 1 item to checkout.");
+    return;
+  }
+
+  // 2) Must select delivery address
+  const $selectedAddress = $("input[name='selected_address']:checked");
+  if ($selectedAddress.length === 0) {
+    alert("Please select a delivery address.");
+    return;
+  }
+
+  // 3) Must select payment method
+  const paymentMethod = $("input[name='payment_method']:checked").val();
+  if (!paymentMethod) {
+    alert("Please select a payment method.");
+    return;
+  }
+
+  // Submit to create_order.php
+  const form = $("<form>", {
+    method: "POST",
+    action: ROOT_DIR + "/pages/checkout/create_order.php",
+    style: "display:none;",
+  });
+
+  form.append($("<input>", { type: "hidden", name: "payment_method", value: paymentMethod }));
+  form.append($("<input>", { type: "hidden", name: "address_id", value: $selectedAddress.val() }));
+
+  $("body").append(form);
+  form.submit();
+}
+function updateCheckoutButtonState() {
+  const hasCheckedItem = $(".is-take-checkbox:checked").length > 0;
+  const hasAddress = $("input[name='selected_address']:checked").length > 0;
+  const hasPayment = $("input[name='payment_method']:checked").length > 0;
+
+  const canCheckout = hasCheckedItem && hasAddress && hasPayment;
+
+  $("#btnCheckout").prop("disabled", !canCheckout);
+
+  if (!canCheckout) {
+    $("#btnCheckout").addClass("disabled");
+  } else {
+    $("#btnCheckout").removeClass("disabled");
+  }
+}
+
+$(document).on("change", ".is-take-checkbox, input[name='selected_address'], input[name='payment_method']", function () {
+  updateCheckoutButtonState();
+});
+
+$(document).ready(function () {
+  updateCheckoutButtonState();
+});

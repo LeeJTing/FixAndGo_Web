@@ -1,6 +1,6 @@
 <?php
 require "../../_base.php";
-$_SESSION['USER_ID'] = "M001";
+// $_SESSION['USER_ID'] = "M001";
 $_title = 'Fix & GO | Cart';
 include "../../_head.php";
 require_once "../../DAO/cart_dao.php";
@@ -8,9 +8,7 @@ require "../../DAO/product_dao.php";
 require "../../DAO/profile_dao.php";
 
 // Determine user ID - use logged in user or generate guest session ID
-
-
-$user_id = $_SESSION['USER_ID'] ?? null;
+$user_id = temp('USER_ID') ?? null;
 if (!$user_id) {
     // For guest users, use session-based identifier
     if (!isset($_SESSION['guest_session_id'])) {
@@ -26,14 +24,15 @@ $total = 0;
 $selected_total = 0;
 
 // Get customer addresses (only if logged in)
-// $addresses = temp('USER_ID') ? getAddressesByUserId(temp('USER_ID')) : [];
-$addresses = isset($_SESSION['USER_ID']) ? getAddressesByUserId($_SESSION['USER_ID']) : [];
+$addresses = temp('USER_ID') ? getAddressesByUserId(temp('USER_ID')) : [];
 $address_count = is_array($addresses) ? count($addresses) : 0;
 foreach ($cart_items as $item) {
     $item->item_total = $item->unit_price * $item->qty;
     $total += $item->item_total;
 
-    if ($item->is_take) {
+    // Use is_check to calculate selected total (is_check is the primary selection flag)
+    $is_check = isset($item->is_check) ? (int)$item->is_check : (int)($item->is_take ?? 0);
+    if ($is_check) {
         $selected_total += $item->item_total;
     }
 }
@@ -86,7 +85,11 @@ foreach ($cart_items as $item) {
                 $description = $product_details ? ($product_details->description ?? 'No description available.') : 'No description available.';
                 $short_description = $product_details ? ($product_details->short_desc ?? '') : '';
             ?>
-                <div class="cart-item flex align-center <?= $item->is_take ? 'item-selected' : '' ?>"
+                <?php
+                // Use is_check as primary, fallback to is_take for backward compatibility
+                $is_check = isset($item->is_check) ? (int)$item->is_check : (int)($item->is_take ?? 0);
+                ?>
+                <div class="cart-item flex align-center <?= $is_check ? 'item-selected' : '' ?>"
                     data-item-id="<?= $item->item_id ?>"
                     data-price="<?= $item->unit_price ?>">
 
@@ -94,8 +97,8 @@ foreach ($cart_items as $item) {
                         <input type="checkbox"
                             class="item-checkbox is-take-checkbox"
                             data-item-id="<?= $item->item_id ?>"
-                            data-is-check="<?= isset($item->is_check) ? (int)$item->is_check : (int)($item->is_check ?? $item->is_take ?? 0) ?>"
-                            <?= (isset($item->is_check) ? $item->is_check : ($item->is_take ?? 0)) ? 'checked' : '' ?> />
+                            data-is-check="<?= $is_check ?>"
+                            <?= $is_check ? 'checked' : '' ?> />
                     </div>
 
                     <img src="<?= $rootDir ?>/<?= htmlspecialchars($item->file_path) ?>"
@@ -135,7 +138,7 @@ foreach ($cart_items as $item) {
 
     <!-- Cart Footer -->
     <?php if (!empty($cart_items)): ?>
-        <?php if (!isset($_SESSION['USER_ID'])): ?>
+        <?php if (!temp('USER_ID')): ?>
             <div class="guest-checkout-notice">
                 <div class="notice-content">
                     <i class="fa-solid fa-info-circle"></i>
@@ -279,11 +282,33 @@ foreach ($cart_items as $item) {
             </div>
         <?php endif; ?>
 
+        <!-- Payment Method Section -->
+        <div class="payment-method-section">
+            <h3>Payment Method</h3>
+            <div class="payment-options">
+                <label class="payment-option">
+                    <input type="radio" name="payment_method" value="Cash" checked>
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                    <span>Cash on Delivery</span>
+                </label>
+                <label class="payment-option">
+                    <input type="radio" name="payment_method" value="Credit/Debit Card">
+                    <i class="fa-solid fa-credit-card"></i>
+                    <span>Credit/Debit Card</span>
+                </label>
+                <label class="payment-option">
+                    <input type="radio" name="payment_method" value="Online Banking">
+                    <i class="fa-solid fa-university"></i>
+                    <span>Online Banking</span>
+                </label>
+            </div>
+        </div>
+
         <div class="cart-footer">
             <div class="total-section">
                 <span class="selected-total-label">Selected Total: RM <span id="selected-total"><?= number_format($selected_total, 2) ?></span></span>
             </div>
-            <a href="../checkout/checkout.php" class="checkout-btn">Proceed to Checkout</a>
+            <button id="btnCheckout" type="button" onclick="proceedToCheckout()">Proceed to Checkout</button>
         </div>
     <?php endif; ?>
 </main>

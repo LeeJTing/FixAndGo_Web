@@ -1,4 +1,5 @@
 <?php
+require __DIR__ . '/../email/email.php';
 require_once  __DIR__ . '/../_base.php';
 require __DIR__ . '/../DAO/product_dao.php';
 require __DIR__ . '/../component/files.php';
@@ -175,8 +176,10 @@ if ($function === 'Search') {
                     echo "✔️ Image added successfully!\n";
                 }
             }
+            sendEmailLowStock();
             updateProductById($id, $name, $category, $price, $qty, $points, $short_desc, $desc, $status, $lowStock);
         } else {
+            sendEmailLowStock();
             updateProductById($id, $name, $category, $price, $qty, $points, $short_desc, $desc, $status, $lowStock);
         }
     } else if ($post_function === 'file_delete') {
@@ -238,4 +241,42 @@ function getProductImages($id)
 function getSpecificProductImage($id)
 {
     return getProductImagesDao($id);
+}
+function sendEmailLowStock()
+{
+    try {
+
+        $lowStockProducts = getLowStockProduct();
+
+        if (empty($lowStockProducts)) {
+            echo "No low stock products.";
+            return;
+        }
+
+        // Build email body
+        $body = '<h2>⚠ Low Stock Alert</h2>';
+        $body .= '<p>The following products are low in stock:</p>';
+        $body .= '<ul>';
+        foreach ($lowStockProducts as $product) {
+            $body .= '<li>' . htmlspecialchars($product->product_name) . ' (ID: ' . $product->product_id . ')</li>';
+        }
+        $body .= '</ul>';
+
+        // Setup PHPMailer
+        $mail = get_mail();
+        $mail->addAddress('joeltanhoujun@gmail.com', 'Admin');
+
+        $mail->isHTML(true);
+        $mail->Subject = 'FixAndGo System: Low Stock Alert';
+        $mail->Body    = $body;
+        $mail->AltBody = strip_tags($body);
+
+        $mail->send();
+        $_SESSION['flash_message'] = [
+            'type' => 'warning',
+            'text' => 'Low Stock Alert Send to Email.'
+        ];
+    } catch (Exception $e) {
+        echo 'Email failed: ' . $mail->ErrorInfo;
+    }
 }

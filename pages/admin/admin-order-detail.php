@@ -4,7 +4,9 @@ require '../../controller/order-controller.php';
 require_once '../../component/msg.php';
 include 'adminHeader.php';
 $id = get('id') ?? null;
-$order = getOrderDetailsAdmin($id);
+$orderItems = getAllProductByOrderId($id);
+$address = getOrderWithSelectedAddress($id);
+$order = getOrderById($id);
 ?>
 <link rel="stylesheet" href="../../css/msg.css">
 <link rel="stylesheet" href="../../css/admin-order-detail.css">

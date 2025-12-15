@@ -562,6 +562,10 @@ ADD COLUMN `isdeleted` BOOLEAN NOT NULL DEFAULT FALSE;
 ALTER TABLE `product`
 ADD COLUMN `low_stock_threshold` INT(11) DEFAULT 10;
 
+ALTER TABLE `category`
+ADD COLUMN `is_show` BOOLEAN NOT NULL DEFAULT 1 AFTER `description`;
+
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */
 ;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */
@@ -1134,32 +1138,12 @@ INSERT INTO
 ALTER TABLE category
 ADD COLUMN img_path VARCHAR(255) AFTER category_name;
 
-INSERT INTO
-    category (
-        category_name,
-        description,
-        img_path
-    )
-VALUES (
-        'Storage',
-        'Storage solutions, tool boxes, shelves and trolleys',
-        'images/storage.png'
-    ),
-    (
-        'Stationery',
-        'Browse the widest range of stationery and office supplies all in one place! You will find everything from double sided tape and colored pencils, to filing folders and sticky notes. If you want the best deals available, you’re sure to find them here – highlighters, staplers, highlighters – we have it all.',
-        'images/stationary.png'
-    ),
-    (
-        'Automotive',
-        'We here at Mr DIY know that spending time and money on your car is an important investment. That is why we have a range of automotive goods and car accessories in our store to make sure you are getting the best out of your ride! Whether it be car mats, sun shades, car covers, car polishes or even the newest tech gadgets, our website has everything you need to get more from your vehicle.',
-        'images/automotive.png'
-    ),
-    (
-        'Power & Hand Tools',
-        'Cordless screwdrivers, drills. saws. chisels hammers and measuring tapes',
-        'images/hardware_tools.png'
-    ),
-    ('Uncategorized', 'Products that have not been assigned to a specific category', 'images/no-image.png')
-ON DUPLICATE KEY UPDATE
-    description = VALUES(description);
+INSERT INTO category (category_name, description, is_show, img_path)
+VALUES
+('Storage', 'Storage solutions, tool boxes, shelves and trolleys', 1, 'images/storage.png'),
+('Stationery', 'Browse the widest range of stationery and office supplies all in one place! You will find everything from double sided tape and colored pencils, to filing folders and sticky notes. If you want the best deals available, you’re sure to find them here – highlighters, staplers, highlighters – we have it all', 1, 'images/stationary.png'),
+('Automotive', 'We here at Mr DIY know that spending time and money on your car is an important investment. That is why we have a range of automotive goods and car accessories in our store to make sure you are getting the best out of your ride! Whether it be car mats, sun shades, car covers, car polishes or even the newest tech gadgets, our website has everything you need to get more from your vehicle', 1, 'images/automotive.png'),
+('Power & Hand Tools', 'Cordless screwdrivers, drills, saws, chisels hammers and measuring tapes', 1, 'images/hardware_tools.png'),
+('Uncategorized', 'Products that have not been assigned to a specific category', 0, 'images/no-image.png')
+ON DUPLICATE KEY UPDATE description = VALUES(description);
+
