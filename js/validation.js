@@ -98,3 +98,33 @@ function emailFormat(email) {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   return email.length > 1 && email.length <= 50 && emailRegex.test(email);
 }
+
+function contactNumberFormat(contact_number) {
+  const phoneRegex = /^\+\d{11,13}$/;
+  return phoneRegex.test(contact_number);
+}
+
+function dobFormat(dob, minAge=17){
+  if (!dob) return false;
+
+    const birthDate = new Date(dob);
+    const today = new Date();
+
+    // Invalid date
+    if (isNaN(birthDate.getTime())) return false;
+
+    // Future date
+    if (birthDate > today) return false;
+
+    // Age check (optional)
+    if (minAge > 0) {
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        if (age < minAge) return false;
+    }
+
+    return true;
+}

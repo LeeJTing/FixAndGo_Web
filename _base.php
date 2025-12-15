@@ -223,3 +223,12 @@ function getUserProfilePicture($userId)
 
     return $defaultPath;
 }
+
+function generateFilePath($fileName)
+{
+    $uploadDir = '/images/profile/';
+
+    $fileExt = pathinfo($fileName, PATHINFO_EXTENSION);
+    $filePath = $uploadDir . '_' . time() . '.' . $fileExt;
+    return $filePath;
+}

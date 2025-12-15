@@ -3,6 +3,7 @@ require "../../_base.php";
 $_title = 'Fix & GO | Profile';
 include "../../_head.php";
 require "../../dao/profile_dao.php";
+require "../../controller/profile-controller.php";
 
 $user_id = temp('USER_ID');
 $user_name = temp('USER_NAME');
@@ -15,6 +16,7 @@ $addresses = getAddressesByUserId($user_id);
 ?>
 
 <link rel="stylesheet" href="<?= $rootDir ?>/css/profile.css">
+<script src="<?= $rootDir ?>/js/validation.js"></script>
 <main>
     <div class="profile-container">
         <!-- Profile Header -->
@@ -64,7 +66,7 @@ $addresses = getAddressesByUserId($user_id);
                         <div class="info-row">
                             <div class="info-label">
                                 <i class="fas fa-birthday-cake"></i>
-                                Date of Birth
+                                Date of Birth (year-month-date)
                             </div>
                             <div class="info-value"><?= $user_profile->dob ?? '<i>None</i>' ?>
                             </div>
@@ -160,19 +162,19 @@ $addresses = getAddressesByUserId($user_id);
                         <h2><i class="fas fa-laptop"></i> My Devices</h2>
                     </div>
                     <div class="card-body">
-                        <?php foreach($user_devices as $key => $value): ?>
-                        <div class="device-card">
-                            <div class="device-info">
-                                <div class="device-details">
-                                    <h3><?= $value->device_name ?></h3>
+                        <?php foreach ($user_devices as $key => $value): ?>
+                            <div class="device-card">
+                                <div class="device-info">
+                                    <div class="device-details">
+                                        <h3><?= $value->device_name ?></h3>
+                                    </div>
+                                </div>
+                                <div class="device-meta">
+                                    <button class="device-action remove">
+                                        <i class="fas fa-trash"></i> Remove
+                                    </button>
                                 </div>
                             </div>
-                            <div class="device-meta">
-                                <button class="device-action remove">
-                                    <i class="fas fa-trash"></i> Remove
-                                </button>
-                            </div>
-                        </div>
                         <?php endforeach ?>
                     </div>
                 </div>
@@ -184,26 +186,26 @@ $addresses = getAddressesByUserId($user_id);
                         </button>
                     </div>
                     <div class="card-body">
-                        <?php foreach($addresses as $key => $value) : ?>
-                        <div class="address-card">
-                            <div class="address-header">
-                                <h3><?= $value->address_name ?></h3>
+                        <?php foreach ($addresses as $key => $value) : ?>
+                            <div class="address-card">
+                                <div class="address-header">
+                                    <h3><?= $value->address_name ?></h3>
+                                </div>
+                                <div class="address-content">
+                                    <p><?= $value->address_one ? $value->address_one . ',' : '<i>None</i>' ?></p>
+                                    <p><?= $value->address_two ? $value->address_two . ',' : '' ?></p>
+                                    <p><?= $value->address_three ? $value->address_three . ', ' : '' ?><?= $value->post_code . ',' ?></p>
+                                    <p><?= $value->state ?>, <?= $value->country ?></p>
+                                </div>
+                                <div class="address-actions">
+                                    <button class="action-btn edit">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                    <button class="action-btn delete">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </div>
                             </div>
-                            <div class="address-content">
-                                <p><?= $value->address_one ? $value->address_one . ',' : '<i>None</i>'?></p>
-                                <p><?= $value->address_two ? $value->address_two . ',' : '' ?></p>
-                                <p><?= $value->address_three ? $value->address_three . ', ' : '' ?><?= $value->post_code . ','?></p>
-                                <p><?= $value->state ?>, <?= $value->country ?></p>
-                            </div>
-                            <div class="address-actions">
-                                <button class="action-btn edit">
-                                    <i class="fas fa-edit"></i> Edit
-                                </button>
-                                <button class="action-btn delete">
-                                    <i class="fas fa-trash"></i> Delete
-                                </button>
-                            </div>
-                        </div>
                         <?php endforeach ?>
                     </div>
                 </div>
@@ -257,6 +259,92 @@ $addresses = getAddressesByUserId($user_id);
             </div>
         </div> -->
     </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="editProfileModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-user-edit"></i> Edit Profile</h2>
+                <button class="close-btn">x</button>
+            </div>
+            <form id="editProfileForm" class="modal-form" method="POST">
+                <!-- Profile Picture Upload -->
+                <div class="form-group">
+                    <label>Profile Picture</label>
+                    <div class="profile-picture-upload">
+                        <div class="current-picture">
+                            <img src="<?= getUserProfilePicture($user_id) ?>"
+                                alt="Current Picture" id="currentProfilePicture" class="modal-profile-picture">
+                        </div>
+                        <div class="upload-options">
+                            <button type="button" class="upload-btn" id="uploadPictureBtn">
+                                <i class="fas fa-camera"></i> Upload New
+                            </button>
+                            <input type="file" id="profileImage" name="profile_image" accept="image/*" style="display: none;">
+                        </div>
+                        <div class="reset-options">
+                            <button type="button" class="reset-btn" id="resetPictureBtn">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Full Name <span style="color: red;">*</span></label>
+                        <input type="text" name="user_name" id="editUserName"
+                            class="form-input" value="<?= htmlspecialchars($user_name) ?>" required>
+                        <div class="error-message" id="nameError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Date of Birth</label>
+                        <input type="date" name="dob" id="editDob"
+                            class="form-input" value="<?= !empty($user_profile->dob) ? $user_profile->dob : '' ?>">
+                        <div class="error-message" id="dobError"></div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <select name="gender" id="editGender" class="form-input">
+                            <option value="" <?= empty($user_profile->gender) ? 'selected' : '' ?>>--Select Genter--</option>
+                            <option value="Male" <?= ($user_profile->gender ?? '') == 'Male' ? 'selected' : '' ?>>Male</option>
+                            <option value="Female" <?= ($user_profile->gender ?? '') == 'Female' ? 'selected' : '' ?>>Female</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Contact Number</label>
+                        <input type="tel" name="contact_number" id="editContactNumber"
+                            class="form-input" value="<?= htmlspecialchars($user_profile->contact_num ?? '') ?>"
+                            placeholder="+60123456789">
+                        <div class="error-message" id="phoneError"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" id="editEmail"
+                        class="form-input" disabled value="<?= htmlspecialchars($user_email) ?>" required>
+                    <div class="error-message" id="emailError"></div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="cancel-btn">
+                        Cancel
+                    </button>
+                    <button type="submit" class="save-btn" id="saveProfileBtn">
+                        <span class="btn-text">Save Changes</span>
+                        <span class="btn-loading" style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i> Saving...
+                        </span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </main>
+<script src="<?= $rootDir ?>/js/profile.js"></script>
 <?php
 include "../../_foot.php";

@@ -11,13 +11,11 @@ include "../../_head.php";
     <script src="<?= $rootDir ?>/js/validation.js"></script>
     <script src="<?= $rootDir ?>/js/registerForm.js"></script>
 
-    <script>
-        if (<?= $error ?>) {
-            repeated_id = '<?= $repeatIDMsg ?>';
-            repeated_email = '<?= $repeatEmailMsg ?>';
-            alert(repeated_id + "\n" + repeated_email + "\nPlease try again.");
-        }
-    </script>
+    <?php if($error) :?>
+        <script>
+            alert('<?= $repeatIDMsg ?>' + "\n" + '<?= $repeatEmailMsg ?>' + "\nPlease try again.");
+        </script>
+    <?php endif ?>
 
     <div class="register-form-container">
         <div class="form-container">
