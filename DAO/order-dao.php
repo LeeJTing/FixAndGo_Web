@@ -116,7 +116,7 @@ function getAllOrdersAdmin()
     }
 }
 
-function getOrderDetailsAdmin($order_id)
+function getOrderById($id)
 {
     global $_db;
 
@@ -124,39 +124,101 @@ function getOrderDetailsAdmin($order_id)
         $sql = "SELECT 
                     o.order_id,
                     o.order_at,
-                    o.user_id,
                     u.user_name,
                     u.email,
-                    up.contact_num,
                     o.total_price,
                     o.payment_status,
                     o.status,
                     o.utilize_point,
-                    p.payment_method,
-                    p.paid_at,
-                    a.address_name,
-                    a.address_one,
-                    a.address_two,
-                    a.address_three,
-                    a.state,
-                    a.post_code,
-                    a.country
+                    COUNT(DISTINCT oi.product_id) AS total_items,
+                    SUM(oi.qty) AS total_quantity
                 FROM orders o
                 INNER JOIN users u ON o.user_id = u.user_id
-                LEFT JOIN userprofile up ON u.user_id = up.user_id
-                LEFT JOIN payment p ON o.order_id = p.order_id
-                LEFT JOIN address a ON o.address_id = a.address_id
-                WHERE o.order_id = ?";
+                LEFT JOIN orderitem oi ON o.order_id = oi.order_id
+                WHERE o.order_id = ?
+                GROUP BY o.order_id
+                ORDER BY o.order_at ASC";
 
         $stmt = $_db->prepare($sql);
-        $stmt->execute([$order_id]);
+        $stmt->execute([$id]);
 
-        return $stmt->fetch(PDO::FETCH_OBJ);
+        return $stmt->fetchAll(PDO::FETCH_OBJ); // Changed to fetchAll
     } catch (PDOException $e) {
-        error_log("Get Order Details Admin Error: " . $e->getMessage());
+        error_log("Get All Orders Admin Error: " . $e->getMessage());
+        return [];
+    }
+}
+
+function getOrderDetailsAdmin(int $orderId)
+{
+    global $_db;
+}
+
+function getAllProductByOrderId($order_id)
+{
+    global $_db;
+    try {
+        $sql = "
+    SELECT 
+        oi.order_id,
+        oi.product_id,
+        pr.product_name,
+        oi.qty,
+        oi.unit_price,
+        pvm.file_path AS product_image,
+        pr.short_desc AS spec
+    FROM orderitem oi
+    INNER JOIN product pr 
+        ON oi.product_id = pr.product_id
+    LEFT JOIN productvisualmedia pvm 
+        ON pvm.product_id = pr.product_id
+        AND pvm.is_show = 1
+        AND pvm.position = 0
+    WHERE oi.order_id = ?
+";
+        $stmt = $_db->prepare($sql);
+        $stmt->execute([$order_id]);
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    } catch (PDOException $e) {
+        error_log("Get Member Order History Error: " . $e->getMessage());
         return false;
     }
 }
+
+function getOrderWithSelectedAddress(int $orderId)
+{
+    global $_db;
+
+    $sql = "
+        SELECT
+            o.order_id,
+            o.order_at,
+            o.user_id,
+            u.user_name,
+            u.email,
+            o.total_price,
+            o.payment_status,
+            o.status,
+            o.utilize_point,
+            a.address_name,
+            a.address_one,
+            a.address_two,
+            a.address_three,
+            a.state,
+            a.post_code,
+            a.country
+        FROM orders o
+        INNER JOIN users u ON o.user_id = u.user_id
+        INNER JOIN address a ON o.address_id = a.address_id
+        WHERE o.order_id = ?
+    ";
+
+    $stmt = $_db->prepare($sql);
+    $stmt->execute([$orderId]);
+
+    return $stmt->fetch(PDO::FETCH_OBJ);
+}
+
 
 function getMemberOrderHistory($user_id)
 {
