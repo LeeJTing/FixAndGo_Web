@@ -320,7 +320,7 @@ include 'adminHeader.php';
             <label>Email Address</label>
             <input type="email" name="email" required>
 
-            <label>Password (Default: password123)</label>
+            <label>Password (Default: 123456abc)</label>
             <input type="password" name="password" placeholder="Leave empty for default">
 
             <label>Phone Number</label>

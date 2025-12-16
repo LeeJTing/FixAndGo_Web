@@ -109,7 +109,7 @@ class CustomerDAO {
             $stmt = $_db->prepare($query);
             $password = !empty($data['password']) 
                 ? $data['password'] 
-                : 'password123';
+                : '123456abc';
 
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 

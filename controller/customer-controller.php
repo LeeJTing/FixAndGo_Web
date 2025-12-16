@@ -77,7 +77,7 @@ class CustomerController {
                 'custom_user_id' => post('custom_user_id'), // 新增：自定义 User ID
                 'user_name' => post('user_name'),
                 'email' => post('email'),
-                'password' => post('password', 'password123'),
+                'password' => post('password', '123456abc'), // 默认密码
                 'contact_num' => post('contact_num'),
                 'gender' => post('gender'),
                 'user_role' => post('user_role', 'Member'),
