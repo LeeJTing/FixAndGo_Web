@@ -10,7 +10,11 @@ class CustomerDAO {
         $query = "SELECT u.*, up.contact_num, up.dob, up.gender, a.address_one, a.state 
                   FROM users u
                   LEFT JOIN userprofile up ON u.user_id = up.user_id
-                  LEFT JOIN address a ON u.user_id = a.user_id
+                  LEFT JOIN (
+                    SELECT user_id, MIN(address_one) AS address_one, MIN(state) AS state
+                    FROM address
+                    GROUP BY user_id
+                ) a ON u.user_id = a.user_id
                   WHERE u.user_role = ?";
         $params = [$role];
         
@@ -229,27 +233,30 @@ class CustomerDAO {
     // 获取总数（用于分页）
     public static function getTotalCount($search = '', $status = '', $role = 'Member') {
         global $_db;
-        
-        $query = "SELECT COUNT(*) as total FROM users WHERE user_role = ?";
+
+        $query = "SELECT COUNT(DISTINCT u.user_id) AS total
+                FROM users u
+                LEFT JOIN userprofile up ON u.user_id = up.user_id
+                WHERE u.user_role = ?";
         $params = [$role];
-        
+
         if (!empty($search)) {
-            $query .= " AND (user_name LIKE ? OR email LIKE ? OR user_id LIKE ?)"; 
+            $query .= " AND (u.user_name LIKE ? OR u.email LIKE ? OR u.user_id LIKE ?)";
             $searchParam = "%{$search}%";
             $params[] = $searchParam;
             $params[] = $searchParam;
             $params[] = $searchParam;
         }
-        
+
         if (!empty($status) && $status != 'All') {
-            $query .= " AND account_status = ?";
+            $query .= " AND u.account_status = ?";
             $params[] = $status;
         }
-        
+
         $stmt = $_db->prepare($query);
         $stmt->execute($params);
-        $row = $stmt->fetch();
-        return $row->total;
+        return (int) $stmt->fetch()->total;
     }
+
 }
 ?>

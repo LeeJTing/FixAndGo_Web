@@ -68,8 +68,8 @@ if (get('edit')) {
 }
 
 // 获取提示信息
-$successMsg = temp('success');
-$errorMsg = temp('error');
+$successMsg = flash('success');
+$errorMsg = flash('error');
 
 include 'adminHeader.php';
 ?>

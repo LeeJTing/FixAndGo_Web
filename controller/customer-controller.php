@@ -85,16 +85,16 @@ class CustomerController {
             ];
             
             if (!is_unique($data['email'], 'users', 'email')) {
-                temp('error', 'Email already exists!');
+                flash('error', 'Email already exists!');
                 redirect('adminCustomer.php');
                 return;
             }
             
             if (CustomerDAO::createCustomer($data)) {
-                temp('success', 'Customer created successfully!');
+                flash('success', 'Customer created successfully!');
                 redirect('adminCustomer.php');
             } else {
-                temp('error', 'Failed to create customer. Check if User ID already exists.');
+                flash('error', 'Failed to create customer. Check if User ID already exists.');
                 redirect('adminCustomer.php');
             }
         }
@@ -119,13 +119,13 @@ class CustomerController {
                 $uploadResult = self::handleFileUpload($id);
                 
                 if ($uploadResult) {
-                    temp('success', 'Customer and profile picture updated successfully!');
+                    flash('success', 'Customer and profile picture updated successfully!');
                 } else {
-                    temp('success', 'Customer updated successfully!');
+                    flash('success', 'Customer updated successfully!');
                 }
                 redirect('adminCustomer.php?edit=' . $id);
             } else {
-                temp('error', 'Failed to update customer');
+                flash('error', 'Failed to update customer');
                 redirect('adminCustomer.php?edit=' . $id);
             }
         }
@@ -134,10 +134,10 @@ class CustomerController {
     // 处理删除用户
     public static function handleDelete($id) {
         if (CustomerDAO::deleteCustomer($id)) {
-            temp('success', 'Customer deleted successfully!');
+            flash('success', 'Customer deleted successfully!');
             redirect('adminCustomer.php');
         } else {
-            temp('error', 'Failed to delete customer');
+            flash('error', 'Failed to delete customer');
             redirect('adminCustomer.php');
         }
     }

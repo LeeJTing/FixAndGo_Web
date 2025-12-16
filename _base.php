@@ -17,7 +17,7 @@ $pathPrefix = (strpos($_SERVER['SCRIPT_NAME'], '/FixAndGo_Web') === 0) ? '/FixAn
 // hashing password
 function hash_password($password)
 {
-    return sha1($password);
+    return password_hash($password, PASSWORD_DEFAULT);
 }
 
 // Get session user ID
@@ -125,6 +125,17 @@ function temp($key, $value = null)
     } else {
         $value = $_SESSION["temp_$key"] ?? null;
         //unset($_SESSION["temp_$key"]);
+        return $value;
+    }
+}
+
+function flash($key, $value = null)
+{
+    if ($value !== null) {
+        $_SESSION["flash_$key"] = $value;
+    } else {
+        $value = $_SESSION["flash_$key"] ?? null;
+        unset($_SESSION["flash_$key"]);
         return $value;
     }
 }
