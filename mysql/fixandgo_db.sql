@@ -166,7 +166,8 @@ CREATE TABLE `payment` (
         'Debit Card',
         'PayPal',
         'Bank Transfer',
-        'Cash'
+        'Cash',
+        'Loyalty Points'
     ) NOT NULL,
     `paid_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
@@ -565,6 +566,8 @@ ADD COLUMN `low_stock_threshold` INT(11) DEFAULT 10;
 ALTER TABLE `category`
 ADD COLUMN `is_show` BOOLEAN NOT NULL DEFAULT 1 AFTER `description`;
 
+ALTER TABLE `orders`
+ADD COLUMN `deliver_at` DATE NULL AFTER `order_at`;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */
 ;

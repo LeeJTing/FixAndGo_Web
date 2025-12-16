@@ -644,3 +644,63 @@ body {
   background-color: #fff7ed;
   box-shadow: 0 0 0 1px #f59e0b;
 }
+
+#header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* Left group (Order ID + Status) */
+#header-row > span,
+#header-row > form {
+  display: flex;
+  align-items: center;
+}
+
+/* Order ID */
+.order-id {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text-heading);
+  white-space: nowrap;
+}
+
+/* Status badge (readonly) */
+#header-row .status {
+  margin-left: 12px;
+}
+
+/* Status select (editable) */
+.status-select {
+  margin-left: 12px;
+}
+
+/* Order date */
+#header-row .estimated {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+/* Make everything stay in one row on large screens */
+@media (max-width: 768px) {
+  #header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  #header-row .estimated {
+    align-self: flex-end;
+  }
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}

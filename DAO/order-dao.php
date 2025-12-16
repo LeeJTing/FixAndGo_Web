@@ -123,6 +123,7 @@ function getOrderByIdDao($id)
     try {
         $sql = "SELECT 
                     o.order_id,
+                    o.deliver_at,
                     o.user_id,
                     o.order_at,
                     u.user_name,
@@ -257,27 +258,16 @@ function updateOrderAddress($order_id, $new_address_id)
     return $stmt->execute([$new_address_id, $order_id]);
 }
 
-function updateOrderDate($order_id, $estimated_date)
+function updateDeliveryDate($order_id, $deliver_at)
 {
     global $_db;
 
-    try {
-        $sql = "UPDATE orders 
-                SET order_at = ? 
-                WHERE order_id = ?";
+    $sql = "UPDATE orders SET deliver_at = ? WHERE order_id = ?";
+    $stmt = $_db->prepare($sql);
 
-        $stmt = $_db->prepare($sql);
-
-        // Returns true on success, false on failure
-        return $stmt->execute([$estimated_date, $order_id]);
-    } catch (PDOException $e) {
-        // Log the error for debugging (optional)
-        error_log("Failed to update order date for order_id {$order_id}: " . $e->getMessage());
-
-        // Return false to indicate failure
-        return false;
-    }
+    return $stmt->execute([$deliver_at, $order_id]);
 }
+
 
 
 function deleteOrder($order_id)

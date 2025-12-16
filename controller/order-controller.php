@@ -101,34 +101,50 @@ if ($action === 'getAddress') {
         }
     } else if ($action === 'updateDate') {
         $orderId = post('order_id');
-        $date = post('estimated_delivery');
+        $date    = post('estimated_delivery');
 
         $order = getOrderById($orderId);
 
-        // $date comes from POST input, e.g., '2025-10-20'
-        $newDate = new DateTime($date);
-
-        // Assuming $order->order_at comes from DB as timestamp
-        $orderDate = new DateTime($order->order_at);
-
-        // Format to full datetime string for MySQL TIMESTAMP
-        $updateDate = $newDate->format('Y-m-d H:i:s');
-
-        // Compare dates ignoring time, if needed
-        if ($newDate > $orderDate) {
-            updateOrderDate($updateDate, $orderId); // Save in DB
-            $_SESSION['flash_message'] = [
-                'type' => 'success',
-                'text' => "Estimated delivery date updated to " . $newDate->format('M d, Y') . "."
-            ];
-        } else {
+        // Safety check
+        if (!$order || empty($date)) {
             $_SESSION['flash_message'] = [
                 'type' => 'error',
-                'text' => "Failed to update date. It must be after the order date."
+                'text' => 'Invalid order or delivery date.'
             ];
+            header("Location: ../../../pages/admin/admin-order-detail.php?id={$orderId}");
+            exit;
         }
 
+        try {
+            // DATE ONLY objects (immutable = no accidental modify)
+            $newDate = new DateTime($date);       // Convert string to DateTime
+            $newDateOnly = $newDate->format('Y-m-d');
+            $orderDate = $order->order_at;
 
+            if (!$newDate) {
+                throw new Exception('Invalid date format.');
+            }
+            // Compare DATE only
+            if ($newDate->format('Y-m-d') > $orderDate) {
+
+                updateDeliveryDate($orderId, $newDate->format('Y-m-d'));
+
+                $_SESSION['flash_message'] = [
+                    'type' => 'success',
+                    'text' => 'Estimated delivery date updated to ' . $newDate->format('M d, Y')
+                ];
+            } else {
+                $_SESSION['flash_message'] = [
+                    'type' => 'error',
+                    'text' => 'Estimated delivery date must be after order date.'
+                ];
+            }
+        } catch (Exception $e) {
+            $_SESSION['flash_message'] = [
+                'type' => 'error',
+                'text' => 'Failed to update delivery date.'
+            ];
+        }
         // Redirect back to the orders list page
         header("Location: ../../../pages/admin/admin-order-detail.php?id={$orderId}");
         exit;
