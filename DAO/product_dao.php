@@ -80,7 +80,7 @@ function getCountAllProductDao()
 {
     global $_db;
     $sql = "SELECT COUNT(*) AS items FROM product WHERE isdeleted = 0 AND status = 'active'";
-    $stmt = $_db->query($sql);
+    $stmt = $_db->prepare($sql);
     return (int)$stmt->fetch()->items;
 }
 
@@ -107,7 +107,7 @@ function getProductListDao()
                 AND pvm.is_show = 1 AND p.isdeleted = 0 AND p.status = 'active'
             ORDER BY p.product_id ASC";
 
-    $stmt = $_db->query($sql);
+    $stmt = $_db->prepare($sql);
     return $stmt->fetchAll();
 }
 
@@ -131,7 +131,7 @@ function getProductListAdminDao()
                 AND pvm.is_show = 1 AND p.isdeleted = 0 
             ORDER BY p.product_id ASC;";
 
-    $stmt = $_db->query($sql);
+    $stmt = $_db->prepare($sql);
     return $stmt->fetchAll();
 }
 
@@ -250,14 +250,14 @@ function searchProducts($keyword)
 function getAllCategoryDao()
 {
     global $_db;
-    $stmt = $_db->query("SELECT * FROM category");
+    $stmt = $_db->prepare("SELECT * FROM category");
     return $stmt->fetchAll();
 }
 
 function getAllCategoryGuestDao()
 {
     global $_db;
-    $stmt = $_db->query("SELECT * FROM category WHERE is_show = 1");
+    $stmt = $_db->prepare("SELECT * FROM category WHERE is_show = 1");
     return $stmt->fetchAll();
 }
 
@@ -463,7 +463,7 @@ function getLastInsertedProduct()
     try {
         // Get the last inserted product based on auto-increment ID
         $sql = "SELECT * FROM product ORDER BY product_id DESC LIMIT 1";
-        $stmt = $_db->query($sql);
+        $stmt = $_db->prepare($sql);
         $product = $stmt->fetch(); // fetch as object
 
         return $product->product_id ?: null; // return null if none
@@ -564,7 +564,7 @@ function getProductName($product_id = null)
     try {
         if ($product_id === null) {
             // If no ID provided, return all product names
-            $stmt = $_db->query("SELECT product_name FROM product");
+            $stmt = $_db->prepare("SELECT product_name FROM product");
         } else {
             // Exclude the product with given ID
             $sql = "SELECT product_name FROM product WHERE product_id != ?";
