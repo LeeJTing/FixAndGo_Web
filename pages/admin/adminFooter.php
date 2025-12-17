@@ -1,8 +1,8 @@
         
 
-    </div> <!-- END main -->
+        </div> <!-- END main -->
 
-</div> <!-- END layout -->
+    </div> <!-- END layout -->
 
 </body>
 </html>
