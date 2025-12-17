@@ -21,14 +21,27 @@ include 'adminHeader.php';
 <div class="admin-topbar">
     <input class="search-box" type="text" placeholder="Search orders, products, customers...">
 
-    <div class="profile-area">
-        <img src="<?= htmlspecialchars($userProfilePic) ?>" 
-             class="avatar" 
-             alt="<?= htmlspecialchars($currentUser->user_name) ?>"
-             width="36" height="36" 
-             style="width: 36px; height: 36px; object-fit: cover; border-radius: 50%;"
-             onerror="this.src='<?= $pathPrefix ?>/images/profile/default_profile_picture.webp'">
-        <span><?= htmlspecialchars($currentUser->user_name) ?></span>
+    <div class="profile-wrapper">
+        <div class="profile-area" id="adminProfileIcon">
+            <img src="<?= htmlspecialchars($userProfilePic) ?>" 
+                 class="avatar" 
+                 alt="<?= htmlspecialchars($currentUser->user_name) ?>"
+                 width="36" height="36" 
+                 style="width: 36px; height: 36px; object-fit: cover; border-radius: 50%;"
+                 onerror="this.src='<?= $pathPrefix ?>/images/profile/default_profile_picture.webp'">
+            <span class="username"><?= htmlspecialchars($currentUser->user_name) ?></span>
+            <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
+        </div>
+
+        <div class="admin-profile-dropdown" id="adminProfileDropdown">
+            <a href="<?= $pathPrefix ?>../member/profile.php">
+                <i class="fa-regular fa-user"></i> My Profile
+            </a>
+            <hr>
+            <a href="javascript:void(0)" class="logout-link" onclick="handleAdminLogout()">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+            </a>
+        </div>
     </div>
 </div>
 
@@ -107,5 +120,37 @@ include 'adminHeader.php';
     </div>
 
 </div> <!-- END content -->
+
+<script>
+// Admin Profile Dropdown Toggle
+document.addEventListener('DOMContentLoaded', function() {
+    const profileIcon = document.getElementById('adminProfileIcon');
+    const profileDropdown = document.getElementById('adminProfileDropdown');
+    const dropdownArrow = profileIcon?.querySelector('.dropdown-arrow');
+    
+    if (profileIcon && profileDropdown) {
+        profileIcon.addEventListener('click', function(e) {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('active');
+            dropdownArrow?.classList.toggle('rotated');
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!profileIcon.contains(e.target) && !profileDropdown.contains(e.target)) {
+                profileDropdown.classList.remove('active');
+                dropdownArrow?.classList.remove('rotated');
+            }
+        });
+    }
+});
+
+// Logout Handler
+function handleAdminLogout() {
+    if (confirm('Are you sure you want to logout?')) {
+        window.location.href = '<?= $pathPrefix ?>/logout.php';
+    }
+}
+</script>
 
 <?php include 'adminFooter.php'; ?>

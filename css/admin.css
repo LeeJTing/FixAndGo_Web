@@ -36,6 +36,8 @@ body {
 
 /* SIDEBAR */
 .admin-sidebar {
+  display: flex;
+  flex-direction: column;
   width: 230px;
   background: var(--color-sidebar-bg);
   padding: 20px;
@@ -53,18 +55,35 @@ body {
   color: var(--color-logo-text);
 }
 
+.menu {
+  padding: 0;
+  margin: 0;
+  flex: 1;
+}
+
+
 .menu li {
   list-style: none;
   margin-bottom: 18px;
 }
 
 .menu a {
+  display: block;
+  padding: 10px 14px;
+  border-radius: 8px;
   text-decoration: none;
   color: var(--color-menu-text);
   font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+}
+
+.menu a:hover {
+  background: #020617;
+  color: #e5e7eb;
 }
 
 .menu a.active {
+  background: rgba(96, 165, 250, 0.15);
   color: var(--color-menu-active);
 }
 
