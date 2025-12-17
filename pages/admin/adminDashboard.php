@@ -106,6 +106,6 @@ include 'adminHeader.php';
         </table>
     </div>
 
-    <?php include 'adminFooter.php'; ?>
-
 </div> <!-- END content -->
+
+<?php include 'adminFooter.php'; ?>
