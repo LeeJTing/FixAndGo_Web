@@ -27,6 +27,7 @@
 </head>
 
 <body>
+    
     <header>
         <div class="container flex justify-between">
             <a href="<?= homePageURL() ?>" class="logo" data-link="home">
@@ -185,4 +186,5 @@
                 <div id="cartOverlay" class="cart-overlay"></div>
             </div>
     </header>
+<script src="<?= $rootDir ?>/js/logout.js"></script>
 </body>
