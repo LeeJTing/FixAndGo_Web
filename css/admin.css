@@ -119,11 +119,6 @@ body {
   color: var(--color-search-text);
 }
 
-.profile-area {
-  display: flex;
-  align-items: center;
-}
-
 .avatar {
   width: 40px;  
   height: 40px;
