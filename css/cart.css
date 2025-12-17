@@ -482,12 +482,11 @@
   color: white;
 }
 
-/* Body class when popup is open */
+/*popup*/
 body.popup-open {
   overflow: hidden;
 }
 
-/* Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -508,7 +507,6 @@ body.popup-open {
   }
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .cart-header {
     display: none;
@@ -588,7 +586,6 @@ body.popup-open {
   }
 }
 
-/* Utility Classes */
 .flex {
   display: flex;
 }
@@ -597,7 +594,6 @@ body.popup-open {
   align-items: center;
 }
 
-/* Address Section Styles */
 .cart-address-section {
   background: #f8f9fa;
   border: 1px solid #ddd;
@@ -606,7 +602,6 @@ body.popup-open {
   margin-bottom: 20px;
 }
 
-/* Guest Checkout Notice */
 .guest-checkout-notice {
   background: #fff3cd;
   border: 1px solid #ffc107;
@@ -660,7 +655,6 @@ body.popup-open {
   font-weight: bold;
 }
 
-/* Existing Addresses */
 .address-list {
   margin-bottom: 25px;
 }
@@ -697,7 +691,6 @@ body.popup-open {
   color: #333;
 }
 
-/* Address Actions - Edit Button */
 .address-actions {
   display: flex;
   align-items: center;
@@ -799,7 +792,6 @@ body.popup-open {
   box-shadow: 0 4px 12px rgba(255, 160, 0, 0.4);
 }
 
-/* Add New Address Form */
 .add-new-address {
   border-top: 1px solid #ddd;
   padding-top: 20px;
@@ -916,7 +908,6 @@ body.popup-open {
   background: #ccc;
 }
 
-/* Success/Error Messages */
 .address-message {
   padding: 12px;
   border-radius: 4px;
@@ -938,7 +929,6 @@ body.popup-open {
   display: block;
 }
 
-/* Address Limit Message */
 .address-limit-msg {
   background: #fff3cd;
   border: 1px solid #ffc107;
@@ -960,7 +950,6 @@ body.popup-open {
   color: #ffc107;
 }
 
-/* Responsive Styles */
 @media (max-width: 768px) {
   .cart-address-section {
     padding: 15px;

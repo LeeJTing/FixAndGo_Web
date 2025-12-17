@@ -118,7 +118,10 @@ if ($payRow) {
 
                 <div class="totals">
                     <div class="box">
-                        <!-- If you want to show shipping separately, calculate it server-side and print it here -->
+                        <div class="row">
+                            <div class="k">Shipping Fee</div>
+                            <div class="v">RM 10</div>
+                        </div>
                         <div class="row">
                             <div class="k">Total</div>
                             <div class="v">RM <?= number_format((float)$order->total_price, 2) ?></div>
@@ -146,7 +149,7 @@ if ($payRow) {
 
                 <div style="display:flex; gap:10px; flex-wrap:wrap;">
                     <?php if (strtolower($order->payment_status) !== 'paid' && $selectedMethod !== 'Cash on Delivery'): ?>
-                        <a class="btn primary" href="<?= $rootDir ?>/pages/payment/stripe_create_session.php?order_id=<?= (int)$order_id ?>">Pay Now</a>
+                        <a class="btn primary" target="_blank" href="<?= $rootDir ?>/pages/payment/stripe_create_session.php?order_id=<?= (int)$order_id ?>">Pay Now</a>
                     <?php endif; ?>
 
                     <button class="btn" onclick="window.print()">Print / Save PDF</button>
