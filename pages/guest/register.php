@@ -1,8 +1,8 @@
 <?php
-require "../../_base.php";
+require_once "../../_base.php";
 $_title = "Fix & Go | Register";
-require "../../controller/registerForm-controller.php";
-include "../../_head.php";
+require_once "../../controller/registerForm-controller.php";
+include_once "../../_head.php";
 ?>
 
 <main>
@@ -82,4 +82,4 @@ include "../../_head.php";
 </main>
 
 <?php
-include "../../_foot.php";
+include_once "../../_foot.php";

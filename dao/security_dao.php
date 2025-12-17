@@ -15,3 +15,11 @@ function getUserByEmail($email){
 
     return $stm->fetch();
 }
+
+// Update user password (store hashed password)
+function updateUserPassword($userId, $hashedPassword)
+{
+    global $_db;
+    $stm = $_db->prepare("UPDATE users SET hash_password = ? WHERE user_id = ?");
+    return $stm->execute([$hashedPassword, $userId]);
+}

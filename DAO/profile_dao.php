@@ -133,3 +133,11 @@ function updateProfile($id, $name, $contact, $dob, $gender, $file_path)
         $stmt->execute([$id, $file_path]);
     }
 }
+
+// function updateUserPassword($id, $hash_password){
+//     global $_db;
+//     $stmt = $_db->prepare('UPDATE users
+//                            SET hash_password = ?
+//                            WHERE user_id = ?');
+//     $stmt->execute([$hash_password, $id]);
+// }

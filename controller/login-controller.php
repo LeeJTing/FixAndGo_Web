@@ -37,13 +37,6 @@ if (is_post()) {
         // ✅ newuser（bcrypt）
         login_success($user);
     }
-    else if (strlen($stored) === 40 && sha1($password) === $stored) {
-        // ⚠️ olduser（SHA1）→ auto update
-        $newHash = password_hash($password, PASSWORD_DEFAULT);
-        updateUserPassword($user->user_id, $newHash);
-
-        login_success($user);
-    }
     else {
         $error = "Invalid user ID or password.";
     }
@@ -58,12 +51,5 @@ function login_success($user)
     temp('ACCOUNT_STATUS', $user->account_status);
 
     redirect(homePageURL());
-}
-
-function updateUserPassword($userId, $newHash)
-{
-    global $_db;
-    $stmt = $_db->prepare("UPDATE users SET hash_password = ? WHERE user_id = ?");
-    $stmt->execute([$newHash, $userId]);
 }
 

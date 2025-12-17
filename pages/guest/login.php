@@ -1,9 +1,9 @@
 <?php
-require "../../_base.php";
-require '../../dao/security_dao.php';
-require "../../controller/login-controller.php";
+require_once "../../_base.php";
+require_once '../../dao/security_dao.php';
+require_once "../../controller/login-controller.php";
 $_title = "Fix & Go | Login";
-include "../../_head.php";
+include_once "../../_head.php";
 ?>
 
 <link rel="stylesheet" href="<?= $rootDir ?>/css/login.css">
@@ -54,4 +54,4 @@ include "../../_head.php";
 </main>
 
 <?php
-include "../../_foot.php";
+include_once "../../_foot.php";

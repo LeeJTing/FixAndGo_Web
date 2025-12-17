@@ -1,9 +1,9 @@
 <?php
-require "../../_base.php";
+require_once "../../_base.php";
 $_title = 'Fix & GO | Profile';
-include "../../_head.php";
-require "../../dao/profile_dao.php";
-require "../../controller/profile-controller.php";
+include_once "../../_head.php";
+require_once "../../dao/profile_dao.php";
+require_once "../../controller/profile-controller.php";
 
 $user_id = temp('USER_ID');
 $user_name = temp('USER_NAME');
@@ -198,10 +198,18 @@ $addresses = getAddressesByUserId($user_id);
                                     <p><?= $value->state ?>, <?= $value->country ?></p>
                                 </div>
                                 <div class="address-actions">
-                                    <button class="action-btn edit">
+                                    <button class="action-btn edit edit-address-btn" value="updateAddress"
+                                        data-address-id="<?= $value->address_id ?>"
+                                        data-address-name="<?= htmlspecialchars($value->address_name) ?>"
+                                        data-address-one="<?= htmlspecialchars($value->address_one) ?>"
+                                        data-address-two="<?= $value->address_two ? htmlspecialchars($value->address_two) : NULL ?>"
+                                        data-address-three="<?= $value->address_three ? htmlspecialchars($value->address_three) : NULL ?>"
+                                        data-post-code="<?= htmlspecialchars($value->post_code) ?>"
+                                        data-state="<?= htmlspecialchars($value->state) ?>"
+                                        data-country="<?= htmlspecialchars($value->country) ?>">
                                         <i class="fas fa-edit"></i> Edit
                                     </button>
-                                    <button class="action-btn delete">
+                                    <button class="action-btn delete delete-address-btn" data-address-id="<?= $value->address_id ?>">
                                         <i class="fas fa-trash"></i> Delete
                                     </button>
                                 </div>
@@ -216,9 +224,9 @@ $addresses = getAddressesByUserId($user_id);
                     </div>
                     <div class="card-body">
                         <div class="action-grid">
-                            <button class="action-card">
+                            <button id="openChangePassword" class="action-card">
                                 <i class="fas fa-lock"></i>
-                                <span>Change Password</span>
+                                <span >Change Password</span>
                             </button>
                             <!-- <button class="action-card">
                                 <i class="fas fa-bell"></i>
@@ -267,7 +275,7 @@ $addresses = getAddressesByUserId($user_id);
                 <h2><i class="fas fa-user-edit"></i> Edit Profile</h2>
                 <button class="close-btn">x</button>
             </div>
-            <form id="editProfileForm" class="modal-form" method="POST">
+            <form id="editProfileForm" class="modal-form" method="POST" action="?update=profile" enctype="multipart/form-data">
                 <!-- Profile Picture Upload -->
                 <div class="form-group">
                     <label>Profile Picture</label>
@@ -344,6 +352,203 @@ $addresses = getAddressesByUserId($user_id);
             </form>
         </div>
     </div>
+    <!-- Add Address Modal -->
+    <div id="addAddressModal" class="address-modal-overlay">
+        <div class="address-modal-container">
+            <div class="address-modal-header">
+                <h2 class="address-modal-title">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Add New Address
+                </h2>
+                <button class="address-modal-close" id="closeAddressModal">&times;</button>
+            </div>
+
+            <div class="address-modal-body">
+                <form method="POST" id="addAddressForm" action="?update=address">
+                    <input type="hidden" id="addressId" name="address_id" value="">
+                    <!-- Address Name -->
+                    <div class="address-form-group">
+                        <label for="addressName" class="address-form-label required">Address Name</label>
+                        <input type="text"
+                            id="addressName"
+                            name="address_name"
+                            class="address-form-input"
+                            placeholder="e.g., Home, Office, Apartment"
+                            maxlength="50"
+                            required>
+                        <div class="address-form-error" id="addressNameError"></div>
+                    </div>
+
+                    <!-- Address Line 1 -->
+                    <div class="address-form-group">
+                        <label for="addressLine1" class="address-form-label required">Address Line 1</label>
+                        <input type="text"
+                            id="addressLine1"
+                            name="address_one"
+                            class="address-form-input"
+                            placeholder="House number, street name"
+                            maxlength="100"
+                            required>
+                        <div class="address-form-error" id="addressLine1Error"></div>
+                    </div>
+
+                    <!-- Address Line 2 -->
+                    <div class="address-form-group">
+                        <label for="addressLine2" class="address-form-label">Address Line 2 (Optional)</label>
+                        <input type="text"
+                            id="addressLine2"
+                            name="address_two"
+                            class="address-form-input"
+                            placeholder="Apartment, suite, unit, building, floor"
+                            maxlength="100">
+                    </div>
+
+                    <!-- Address Line 3 -->
+                    <div class="address-form-group">
+                        <label for="addressLine3" class="address-form-label">Address Line 3 (Optional)</label>
+                        <input type="text"
+                            id="addressLine3"
+                            name="address_three"
+                            class="address-form-input"
+                            placeholder="Additional address information"
+                            maxlength="100">
+                    </div>
+
+                    <!-- Post Code and State -->
+                    <div class="address-form-row">
+                        <div class="address-form-group">
+                            <label for="postCode" class="address-form-label required">Post Code</label>
+                            <input type="text"
+                                id="postCode"
+                                name="post_code"
+                                class="address-form-input"
+                                placeholder="e.g., 50000"
+                                maxlength="10"
+                                pattern="[0-9]*"
+                                inputmode="numeric"
+                                required>
+                            <div class="address-form-error" id="postCodeError"></div>
+                        </div>
+
+                        <div class="address-form-group">
+                            <label for="state" class="address-form-label required">State</label>
+                            <select id="state" name="state" class="address-form-input" required>
+                                <option value="">Select State</option>
+                                <option value="Johor">Johor</option>
+                                <option value="Kedah">Kedah</option>
+                                <option value="Kelantan">Kelantan</option>
+                                <option value="Malacca">Malacca</option>
+                                <option value="Negeri Sembilan">Negeri Sembilan</option>
+                                <option value="Pahang">Pahang</option>
+                                <option value="Penang">Penang</option>
+                                <option value="Perak">Perak</option>
+                                <option value="Perlis">Perlis</option>
+                                <option value="Sabah">Sabah</option>
+                                <option value="Sarawak">Sarawak</option>
+                                <option value="Selangor">Selangor</option>
+                                <option value="Terengganu">Terengganu</option>
+                                <option value="Kuala Lumpur">Kuala Lumpur</option>
+                                <option value="Labuan">Labuan</option>
+                                <option value="Putrajaya">Putrajaya</option>
+                            </select>
+                            <div class="address-form-error" id="stateError"></div>
+                        </div>
+                    </div>
+
+                    <!-- Country -->
+                    <div class="address-form-group">
+                        <label for="country" class="address-form-label required">Country</label>
+                        <select id="country" name="country" class="address-form-input" required>
+                            <option value="">Select Country</option>
+                            <option value="Malaysia" selected>Malaysia</option>
+                            <option value="Singapore">Singapore</option>
+                            <option value="Thailand">Thailand</option>
+                            <option value="Indonesia">Indonesia</option>
+                            <option value="Brunei">Brunei</option>
+                            <option value="Philippines">Philippines</option>
+                            <option value="Vietnam">Vietnam</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <div class="address-form-error" id="countryError"></div>
+                    </div>
+                </form>
+
+                <!-- Loading Indicator -->
+                <div class="address-modal-loading" id="addressLoading">
+                    <div class="spinner"></div>
+                    <p>Saving address...</p>
+                </div>
+            </div>
+
+            <div class="address-form-footer">
+                <button type="button" class="cancel-btn" id="cancelAddressBtn">
+                    Cancel
+                </button>
+                <button type="submit" class="save-btn" id="saveAddressBtn" form="addAddressForm">
+                    Save Address
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Change Password Modal -->
+    <div id="changePasswordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-lock"></i> Change Password</h2>
+                <button class="close-btn">x</button>
+            </div>
+
+            <form method="POST" action="?update=password" class="modal-form" id="changePasswordForm">
+
+                <div class="form-group">
+                    <label>Old Password <span style="color:red">*</span></label>
+                    <input type="password"
+                        id="old_password"
+                        name="old_password"
+                        class="form-input"
+                        required>
+                    <div class="error-message" id="oldPasswordError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>New Password <span style="color:red">*</span></label>
+                    <input type="password"
+                        id="new_password"
+                        name="new_password"
+                        class="form-input"
+                        minlength="8"
+                        required>
+                    <div class="error-message" id="newPasswordError"></div>
+                    <!-- Password must be 8-12 characters with at least one letter and one number. -->
+                    <div class="password-strength">
+                        <div class="password-strength-bar" id="passwordStrengthBar"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Confirm Password <span style="color:red">*</span></label>
+                    <input type="password"
+                        id="confirm_password"
+                        name="confirm_password"
+                        class="form-input"
+                        required>
+                    <div class="correct-message" id="confirmPasswordCorrect"></div>
+                    <div class="error-message" id="confirmPasswordError"></div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="cancel-btn">
+                        Cancel
+                    </button>
+                    <button type="submit" class="save-btn" id='changePasswordBtn'>
+                        Update Password
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
 </main>
 <script src="<?= $rootDir ?>/js/profile.js"></script>
 <?php
