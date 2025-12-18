@@ -1,7 +1,7 @@
 <?php
-require "../../_base.php";
+require_once "../../_base.php";
 $_title = 'Fix & GO | About Us';
-include "../../_head.php";
+include_once "../../_head.php";
 ?>
 <link rel="stylesheet" href="<?= $rootDir ?>/css/aboutUs.css" />
 <main>
@@ -35,4 +35,4 @@ include "../../_head.php";
 
 </main>
 <?php
-include "../../_foot.php";
+include_once "../../_foot.php";

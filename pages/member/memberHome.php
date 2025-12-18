@@ -1,9 +1,9 @@
 <?php
-require "../../_base.php";
+require_once "../../_base.php";
 $_title = "Fix & Go | Home Page";
-include  "../../_head.php";
-include '../homepage.php';
+include_once  "../../_head.php";
+include_once '../homepage.php';
 ?>
 
 
-<?php include "../../_foot.php" ?>
+<?php include_once "../../_foot.php" ?>

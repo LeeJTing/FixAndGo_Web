@@ -128,3 +128,7 @@ function dobFormat(dob, minAge=17){
 
     return true;
 }
+
+function addressLineFormat(address){
+  return address.length >= 5;
+}

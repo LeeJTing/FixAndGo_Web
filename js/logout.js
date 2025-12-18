@@ -7,7 +7,7 @@
             $.post(ROOT_DIR + "/_logout.php", {
                 logout: true
             }).done(function () {
-                window.location.href = ROOT_DIR + "/guest/login.php";
+                window.location.href = ROOT_DIR + "/pages/guest/login.php";
                 console.log("posted");
             }
             ).fail(function () {
