@@ -104,7 +104,7 @@ if ($function === 'Search') {
         }
         // Upload files
         $uploadedFiles = !empty($_FILES['product_images']['name'][0])
-            ? uploadFiles('product_images', "../images/product/")
+            ? uploadFiles('product_images', "../images/product/", "images/product/")
             : [];
 
         // Convert paths to **web-accessible**
@@ -158,7 +158,7 @@ if ($function === 'Search') {
         if (!empty($_FILES['new_images']['name'][0])) {
 
             // Upload files
-            $uploadedFiles = uploadFiles('new_images', "../images/product/");
+            $uploadedFiles = uploadFiles('new_images', "../images/product/", "images/product/");
             // Insert uploaded images
             foreach ($uploadedFiles as $file) {
                 $countAppearProduct_update = count(getProductImagesDao($id));

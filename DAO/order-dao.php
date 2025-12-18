@@ -220,6 +220,7 @@ function getOrderWithSelectedAddress(int $orderId)
 
     return $stmt->fetch(PDO::FETCH_OBJ);
 }
+
 function getMemberAddressDao($user_id, $order_id = null)
 {
     global $_db;
@@ -278,7 +279,7 @@ function deleteOrder($order_id)
         $_db->beginTransaction(); // Start a transaction
 
         // 1. First, delete items linked to this order
-        $sqlItems = "DELETE FROM order_items WHERE order_id = ?";
+        $sqlItems = "DELETE FROM orderitem WHERE order_id = ?";
         $stmtItems = $_db->prepare($sqlItems);
         $stmtItems->execute([$order_id]);
 

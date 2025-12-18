@@ -8,7 +8,7 @@ function getAllProductFilterDao($category, $sort, $price)
     global $_db;
     $sql = "SELECT p.*, c.category_name, pvm.file_path, pvm.alt
             FROM product p
-            JOIN category c ON p.category_code = c.category_code
+            JOIN category c ON p.category_code = c.category_code AND c.is_deleted = 0
             LEFT JOIN productvisualmedia pvm ON pvm.product_id = p.product_id AND pvm.is_show = 1
             WHERE 1=1 AND p.isdeleted = 0 AND p.status = 'active'";
     $param = [];
@@ -28,7 +28,8 @@ function getAllProductFilterDao($category, $sort, $price)
     } else if ($sort == "HightoLow") {
         $sql .= " ORDER BY p.unit_price DESC";
     } else if ($sort == "newest") {
-        $sql .= " AND p.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)";
+        $sql .= " AND p.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+              ORDER BY p.created_at DESC";
     } else {
         $sql .= " ORDER BY p.product_id ASC";
     }
@@ -46,7 +47,9 @@ function getAllProductFilterAdminDao($category, $sort, $price)
             pvm.alt
                 FROM product p
                 JOIN category c ON p.category_code = c.category_code
-                LEFT JOIN productvisualmedia pvm ON pvm.product_id = p.product_id AND pvm.is_show = 1
+                LEFT JOIN productvisualmedia pvm ON pvm.product_id = p.product_id 
+                AND pvm.is_show = 1
+                AND c.is_deleted = 0
                 WHERE 1=1 AND p.isdeleted = 0";
     $param = [];
 
@@ -81,6 +84,7 @@ function getCountAllProductDao()
     global $_db;
     $sql = "SELECT COUNT(*) AS items FROM product WHERE isdeleted = 0 AND status = 'active'";
     $stmt = $_db->prepare($sql);
+    $stmt->execute();
     return (int)$stmt->fetch()->items;
 }
 
@@ -105,9 +109,11 @@ function getProductListDao()
             JOIN category c ON p.category_code = c.category_code
             JOIN productvisualmedia pvm ON pvm.product_id = p.product_id 
                 AND pvm.is_show = 1 AND p.isdeleted = 0 AND p.status = 'active'
+                AND c.is_deleted = 0
             ORDER BY p.product_id ASC";
 
     $stmt = $_db->prepare($sql);
+    $stmt->execute();
     return $stmt->fetchAll();
 }
 
@@ -128,10 +134,11 @@ function getProductListAdminDao()
             FROM product p
             JOIN category c ON p.category_code = c.category_code
             LEFT JOIN productvisualmedia pvm ON pvm.product_id = p.product_id 
-                AND pvm.is_show = 1 AND p.isdeleted = 0 
+                AND pvm.is_show = 1 AND p.isdeleted = 0  AND c.is_deleted = 0
             ORDER BY p.product_id ASC;";
 
     $stmt = $_db->prepare($sql);
+    $stmt->execute();
     return $stmt->fetchAll();
 }
 
@@ -146,7 +153,7 @@ function getProductByIdDao($id)
                             c.category_name
                            FROM product p 
                            JOIN category c ON p.category_code = c.category_code 
-                           WHERE p.isdeleted = 0 AND p.status = 'active' AND p.product_id = ? ");
+                           WHERE p.isdeleted = 0 AND p.status = 'active' AND c.is_deleted = 0 AND p.product_id = ? ");
     $stmt->execute([$id]);
     return $stmt->fetch();
 }
@@ -159,23 +166,9 @@ function getProductByIdAdminDao($id)
                             c.category_name
                            FROM product p 
                            JOIN category c ON p.category_code = c.category_code 
-                           WHERE p.isdeleted = 0 AND p.product_id = ?");
+                           WHERE p.isdeleted = 0 AND c.is_deleted = 0 AND p.product_id = ?");
     $stmt->execute([$id]);
     return $stmt->fetch();
-}
-
-function getProductReviews($product_id)
-{
-    global $_db;
-    $stmt = $_db->prepare("
-        SELECT r.*, c.name AS customer_name 
-        FROM reviews r 
-        LEFT JOIN customers c ON r.customer_id = c.customer_id 
-        WHERE r.product_id = ? AND r.is_approved = 1 
-        ORDER BY r.created_at DESC
-    ");
-    $stmt->execute([$product_id]);
-    return $stmt->fetchAll();
 }
 
 /**
@@ -220,6 +213,7 @@ function getProductsByCategoryDao($category_code)
                            JOIN category c ON p.category_code = c.category_code 
                            JOIN productvisualmedia pvm ON pvm.product_id = p.product_id
                            WHERE p.category_code = ? 
+                            AND c.is_deleted = 0
                             AND p.isdeleted = 0
                             AND p.status = 'active'
                            ORDER BY p.product_name ASC");
@@ -233,16 +227,24 @@ function getProductsByCategoryDao($category_code)
 function searchProducts($keyword)
 {
     global $_db;
+
     $keyword = "%$keyword%";
-    $stmt = $_db->prepare("SELECT p.*, c.category_name 
-                           FROM product p 
-                           JOIN category c ON p.category_code = c.category_code 
-                           WHERE p.isdeleted = 0 
-                              AND p.status = 'active'
-                              AND p.product_name LIKE ? 
-                              OR p.short_desc LIKE ? 
-                              OR p.description LIKE ?
-                           ORDER BY p.product_name");
+
+    $stmt = $_db->prepare("
+        SELECT p.*, c.category_name 
+        FROM product p 
+        JOIN category c ON p.category_code = c.category_code 
+        WHERE p.isdeleted = 0 
+          AND p.status = 'active'
+          AND c.is_deleted = 0
+          AND (
+              p.product_name LIKE ?
+              OR p.short_desc LIKE ?
+              OR p.description LIKE ?
+          )
+        ORDER BY p.product_name
+    ");
+
     $stmt->execute([$keyword, $keyword, $keyword]);
     return $stmt->fetchAll();
 }
@@ -250,16 +252,50 @@ function searchProducts($keyword)
 function getAllCategoryDao()
 {
     global $_db;
-    $stmt = $_db->prepare("SELECT * FROM category");
-    return $stmt->fetchAll();
+
+    $stmt = $_db->prepare("SELECT * FROM category WHERE is_deleted = 0");
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_OBJ);
 }
 
 function getAllCategoryGuestDao()
 {
     global $_db;
-    $stmt = $_db->prepare("SELECT * FROM category WHERE is_show = 1");
+    $sql = "SELECT * FROM category WHERE is_show = 1 AND is_deleted = 0";
+    $stmt = $_db->prepare($sql);
+    $stmt->execute();
     return $stmt->fetchAll();
 }
+
+function getCategoryByCodeDao($id)
+{
+    global $_db;
+    $sql = "SELECT * FROM category WHERE is_deleted = 0 AND category_code = ?";
+    $stmt = $_db->prepare($sql);
+    $stmt->execute([$id]);
+    return $stmt->fetch(PDO::FETCH_OBJ);
+}
+
+function deleteCategory(int $code): bool
+{
+    global $_db;
+
+    try {
+        $sql = "UPDATE category
+            SET is_deleted = 1
+            WHERE category_code = ?
+        ";
+
+        $stmt = $_db->prepare($sql);
+        $stmt->execute([$code]);
+        return $stmt->rowCount() > 0;
+    } catch (PDOException $e) {
+        error_log("Delete category failed (code=$code): " . $e->getMessage());
+        return false;
+    }
+}
+
 
 function updateProductById(
     $id,
@@ -325,7 +361,7 @@ function getProductBySearchDao($keyword)
 
     $sql = "SELECT p.*,pvm.alt,pvm.file_path,c.category_name
             FROM product p
-            JOIN category c ON c.category_code = p.category_code 
+            JOIN category c ON c.category_code = p.category_code AND c.is_deleted = 0
             LEFT JOIN productvisualmedia pvm ON pvm.product_id = p.product_id AND pvm.is_show = 1
             WHERE p.isdeleted = 0 
             AND p.status = 'active'
@@ -360,7 +396,7 @@ function getProductBySearchAdminDao($keyword)
 
     $sql = "SELECT p.*,pvm.alt,COALESCE(pvm.file_path, 'no-image.jpg') AS file_path,c.category_name
             FROM product p
-            JOIN category c ON c.category_code = p.category_code 
+            JOIN category c ON c.category_code = p.category_code AND c.is_deleted = 0
             LEFT JOIN productvisualmedia pvm ON pvm.product_id = p.product_id AND pvm.is_show = 1
             WHERE p.isdeleted = 0 
             AND p.product_id LIKE ? 
@@ -477,25 +513,6 @@ function addNewProduct($product_name, $short_desc, $category_id, $price, $stock,
 {
     global $_db;
 
-    // Debug: Log function entry
-    error_log("=== addNewProduct Function Called ===");
-    error_log("Parameters received:");
-    error_log("- product_name: " . var_export($product_name, true));
-    error_log("- short_desc: " . var_export($short_desc, true));
-    error_log("- category_id: " . var_export($category_id, true));
-    error_log("- price: " . var_export($price, true));
-    error_log("- stock: " . var_export($stock, true));
-    error_log("- status: " . var_export($status, true));
-    error_log("- point: " . var_export($point, true));
-    error_log("- description: " . var_export($description, true));
-
-    // Debug: Check database connection
-    if (!$_db) {
-        error_log("ERROR: Database connection is null or not initialized");
-        return false;
-    }
-    error_log("Database connection: OK");
-
     try {
         // Insert product main info
         $sql = "INSERT INTO product 
@@ -509,11 +526,8 @@ function addNewProduct($product_name, $short_desc, $category_id, $price, $stock,
 
         // Debug: Check if prepare was successful
         if (!$stmt) {
-            error_log("ERROR: Failed to prepare statement");
-            error_log("PDO Error Info: " . print_r($_db->errorInfo(), true));
             return false;
         }
-        error_log("Statement prepared successfully");
 
         // Prepare parameters array
         $params = [
@@ -527,34 +541,18 @@ function addNewProduct($product_name, $short_desc, $category_id, $price, $stock,
             ':point' => $point
         ];
 
-        error_log("Bound parameters: " . print_r($params, true));
-
         // Execute the statement
         $result = $stmt->execute($params);
 
         // Debug: Check execution result
         if ($result) {
             $lastId = $_db->lastInsertId();
-            error_log("SUCCESS: Product inserted successfully");
-            error_log("Last Insert ID: " . $lastId);
-            error_log("Rows affected: " . $stmt->rowCount());
             return true;
         } else {
-            error_log("ERROR: Execute returned false");
-            error_log("Statement Error Info: " . print_r($stmt->errorInfo(), true));
             return false;
         }
     } catch (PDOException $e) {
-        error_log("=== PDO EXCEPTION CAUGHT ===");
-        error_log("Error Message: " . $e->getMessage());
-        error_log("Error Code: " . $e->getCode());
-        error_log("Stack Trace: " . $e->getTraceAsString());
-        return false;
-    } catch (Exception $e) {
-        error_log("=== GENERAL EXCEPTION CAUGHT ===");
-        error_log("Error Message: " . $e->getMessage());
-        error_log("Stack Trace: " . $e->getTraceAsString());
-        return false;
+        return $e->getMessage();
     }
 }
 
@@ -595,5 +593,38 @@ function getLowStockProduct()
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     } catch (PDOException $e) {
         echo "DB Error: " . $e->getMessage();
+    }
+}
+
+function insertCategory($category_name, $description = null, $img_path = null, $is_show = true)
+{
+    global $_db;
+
+    // Basic validation
+    if (empty(trim($category_name))) {
+        return false;
+    }
+
+    try {
+        $sql = "INSERT INTO category 
+                (category_name, description, img_path, is_show) 
+                VALUES 
+                (?, ?, ?, ?)";
+
+        $stmt = $_db->prepare($sql);
+
+        $stmt->execute([
+            trim($category_name),
+            $description,
+            $img_path,
+            $is_show ? 1 : 0,     // Convert bool to int for MySQL
+        ]);
+
+        // Return true if a row was inserted
+        return $stmt->rowCount() > 0;
+    } catch (PDOException $e) {
+        // Log error (never show raw error to user)
+        error_log("Insert category failed: " . $e->getMessage());
+        return false;
     }
 }

@@ -1,49 +1,54 @@
 <?php
-function uploadFiles($inputName, $targetDir = "../../images/product/", $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'])
-{
+function uploadFiles(
+    $inputName,
+    $targetDir,
+    $publicPath,
+    $allowedTypes = ['jpg', 'jpeg', 'png', 'gif']
+) {
     $uploadedFiles = [];
 
-    // Create directory if it doesn't exist
     if (!file_exists($targetDir)) {
-        if (!mkdir($targetDir, 0755, true)) {
-            echo "❌ Failed to create directory: $targetDir<br>";
-            return [];
-        }
+        mkdir($targetDir, 0755, true);
     }
 
-    // Check if files exist
-    if (!empty($_FILES[$inputName]['name'][0])) {
+    if (empty($_FILES[$inputName]['name'])) {
+        return [];
+    }
 
-        $fileCount = count($_FILES[$inputName]['name']);
+    $files = $_FILES[$inputName];
 
-        for ($i = 0; $i < $fileCount; $i++) {
+    // Normalize single → multiple
+    if (!is_array($files['name'])) {
+        $files = [
+            'name'     => [$files['name']],
+            'tmp_name' => [$files['tmp_name']],
+            'error'    => [$files['error']]
+        ];
+    }
 
-            $originalName = $_FILES[$inputName]['name'][$i];
-            $tmpPath      = $_FILES[$inputName]['tmp_name'][$i];
+    $fileCount = count($files['name']);
 
-            // Use unique name (recommended)
-            $fileName = basename($originalName);
+    for ($i = 0; $i < $fileCount; $i++) {
 
-            $targetFilePath = $targetDir . $fileName;
-
-            // Validate extension
-            $fileType = strtolower(pathinfo($targetFilePath, PATHINFO_EXTENSION));
-            if (!in_array($fileType, $allowedTypes)) {
-                echo "❌ Invalid file type for: $originalName<br>";
-                continue;
-            }
-
-            // Move the file
-            if (move_uploaded_file($tmpPath, $targetFilePath)) {
-                echo "✔ Uploaded: $targetFilePath<br>";
-                $uploadedFiles[] = "images/product/" . $fileName;
-                echo realpath($targetDir);
-            } else {
-                echo "❌ Failed to upload: $originalName<br>";
-            }
+        if ($files['error'][$i] !== UPLOAD_ERR_OK) {
+            continue;
         }
-    } else {
-        echo "❌ No files found in \$_FILES['$inputName']<br>";
+
+        $originalName = $files['name'][$i];
+        $tmpPath      = $files['tmp_name'][$i];
+
+        $ext = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+
+        if (!in_array($ext, $allowedTypes)) {
+            continue;
+        }
+
+        $fileName = uniqid('img_', true) . '.' . $ext;
+        $targetFilePath = $targetDir . $fileName;
+
+        if (move_uploaded_file($tmpPath, $targetFilePath)) {
+            $uploadedFiles[] = $publicPath . $fileName;
+        }
     }
 
     return $uploadedFiles;

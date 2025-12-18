@@ -1,6 +1,7 @@
 <?php
 require_once  __DIR__ . '/../_base.php';
 require __DIR__ . '/../DAO/order-dao.php';
+require_once __DIR__ . '/../DAO/product_dao.php';
 
 $order_id = get('order_id');
 $user_id = get('user_id');
@@ -60,11 +61,27 @@ if ($action === 'getAddress') {
         ];
 
         if ($status === 'Cancelled') {
-            deleteOrder($orderId);
-            $_SESSION['flash_message'] = [
-                'type' => 'success',
-                'text' => "Order #{$orderId} has been cancelled and deleted successfully."
-            ];
+            try {
+                // Otherwise, return JSON response
+
+                $deleted = deleteOrder($orderId); // Assuming this returns true/false
+                if ($deleted) {
+                    $_SESSION['flash_message'] = [
+                        'type' => 'success',
+                        'text' => "Order #{$orderId} has been cancelled and deleted successfully."
+                    ];
+                } else {
+                    $_SESSION['flash_message'] = [
+                        'type' => 'error',
+                        'text' => "Failed to delete Order #{$orderId}. Please try again."
+                    ];
+                }
+            } catch (Exception $e) {
+                $_SESSION['flash_message'] = [
+                    'type' => 'error',
+                    'text' => "Error cancelling Order #{$orderId}: " . $e->getMessage()
+                ];
+            }
 
             // Redirect back to the orders list page
             header("Location: ../../../pages/admin/admin-order.php");
@@ -179,4 +196,8 @@ function getPaymentRecord($order_id)
 function getMemberAddress($user_id)
 {
     return getMemberAddressDao($user_id);
+}
+function getAllCategory()
+{
+    return getAllCategoryDao();
 }

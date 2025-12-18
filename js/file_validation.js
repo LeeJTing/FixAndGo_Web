@@ -47,6 +47,6 @@ function validateFileInput(selector, options = {}) {
       }
     });
   }
-
+  
   return isValid;
 }

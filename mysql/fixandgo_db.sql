@@ -123,16 +123,21 @@ CREATE TABLE `category` (
   `is_show` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+
+ALTER TABLE `category`
+ADD COLUMN `is_deleted` BOOLEAN NOT NULL DEFAULT FALSE
+AFTER `is_show`;
+
 --
 -- Dumping data for table `category`
 --
 
 INSERT INTO `category` (`category_code`, `category_name`, `img_path`, `description`, `is_show`) VALUES
-(1, 'Storage', 'images/storage.png', 'Storage solutions, tool boxes, shelves and trolleys', 1),
-(2, 'Stationery', 'images/stationary.png', 'Browse the widest range of stationery and office supplies all in one place! You will find everything from double sided tape and colored pencils, to filing folders and sticky notes. If you want the best deals available, you’re sure to find them here – highlighters, staplers, highlighters – we have it all', 1),
-(3, 'Automotive', 'images/automotive.png', 'We here at Mr DIY know that spending time and money on your car is an important investment. That is why we have a range of automotive goods and car accessories in our store to make sure you are getting the best out of your ride! Whether it be car mats, sun shades, car covers, car polishes or even the newest tech gadgets, our website has everything you need to get more from your vehicle', 1),
-(4, 'Power & Hand Tools', 'images/hardware_tools.png', 'Cordless screwdrivers, drills, saws, chisels hammers and measuring tapes', 1),
-(5, 'Uncategorized', 'images/no-image.png', 'Products that have not been assigned to a specific category', 0);
+(1, 'Storage', 'images/category/storage.jpg', 'Storage solutions, tool boxes, shelves and trolleys', 1),
+(2, 'Stationery', 'images/category/stationary.png', 'Browse the widest range of stationery and office supplies all in one place! You will find everything from double sided tape and colored pencils, to filing folders and sticky notes. If you want the best deals available, you’re sure to find them here – highlighters, staplers, highlighters – we have it all', 1),
+(3, 'Automotive', 'images/category/automotive.png', 'We here at Mr DIY know that spending time and money on your car is an important investment. That is why we have a range of automotive goods and car accessories in our store to make sure you are getting the best out of your ride! Whether it be car mats, sun shades, car covers, car polishes or even the newest tech gadgets, our website has everything you need to get more from your vehicle', 1),
+(4, 'Power & Hand Tools', 'images/category/hardware_tools.png', 'Cordless screwdrivers, drills, saws, chisels hammers and measuring tapes', 1),
+(5, 'Uncategorized', 'images/no-image.jpg', 'Products that have not been assigned to a specific category', 0);
 
 -- --------------------------------------------------------
 
