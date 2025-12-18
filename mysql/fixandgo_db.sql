@@ -192,6 +192,23 @@ CREATE TABLE `orders` (
   `address_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders`
+(`order_id`, `user_id`, `order_at`, `deliver_at`, `payment_status`, `status`, `total_price`, `utilize_point`, `address_id`)VALUES
+(1, 'M001', '2025-01-05 10:15:00', '2025-01-08', 'Paid', 'Delivered', 129.90, 1, 1),
+(2, 'M002', '2025-01-06 14:20:00', '2025-01-10', 'Paid', 'Delivered', 89.50, 0, 2),
+(3, 'M003', '2025-01-07 09:45:00', NULL, 'Pending', 'Pending', 45.00, 0, 3),
+(4, 'M001', '2025-01-08 18:30:00', NULL, 'Paid', 'Processing', 210.75, 1, 1),
+(5, 'M004', '2025-01-09 11:10:00', NULL, 'Failed', 'Cancelled', 60.00, 0, 4),
+(6, 'M005', '2025-01-10 16:55:00', '2025-01-14', 'Paid', 'Shipping', 320.40, 1, 5),
+(7, 'M002', '2025-01-11 13:05:00', NULL, 'Paid', 'Processing', 150.00, 0, 2),
+(8, 'M003', '2025-01-12 20:40:00', NULL, 'Pending', 'Pending', 78.90, 0, 3),
+(9, 'M004', '2025-01-13 08:25:00', '2025-01-16', 'Refunded', 'Cancelled', 99.99, 1, 4),
+(10,'M005', '2025-01-14 17:50:00', NULL, 'Paid', 'Processing', 540.00, 0, 5);
+
 -- --------------------------------------------------------
 
 --
