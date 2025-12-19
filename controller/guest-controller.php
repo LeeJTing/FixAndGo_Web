@@ -11,3 +11,7 @@ function getGuestAllCategory()
 {
     return getAllCategoryGuestDao();
 }
+function getTop5Product()
+{
+    return getTop5BestSellersDifferentCategories();
+}

@@ -269,30 +269,32 @@ function updateDeliveryDate($order_id, $deliver_at)
     return $stmt->execute([$deliver_at, $order_id]);
 }
 
-
-
-function deleteOrder($order_id)
+function cancelOrder($order_id)
 {
     global $_db;
 
     try {
         $_db->beginTransaction(); // Start a transaction
 
-        // 1. First, delete items linked to this order
-        $sqlItems = "DELETE FROM orderitem WHERE order_id = ?";
-        $stmtItems = $_db->prepare($sqlItems);
-        $stmtItems->execute([$order_id]);
-
-        // 2. Then, delete the order itself
-        $sqlOrder = "DELETE FROM orders WHERE order_id = ?";
+        // 2. Update order status to 'cancelled'
+        $sqlOrder = "UPDATE orders SET status = 'Cancelled' WHERE order_id = ?";
         $stmtOrder = $_db->prepare($sqlOrder);
         $stmtOrder->execute([$order_id]);
 
+        // 3. (Optional) Restore inventory if you have stock management
+        $sqlRestoreStock = "UPDATE product p 
+                            JOIN orderitem oi ON p.product_id = oi.product_id 
+                            SET p.stock_quantity = p.stock_quantity + oi.qty
+                            WHERE oi.order_id = ?";
+        $stmtStock = $_db->prepare($sqlRestoreStock);
+        $stmtStock->execute([$order_id]);
+
         $_db->commit(); // Save changes
-        return true;
+        return ['success' => true, 'message' => 'Order cancelled successfully'];
     } catch (Exception $e) {
         $_db->rollBack(); // Undo if something goes wrong
-        return false;
+        error_log("Order cancellation failed: " . $e->getMessage());
+        return ['success' => false, 'message' => 'Failed to cancel order: ' . $e->getMessage()];
     }
 }
 
@@ -323,6 +325,24 @@ function getMemberOrderHistory($user_id)
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     } catch (PDOException $e) {
         error_log("Get Member Order History Error: " . $e->getMessage());
+        return false;
+    }
+}
+function getSpecificPaymentDao($order_id)
+{
+    global $_db;
+
+    try {
+        $stmt = $_db->prepare("
+            SELECT payment_id, order_id, payment_method, paid_at
+            FROM payment
+            WHERE order_id = ?
+            LIMIT 1
+        ");
+        $stmt->execute([$order_id]);
+        return $stmt->fetch(PDO::FETCH_OBJ); // returns object or false if not found
+    } catch (PDOException $e) {
+        error_log("Get Payment Error: " . $e->getMessage());
         return false;
     }
 }

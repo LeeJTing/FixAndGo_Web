@@ -1,4 +1,26 @@
 $(document).ready(function () {
+  $("select[name='status']")
+    .on("focus", function () {
+      $(this).data("original", $(this).val());
+    })
+    .on("change", function (e) {
+      e.preventDefault();
+
+      const $select = $(this);
+      const newStatus = $select.val();
+      const originalStatus = $select.data("original");
+
+      showConfirm(
+        "Change status from " + originalStatus + " to " + newStatus + "?",
+        function (confirmed) {
+          if (confirmed) {
+            $select.closest("form").submit();
+          } else {
+            $select.val(originalStatus); // Revert if cancelled
+          }
+        }
+      );
+    });
   // Edit button click
   $(".btn-text-edit").on("click", function () {
     const userId = $(this).data("user-id"); // Use data attribute

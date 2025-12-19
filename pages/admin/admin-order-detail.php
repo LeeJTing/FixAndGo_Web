@@ -47,7 +47,7 @@ displayFlashMessage();
                             <input type="hidden" name="action" value="updateStatus">
                             <input type="hidden" name="order_id" value="<?= $order->order_id ?>">
 
-                            <select name="status" class="status-select status-<?= strtolower($order->status) ?>" onchange="confirmStatusChange(this)">
+                            <select name="status" class="status-select status-<?= strtolower($order->status) ?>">
                                 <?php foreach ($all_statuses as $s): ?>
                                     <option value="<?= $s ?>" <?= $order->status == $s ? 'selected' : '' ?>>
                                         <?= ucfirst($s) ?>
@@ -138,7 +138,7 @@ displayFlashMessage();
                         <?php
                         if ($order->deliver_at) {
                             $deliverDate = new DateTime($order->deliver_at);
-                            echo "Delivery date: " . $deliverDate->format('M d, Y');
+                            echo $deliverDate->format('M d, Y');
                         } else {
                             echo "Delivery date: Not scheduled";
                         }
@@ -154,8 +154,6 @@ displayFlashMessage();
                             <button type="submit" class="btn-save">Update</button>
                         </form>
                     <?php endif; ?>
-
-
                 </div>
             </div>
 
@@ -226,20 +224,6 @@ displayFlashMessage();
             </form>
         </div>
     </div>
-    <script>
-        function confirmStatusChange(selectElement) {
-            const newStatus = selectElement.value;
-
-            showConfirm(
-                'Are you sure you want to change status to ' + newStatus + "?",
-                function(result) {
-                    if (result) {
-                        selectElement.form.submit();
-                    }
-                }
-            );
-        }
-    </script>
     <script src="../../js/confirmMsg.js"></script>
     <script src="../../js/admin-order-detail.js"></script>
 </body>

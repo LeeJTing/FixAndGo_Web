@@ -5,7 +5,7 @@ include  "../../_head.php";
 
 $user_id = temp('USER_ID');
 require '../../controller/order-controller.php';
-$orders = getOrderHistoryMember("M001");
+$orders = getOrderHistoryMember($user_id);
 ?>
 <link rel="stylesheet" href="../../css/msg.css">
 <link rel="stylesheet" href="../../css/member-order-history.css">

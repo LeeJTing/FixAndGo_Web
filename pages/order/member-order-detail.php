@@ -4,12 +4,14 @@ $_title = "Fix & Go | Order History";
 include "../../_head.php";
 require '../../controller/order-controller.php';
 
-$order_id = get('id');
+$order_id = (int)get('id');
+$order = getOrderById($order_id);
 $items = getOrderItem($order_id);
+$user = getUserOrder($order_id, $order->user_id);
+$payment = getPayment($order_id);
 
 if (empty($items)) {
     echo "<p>No order found.</p>";
-    include '../../_foot.php';
     exit;
 }
 
@@ -21,70 +23,124 @@ $total_items = count($items);
 $total_quantity = array_sum(array_map(fn($i) => $i->qty, $items));
 ?>
 
-<link rel="stylesheet" href="../../css/member-order-history.css">
+<link rel="stylesheet" href="../../css/member-order-detail.css">
 <link rel="stylesheet" href="../../css/msg.css">
+<div class="container">
 
-<div class="order-history-container">
-
-    <div class="order-card">
-
-        <!-- HEADER -->
-        <div class="order-header">
-            <div>
-                <p class="order-id">Order ID: <?= htmlspecialchars($order->order_id) ?></p>
-                <p class="order-date">
-                    <?= date('d M Y', strtotime($order->order_at)) ?><br>
-                    <small><?= date('h:i A', strtotime($order->order_at)) ?></small>
-                </p>
-            </div>
-
-            <div class="order-meta">
-                <span class="order-status <?= strtolower($order->order_status) ?>">
-                    <?= htmlspecialchars($order->order_status) ?>
-                </span>
-                <span class="order-total">
-                    RM <?= number_format($order->total_price, 2) ?>
-                </span>
-            </div>
+    <!-- Order Overview -->
+    <div class="order-header">
+        <div>
+            <h2>Order #<?= htmlspecialchars($order->order_id) ?></h2>
+            <p class="text-muted">
+                Placed on <?= date('d M Y, H:i', strtotime($order->order_at)) ?>
+            </p>
         </div>
 
-        <!-- BODY -->
-        <div class="order-body">
+        <span class="status <?= strtolower($order->order_status) ?>">
+            <?= htmlspecialchars($order->order_status) ?>
+        </span>
 
-            <div class="order-item-summary">
-                <?= $total_items ?> items (<?= $total_quantity ?> qty)
+    </div>
+
+    <div class="grid">
+
+        <!-- Left Column -->
+        <div>
+
+            <div class="card info">
+                <h3>Shipping Information</h3>
+                <p><span></span></p>
+                <p></p>
+                <?= htmlspecialchars($user->address_one) ?><br>
+
+                <?php if ($user->address_two): ?>
+                    <?= htmlspecialchars($user->address_two) ?><br>
+                <?php endif; ?>
+
+                <?php if ($user->address_three): ?>
+                    <?= htmlspecialchars($user->address_three) ?><br>
+                <?php endif; ?>
+
+                <?= htmlspecialchars($user->post_code) ?>
+                <?= htmlspecialchars($user->state) ?><br>
+                <?= htmlspecialchars($user->country) ?>
+                <p>Shipping: <span>Standard Delivery</span></p>
             </div>
 
-            <?php foreach ($items as $item): ?>
-                <div class="order-item">
+            <div class="card info">
+                <h3>Payment Information</h3>
+                <p>Method: <span><?= $payment->payment_id ?></span></p>
+                <p>Status: <span><?= htmlspecialchars($order->payment_status) ?></span></p>
+                <p>Transaction ID: <span><?= $payment->payment_id ?></span></p>
+            </div>
 
-                    <img src="../../<?= $item->product_image ?? 'images/no-image.png' ?>" alt="Product">
+            <div class="card">
+                <h3>Ordered Items (<?= $total_items ?> items)</h3>
 
-                    <div>
-                        <div class="item-name">
-                            <?= htmlspecialchars($item->product_name) ?>
-                        </div>
-                        <div class="item-qty">
-                            Qty: <?= (int)$item->qty ?> × RM <?= number_format($item->unit_price, 2) ?>
-                        </div>
-                    </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Unit Price</th>
+                            <th>Qty</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-                    <div class="item-price">
-                        RM <?= number_format($item->subtotal, 2) ?>
-                    </div>
+                        <?php foreach ($items as $item): ?>
+                            <tr>
+                                <td>
+                                    <div class="product">
+                                        <img src="../../<?= htmlspecialchars($item->product_image ?? 'default.png') ?>" alt="">
+                                        <?= htmlspecialchars($item->product_name) ?>
+                                    </div>
+                                </td>
 
-                </div>
-            <?php endforeach; ?>
+                                <td>RM <?= number_format($item->unit_price, 2) ?></td>
+                                <td><?= $item->qty ?></td>
+                                <td>RM <?= number_format($item->subtotal, 2) ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+
+                    </tbody>
+                </table>
+            </div>
 
         </div>
 
-        <!-- FOOTER -->
-        <div class="order-footer">
-            <a href="member-order-history.php" class="btn-view">
-                Back to Order History
-            </a>
-        </div>
+        <!-- Right Column -->
+        <div class="card summary">
+            <h3>Order Summary</h3>
 
+            <div class="summary-row">
+                <span>Total Items</span>
+                <span><?= $total_items ?></span>
+            </div>
+
+            <div class="summary-row">
+                <span>Total Quantity</span>
+                <span><?= $total_quantity ?></span>
+            </div>
+
+            <div class="summary-row">
+                <span>Payment Status</span>
+                <span><?= ucfirst($order->payment_status) ?></span>
+            </div>
+
+            <div class="summary-total">
+                Total: RM <?= number_format($order->total_price, 2) ?>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-primary">Track Order</button>
+                <button class="btn btn-outline">Download Invoice</button>
+
+                <?php if ($order->order_status === 'processing'): ?>
+                    <button class="btn btn-danger">Cancel Order</button>
+                <?php endif; ?>
+            </div>
+        </div>
     </div>
 
 </div>

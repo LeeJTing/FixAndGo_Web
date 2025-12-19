@@ -14,7 +14,33 @@
   --container-width: 1500px;
   --header-height: 80px;
 }
+.page-title-section {
+  padding: 20px 0;
+  text-align: left; /* Changed from center to left */
+}
 
+.page-title {
+  font-size: 25px;
+  font-weight: 600;
+  color: var(--color-text-heading);
+  margin: 0 0 8px 0;
+}
+
+.page-subtitle {
+  font-size: 16px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* Optional: Add a subtle accent line below title */
+.page-title::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: var(--color-primary);
+  border-radius: 2px;
+}
 .member-orders {
   max-width: var(--container-width);
   margin: auto;

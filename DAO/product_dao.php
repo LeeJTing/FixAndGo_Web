@@ -689,3 +689,74 @@ function updateCategory(
         return false;
     }
 }
+function getTop5BestSellersDifferentCategories()
+{
+    global $_db;
+
+    $sql = "WITH sales_by_product AS (
+                SELECT
+                    p.product_id,
+                    p.product_name,
+                    p.unit_price,
+                    p.short_desc,
+                    c.category_name,
+                    SUM(oi.qty) AS total_sold
+                FROM product p
+                JOIN category c ON c.category_code = p.category_code
+                JOIN orderitem oi ON oi.product_id = p.product_id
+                JOIN orders o ON o.order_id = oi.order_id
+                WHERE o.status NOT IN ('Pending', 'Cancelled')
+                AND c.is_deleted = FALSE
+                AND c.is_show = 1
+                GROUP BY p.product_id, p.product_name, p.unit_price, p.short_desc, c.category_name
+            ),
+            ranked_products AS (
+                SELECT
+                    sp.*,
+                    ROW_NUMBER() OVER (PARTITION BY sp.category_name ORDER BY sp.total_sold DESC) AS rank_in_category
+                FROM sales_by_product sp
+            ),
+            top_products AS (
+                SELECT
+                    rp.product_id,
+                    rp.product_name,
+                    rp.unit_price,
+                    rp.short_desc,
+                    rp.category_name,
+                    rp.total_sold
+                FROM ranked_products rp
+                WHERE rp.rank_in_category = 1
+                ORDER BY rp.total_sold DESC
+                LIMIT 5
+            ),
+            top_with_image AS (
+                SELECT
+                    tp.*,
+                    pvm.file_path,
+                    pvm.alt,
+                    ROW_NUMBER() OVER (PARTITION BY tp.product_id ORDER BY pvm.media_id ASC) AS image_rank
+                FROM top_products tp
+                LEFT JOIN productvisualmedia pvm ON pvm.product_id = tp.product_id
+            )
+            SELECT
+                product_id,
+                product_name,
+                unit_price,
+                short_desc,
+                category_name,
+                total_sold,
+                file_path,
+                alt
+            FROM top_with_image
+            WHERE image_rank = 1 OR file_path IS NULL
+            ORDER BY total_sold DESC";
+
+    try {
+        $stmt = $_db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    } catch (PDOException $e) {
+        error_log("getTop5BestSellersDifferentCategories error: " . $e->getMessage());
+        return [];
+    }
+}

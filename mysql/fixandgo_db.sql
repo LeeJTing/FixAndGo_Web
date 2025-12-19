@@ -190,7 +190,7 @@ CREATE TABLE `orders` (
   `user_id` varchar(12) NOT NULL,
   `order_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `deliver_at` date DEFAULT NULL,
-  `payment_status` enum('Pending','Paid','Failed','Refunded') NOT NULL,
+  `payment_status` enum('Pending','Paid','Failed','Refunded','Redeemed') NOT NULL,
   `status` enum('Pending','Processing','Shipping','Delivered','Cancelled') NOT NULL,
   `total_price` decimal(10,2) NOT NULL,
   `utilize_point` tinyint(1) NOT NULL DEFAULT 0,

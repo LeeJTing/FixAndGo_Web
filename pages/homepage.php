@@ -2,7 +2,7 @@
     $controllerPath = __DIR__ . '/../controller/guest-controller.php';
     require $controllerPath;
     $category = getGuestAllCategory();
-    $product = getGuestAllProduct();
+    $product = getTop5Product();
     if (basename($_SERVER['PHP_SELF']) != "memberHomepage.php") {
         $path = "../../";
     } else {
@@ -40,42 +40,52 @@
   </section>
 
   <section class="featured-tools-section">
-      <div class="container">
-          <!-- Section Header -->
-          <div class="section-header text-center">
-              <h2 class="section-title">Featured Tools</h2>
-              <p class="section-subtitle">Explore our selection of top-rated hardware</p>
-          </div>
 
-          <!-- Tools Grid -->
-          <div class="product-grid">
-              <?php
-                $firstthree = array_slice($product, 0, 3);
-                foreach ($firstthree as $item):
-                ?>
-                  <article class="product-card">
-                      <div class="product-image">
-                          <img src="<?= $path ?><?= $item->file_path ?>"
-                              alt="<?= $item->alt_text ?>"
-                              class="product-img">
+      <!-- Section Header -->
+      <div class="section-header text-center">
+          <h2 class="section-title">Featured Tools</h2>
+          <p class="section-subtitle">Explore our selection of top-rated hardware</p>
+      </div>
+
+      <!-- Tools Grid -->
+
+      <div class="product-grid top5-grid">
+          <?php foreach ($product as $item): ?>
+              <article class="product-card">
+                  <div class="product-image">
+                      <img src="<?= $path ?><?= htmlspecialchars($item->file_path) ?>"
+                          alt="<?= htmlspecialchars($item->alt_text ?? $item->product_name) ?>"
+                          class="product-img">
+                  </div>
+
+                  <div class="product-info">
+                      <span class="product-category"><?= htmlspecialchars($item->category_name) ?></span>
+                      <h3 class="product-title"><?= htmlspecialchars($item->product_name) ?></h3>
+                      <p class="product-description">
+                          <?= htmlspecialchars($item->short_desc ?? substr(strip_tags($item->description ?? ''), 0, 150) . '...') ?>
+                      </p>
+
+                      <div class="product-price">
+                          RM <?= number_format($item->unit_price, 2) ?>
+                          <?php if (!empty($item->old_price)): ?>
+                              <span class="old-price">RM <?= number_format($item->old_price, 2) ?></span>
+                          <?php endif; ?>
                       </div>
-                      <div class="product-info">
-                          <span class="product-category"><?= $item->category_name ?></span>
-                          <h3 class="product-title"><?= $item->product_name ?></h3>
-                          <p class="product-description"><?= $item->description ?></p>
-                          <div class="product-price">RM <?= $item->unit_price ?></div>
-                          <div class="product-actions">
-                              <a href="#details-<?= strtolower(str_replace(' ', '-', $item->product_id)) ?>" class="btn-view">
-                                  View Details
-                              </a>
-                              <button class="btn-cart add-to-cart"
-                                  data-name="<?= $item->product_name ?>"
-                                  data-price="<?= $item->unit_price ?>">
-                                  Add to Cart
-                              </button>
-                          </div>
+
+                      <div class="product-actions">
+                          <a href="product-details.php?id=<?= $item->product_id ?>" class="btn-view">
+                              View Details
+                          </a>
+                          <button class="btn-cart add-to-cart"
+                              data-id="<?= $item->product_id ?>"
+                              data-name="<?= htmlspecialchars($item->product_name) ?>"
+                              data-price="<?= $item->unit_price ?>">
+                              <i class="fas fa-cart-plus"></i>
+                          </button>
                       </div>
-                  </article>
-              <?php endforeach; ?>
-          </div>
+                  </div>
+              </article>
+          <?php endforeach; ?>
+      </div>
+
   </section>

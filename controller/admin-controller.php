@@ -4,6 +4,7 @@ require_once  __DIR__ . '/../_base.php';
 require __DIR__ . '/../DAO/product_dao.php';
 require __DIR__ . '/../component/files.php';
 require __DIR__ . '/../component/msg.php';
+require __DIR__ . '/../DAO/UserDAO.php';
 
 $function = $_GET['function'] ?? null;   // <-- FIX (no warning)
 
@@ -245,7 +246,7 @@ function getSpecificProductImage($id)
 function sendEmailLowStock()
 {
     try {
-
+        $emailAdmin = getUserById("A0011");
         $lowStockProducts = getLowStockProduct();
 
         if (empty($lowStockProducts)) {
@@ -264,7 +265,7 @@ function sendEmailLowStock()
 
         // Setup PHPMailer
         $mail = get_mail();
-        $mail->addAddress('joeltanhoujun@gmail.com', 'Admin');
+        $mail->addAddress($emailAdmin->email, 'Admin');
 
         $mail->isHTML(true);
         $mail->Subject = 'FixAndGo System: Low Stock Alert';
