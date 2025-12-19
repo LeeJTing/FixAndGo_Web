@@ -1,38 +1,40 @@
 function validateFileInput(selector, options = {}) {
   var $input = $(selector);
-  var files = $input[0].files; // FileList
+  var files = $input[0].files;
   var isValid = true;
 
-  // Remove previous error
+  options.required = options.required !== undefined ? options.required : true;
+  var allowedExtensions = options.types || [];
+  var maxSize = options.maxSize || Infinity;
+
+  // Clear previous error
   $input.next(".error-msg").remove();
 
   // Required validation
-  if (options.required && files.length === 0) {
+  if (options.required && (!files || files.length === 0)) {
     $input.after(
-      '<small class="error-msg" style="color:#f87171;">Please select at least one file.</small>'
+      '<small class="error-msg" style="color:#f87171;">Please select an image.</small>'
     );
     return false;
   }
 
-  // File type and size validation
-  if (files.length > 0) {
-    var allowedTypes = options.types || [];
-    var maxSize = options.maxSize || Infinity;
-
-    $.each(files, function (index, file) {
+  // File type & size validation
+  if (files && files.length > 0) {
+    $.each(files, function (i, file) {
+      var ext = file.name.split(".").pop().toLowerCase();
       if (
-        allowedTypes.length > 0 &&
-        $.inArray(file.type, allowedTypes) === -1
+        allowedExtensions.length > 0 &&
+        allowedExtensions.indexOf(ext) === -1
       ) {
         $input.after(
           '<small class="error-msg" style="color:#f87171;">File "' +
             file.name +
             '" must be one of: ' +
-            allowedTypes.join(", ") +
+            allowedExtensions.join(", ") +
             "</small>"
         );
         isValid = false;
-        return false; // break $.each
+        return false; // break
       }
       if (file.size > maxSize) {
         $input.after(
@@ -43,10 +45,10 @@ function validateFileInput(selector, options = {}) {
             " MB.</small>"
         );
         isValid = false;
-        return false; // break $.each
+        return false; // break
       }
     });
   }
-  
+
   return isValid;
 }

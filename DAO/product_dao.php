@@ -628,3 +628,64 @@ function insertCategory($category_name, $description = null, $img_path = null, $
         return false;
     }
 }
+
+function deleteImageCategoryDao(int $code): bool
+{
+    global $_db;
+
+    try {
+        $sql = "UPDATE category 
+                SET img_path = NULL, is_show = 0
+                WHERE category_code = ?";
+
+        $stmt = $_db->prepare($sql);
+        $stmt->execute([$code]);
+
+        // Return true only if a row was actually updated
+        return $stmt->rowCount() > 0;
+    } catch (PDOException $e) {
+        error_log("Delete category image failed: " . $e->getMessage());
+        return false;
+    }
+}
+
+function updateCategory(
+    int $category_code,
+    string $category_name,
+    ?string $description,
+    ?string $img_path,
+    int $is_show
+): bool {
+    global $_db;
+
+    // Validate required fields
+    if ($category_code <= 0 || trim($category_name) === '') {
+        return false;
+    }
+
+    try {
+        $sql = "UPDATE category 
+                SET category_name = :name,
+                    description   = :description,
+                    img_path       = :img_path,
+                    is_show        = :is_show
+                WHERE category_code = :code
+                  AND is_deleted = 0";
+
+        $stmt = $_db->prepare($sql);
+
+        $stmt->execute([
+            ':name'        => trim($category_name),
+            ':description' => $description ?: null,
+            ':img_path'    => $img_path ?: null,
+            ':is_show'     => $is_show,   // 1 or 0
+            ':code'        => $category_code,
+        ]);
+
+        // True if update executed successfully
+        return $stmt->rowCount() >= 0;
+    } catch (PDOException $e) {
+        error_log('Update category failed: ' . $e->getMessage());
+        return false;
+    }
+}

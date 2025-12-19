@@ -41,7 +41,7 @@ $(document).ready(function () {
     }
 
     // Validate image upload
-    if (!validateFileInput($("#categoryImageInput")[0])) {
+    if (!validateFileInput($("#categoryImageInput"))) {
       isValid = false;
     }
 

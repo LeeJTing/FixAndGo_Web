@@ -21,7 +21,7 @@ $category = getCategoryByCode($category_code);
     <form id="updateCategoryForm" method="POST" enctype="multipart/form-data" action="../../controller/category-controller.php">
         <input type="hidden" name="function" value="update_category">
         <input type="hidden" name="category_code" value="<?= htmlspecialchars($category->category_code) ?>">
-        <input type="hidden" name="existing_image" id="existingImage" value="<?= htmlspecialchars($category->img_path) ?>">
+        <input type="hidden" name="existed_image" value="<?= htmlspecialchars($category->img_path) ?>">
 
         <div class="form-grid">
             <!-- Left Column -->
@@ -47,8 +47,8 @@ $category = getCategoryByCode($category_code);
                 <div class="form-group">
                     <label>Status</label>
                     <select name="status" class="form-input">
-                        <option value="active" <?= $category->is_show ? 'selected' : '' ?>>Active</option>
-                        <option value="inactive" <?= !$category->is_show ? 'selected' : '' ?>>Inactive</option>
+                        <option value="1" <?= $category->is_show ? 'selected' : '' ?>>Active</option>
+                        <option value="0" <?= !$category->is_show ? 'selected' : '' ?>>Inactive</option>
                     </select>
                 </div>
             </div>
@@ -63,7 +63,7 @@ $category = getCategoryByCode($category_code);
                         <!-- Current Image (if exists) -->
                         <?php if (!empty($category->img_path)): ?>
                             <div class="img-box current-img" id="currentImgBox">
-                                <img src="../../<?= htmlspecialchars($category->img_path) ?>"
+                                <img id="previewImage" src="../../<?= htmlspecialchars($category->img_path) ?>"
                                     alt="Current <?= htmlspecialchars($category->category_name) ?> image"
                                     style="width:100%; height:100%; object-fit:cover; border-radius:8px;">
                                 <button type="button" id="removeCurrent" class="remove-img" title="Remove current image">×</button>
@@ -101,37 +101,7 @@ $category = getCategoryByCode($category_code);
         </div>
     </form>
 </div>
-<script>
-    // Image preview for new upload
-    $('#categoryImageInput').on('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                $('#previewImg').attr('src', e.target.result);
-                $('#previewContainer').show();
-                $('#addNewBox').hide();
-                $('#currentImgBox').hide(); // Hide old image when new is selected
-            }
-            reader.readAsDataURL(file);
-        }
-    });
-
-    // Remove new preview
-    $('#removePreview').on('click', function() {
-        $('#categoryImageInput').val('');
-        $('#previewContainer').hide();
-        $('#addNewBox').show();
-        if ($('#existingImage').val()) {
-            $('#currentImgBox').show();
-        }
-    });
-
-    // Remove current image (will trigger upload new)
-    $('#removeCurrent').on('click', function() {
-        $('#existingImage').val(''); // Clear hidden field
-        $('#currentImgBox').hide();
-        $('#addNewBox').show();
-    });
-</script>
+<script src="../../js/confirmMsg.js"></script>
+<script src="../../js/validation.js"></script>
+<script src="../../js/admin-update-category.js"></script>
 <?php include 'adminFooter.php'; ?>

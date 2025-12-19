@@ -104,31 +104,31 @@ function contactNumberFormat(contact_number) {
   return phoneRegex.test(contact_number);
 }
 
-function dobFormat(dob, minAge=17){
+function dobFormat(dob, minAge = 17) {
   if (!dob) return false;
 
-    const birthDate = new Date(dob);
-    const today = new Date();
+  const birthDate = new Date(dob);
+  const today = new Date();
 
-    // Invalid date
-    if (isNaN(birthDate.getTime())) return false;
+  // Invalid date
+  if (isNaN(birthDate.getTime())) return false;
 
-    // Future date
-    if (birthDate > today) return false;
+  // Future date
+  if (birthDate > today) return false;
 
-    // Age check (optional)
-    if (minAge > 0) {
-        let age = today.getFullYear() - birthDate.getFullYear();
-        const m = today.getMonth() - birthDate.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-            age--;
-        }
-        if (age < minAge) return false;
+  // Age check (optional)
+  if (minAge > 0) {
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
     }
+    if (age < minAge) return false;
+  }
 
-    return true;
+  return true;
 }
 
-function addressLineFormat(address){
+function addressLineFormat(address) {
   return address.length >= 5;
 }

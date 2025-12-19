@@ -50,16 +50,19 @@ displayFlashMessage();
                             </a>
 
 
-                            <form method="post" action="../../controller/category-controller.php" id="form-oder"
-                                style="display:inline;">
+                            <form method="post" action="../../controller/category-controller.php" style="display:inline;">
                                 <input type="hidden" name="function" value="delete">
                                 <input type="hidden" name="category_code" value="<?= htmlspecialchars($cat->category_code) ?>">
-                                <button type="submit"
-                                    class="btn-delete"
-                                    <?= $cat->is_show == 0 ? 'disabled' : '' ?>
-                                    title="Delete Category">
-                                    <i class="fa-solid fa-trash-can"></i> Delete
-                                </button>
+
+                                <?php if ($cat->category_code === 5) { ?>
+                                    <button type="submit" class="btn-delete" disabled title="Delete Category">
+                                        <i class="fa-solid fa-trash-can"></i> Delete
+                                    </button>
+                                <?php } else { ?>
+                                    <button type="submit" class="btn-delete" title="Delete Category">
+                                        <i class="fa-solid fa-trash-can"></i> Delete
+                                    </button>
+                                <?php } ?>
                             </form>
                         </td>
                     </tr>
@@ -76,12 +79,14 @@ displayFlashMessage();
 </div>
 <script src="../../js/confirmMsg.js"></script>
 <script>
-    $("#form-order").on("submit", function(e) {
-        e.preventDefault();
+    $(".btn-delete").on("click", function(e) {
+        e.preventDefault(); // stop immediate submit
+
+        const $form = $(this).closest("form"); // find the form of this button
 
         showConfirm("Are you sure you want to delete this category?", function(result) {
             if (result) {
-                $("#form-order")[0].submit();
+                $form.submit(); // submit only this form
             }
         });
     });
