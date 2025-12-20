@@ -26,9 +26,7 @@ class CustomerController {
         }
         
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $fileType = finfo_file($finfo, $_FILES['profile_image']['tmp_name']);
-        finfo_close($finfo);
+        $fileType = $_FILES['profile_image']['type'];
         
         if (!in_array($fileType, $allowedTypes)) {
             return false;
@@ -43,13 +41,10 @@ class CustomerController {
         $targetFile = $targetDir . $fileName;
         
         // 删除旧文件（如果存在）
-        $pattern = $targetDir . $userId . '.*';
-        foreach (glob($pattern) as $file) {
-            if (is_file($file)) {
-                unlink($file);
-            }
+        if (file_exists($targetFile)) {
+            unlink($targetFile);
         }
-                
+        
         if (move_uploaded_file($_FILES['profile_image']['tmp_name'], $targetFile)) {
             // 更新或插入 profilepicture 表
             $stmt = $_db->prepare("SELECT user_id FROM profilepicture WHERE user_id = ?");
@@ -141,17 +136,28 @@ class CustomerController {
         global $_db;
 
         try {
-            // 1️⃣ 删除所有可能的头像实体文件（不依赖 DB）
-            $pattern = __DIR__ . '/../images/profile/' . $id . '.*';
-            foreach (glob($pattern) as $file) {
-                if (is_file($file)) {
-                    unlink($file);
-                }
-            }
+            // 1️⃣ 查头像路径（如果有）
+            $stmt = $_db->prepare("SELECT file_path FROM profilepicture WHERE user_id = ?");
+            $stmt->execute([$id]);
+            $profile = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // 2️⃣ 删除数据库记录（DAO 已包含 profilepicture）
+            // 2️⃣ 删除用户（主表）
             if (!CustomerDAO::deleteCustomer($id)) {
                 throw new Exception('Delete user failed');
+            }
+
+            // 3️⃣ 删除 profilepicture 记录
+            if ($profile) {
+                $stmt = $_db->prepare("DELETE FROM profilepicture WHERE user_id = ?");
+                $stmt->execute([$id]);
+
+                // 4️⃣ 删除实体图片文件
+                $pattern = __DIR__ . '/../images/profile/' . $id . '.*';
+                foreach (glob($pattern) as $file) {
+                    if (is_file($file)) {
+                        unlink($file);
+                    }
+                }
             }
 
             flash('success', 'Customer deleted successfully!');
@@ -162,7 +168,6 @@ class CustomerController {
 
         redirect('adminCustomer.php');
     }
-
 
 }
 ?>
