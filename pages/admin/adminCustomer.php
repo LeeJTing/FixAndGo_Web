@@ -116,8 +116,7 @@ include 'adminHeader.php';
 
                 <select name="status" class="filter-select" onchange="this.form.submit()">
                     <option value="All" <?= $status == 'All' ? 'selected' : '' ?>>Status: All</option>
-                    <option value="Verified" <?= $status == 'Verified' ? 'selected' : '' ?>>Verified</option>
-                    <option value="Unverified" <?= $status == 'Unverified' ? 'selected' : '' ?>>Unverified</option>
+                    <option value="Unblock" <?= $status == 'Unblock' ? 'selected' : '' ?>>Unblock</option>
                     <option value="Blocked" <?= $status == 'Blocked' ? 'selected' : '' ?>>Blocked</option>
                 </select>
 
@@ -164,9 +163,11 @@ include 'adminHeader.php';
                                 <td>
                                     <?php
                                     $statusClass = strtolower($customer->account_status);
-                                    if ($statusClass == 'verified') $statusClass = 'active';
-                                    if ($statusClass == 'blocked') $statusClass = 'suspended';
-                                    if ($statusClass == 'unverified') $statusClass = 'new';
+                                    if ($statusClass === 'unblock') {
+                                        $statusClass = 'active';
+                                    } elseif ($statusClass === 'blocked') {
+                                        $statusClass = 'suspended';
+                                    }
                                     ?>
                                     <span class="status <?= $statusClass ?>">
                                         <?= htmlspecialchars($customer->account_status) ?>
@@ -280,9 +281,12 @@ include 'adminHeader.php';
 
                 <label>Status</label>
                 <select name="account_status">
-                    <option value="Verified" <?= $selectedCustomer->account_status == 'Verified' ? 'selected' : '' ?>>Verified</option>
-                    <option value="Unverified" <?= $selectedCustomer->account_status == 'Unverified' ? 'selected' : '' ?>>Unverified</option>
-                    <option value="Blocked" <?= $selectedCustomer->account_status == 'Blocked' ? 'selected' : '' ?>>Blocked</option>
+                    <option value="Unblock" <?= $selectedCustomer->account_status == 'Unblock' ? 'selected' : '' ?>>
+                        Unblock
+                    </option>
+                    <option value="Blocked" <?= $selectedCustomer->account_status == 'Blocked' ? 'selected' : '' ?>>
+                        Blocked
+                    </option>
                 </select>
 
                 <div class="edit-panel-buttons">
@@ -335,8 +339,7 @@ include 'adminHeader.php';
 
             <label>Status</label>
             <select name="account_status">
-                <option value="Verified">Verified</option>
-                <option value="Unverified">Unverified</option>
+                <option value="Unblock">Unblock</option>
                 <option value="Blocked">Blocked</option>
             </select>
 

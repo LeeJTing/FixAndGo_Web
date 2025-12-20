@@ -81,7 +81,7 @@ class CustomerController {
                 'contact_num' => post('contact_num'),
                 'gender' => post('gender'),
                 'user_role' => post('user_role', 'Member'),
-                'account_status' => post('account_status', 'Verified')
+                'account_status' => post('account_status', 'Unblock')
             ];
             
             if (!is_unique($data['email'], 'users', 'email')) {
@@ -110,7 +110,7 @@ class CustomerController {
                 'email' => post('email'),
                 'contact_num' => post('contact_num'),
                 'gender' => post('gender'),
-                'account_status' => post('account_status'),
+                'account_status' => post('account_status', 'Unblock'),
                 'password' => post('password')
             ];
             
@@ -133,13 +133,41 @@ class CustomerController {
     
     // 处理删除用户
     public static function handleDelete($id) {
-        if (CustomerDAO::deleteCustomer($id)) {
+        global $_db;
+
+        try {
+            // 1️⃣ 查头像路径（如果有）
+            $stmt = $_db->prepare("SELECT file_path FROM profilepicture WHERE user_id = ?");
+            $stmt->execute([$id]);
+            $profile = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // 2️⃣ 删除用户（主表）
+            if (!CustomerDAO::deleteCustomer($id)) {
+                throw new Exception('Delete user failed');
+            }
+
+            // 3️⃣ 删除 profilepicture 记录
+            if ($profile) {
+                $stmt = $_db->prepare("DELETE FROM profilepicture WHERE user_id = ?");
+                $stmt->execute([$id]);
+
+                // 4️⃣ 删除实体图片文件
+                $pattern = __DIR__ . '/../images/profile/' . $id . '.*';
+                foreach (glob($pattern) as $file) {
+                    if (is_file($file)) {
+                        unlink($file);
+                    }
+                }
+            }
+
             flash('success', 'Customer deleted successfully!');
-            redirect('adminCustomer.php');
-        } else {
+        } catch (Exception $e) {
+            error_log($e->getMessage());
             flash('error', 'Failed to delete customer');
-            redirect('adminCustomer.php');
         }
+
+        redirect('adminCustomer.php');
     }
+
 }
 ?>
