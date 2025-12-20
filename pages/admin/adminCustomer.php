@@ -3,19 +3,25 @@
 require_once __DIR__ . '/../../_base.php';
 require_once __DIR__ . '/../../controller/customer-controller.php';
 
-// 处理操作
-$action = get('action');
+// 处理删除（POST）
+$action = get('action') ?? post('action');
 
-if ($action == 'delete' && get('id')) {
-    CustomerController::handleDelete(get('id'));
-}
+if (is_post()) {
+    switch ($action) {
+        case 'delete':
+            if (post('id')) {
+                CustomerController::handleDelete(post('id'));
+            }
+            break;
 
-if ($action == 'update' && is_post()) {
-    CustomerController::handleUpdate();
-}
+        case 'update':
+            CustomerController::handleUpdate();
+            break;
 
-if ($action == 'create' && is_post()) {
-    CustomerController::handleCreate();
+        case 'create':
+            CustomerController::handleCreate();
+            break;
+    }
 }
 
 // 获取搜索和筛选参数
@@ -175,9 +181,15 @@ include 'adminHeader.php';
                                 </td>
                                 <td onclick="event.stopPropagation();">
                                     <a href="?edit=<?= $customer->user_id ?>&<?= $queryParams ?>" class="btn-edit">Edit</a>
-                                    <a href="?action=delete&id=<?= $customer->user_id ?>&<?= $queryParams ?>"
-                                    onclick="return confirm('Are you sure you want to delete this customer?')" 
-                                    class="btn-delete">Delete</a>
+                                    <form method="POST" action="adminCustomer.php" style="display:inline;"
+                                        onsubmit="return confirm('Are you sure you want to delete this customer?')">
+
+                                        <input type="hidden" name="action" value="delete">
+                                        <input type="hidden" name="id" value="<?= $customer->user_id ?>">
+
+                                        <button type="submit" class="btn-delete">Delete</button>
+                                    </form>
+
                                 </td>
                             </tr>
                             <?php endforeach; ?>

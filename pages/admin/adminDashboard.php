@@ -53,7 +53,7 @@ include 'adminHeader.php';
                 <i class="fa-regular fa-user"></i> My Profile
             </a>
             <hr>
-            <a href="#" class="logout-btn">
+            <a href="javascript:void(0)" class="logout-btn">
                 <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
             </a>
         </div>
@@ -357,14 +357,24 @@ function initSalesChart(period) {
         });
 }
 
-$('.logout-btn').on('click', function (e) {
-    e.preventDefault();
+document.addEventListener('DOMContentLoaded', function () {
+    const logoutBtn = document.querySelector('.logout-btn');
 
-    if (confirm('Are you sure you want to logout?')) {
-        $.post('<?= $pathPrefix ?>/_logout.php', {
-            logout: true
-        }).done(function () {
-            window.location.href = '<?= $pathPrefix ?>/pages/guest/login.php';
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            if (confirm('Are you sure you want to logout?')) {
+                fetch('<?= $pathPrefix ?>/_logout.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: 'logout=true'
+                }).then(() => {
+                    window.location.href = '<?= $pathPrefix ?>/pages/guest/login.php';
+                });
+            }
         });
     }
 });
