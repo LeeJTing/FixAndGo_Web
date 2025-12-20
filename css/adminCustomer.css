@@ -60,7 +60,7 @@
 }
 
 .search-box {
-    background: #1e293b;
+    background: #000000;
     padding: 10px 14px;
     border-radius: 8px;
     display: flex;
@@ -94,7 +94,7 @@
 
 /* ===== Table ===== */
 .customer-table-container {
-    background: #0f172a;
+    background: #000000;
     padding: 20px;
     border-radius: 12px;
     flex: 3;
@@ -224,7 +224,7 @@
 
 /* ===== Right Panel ===== */
 .edit-panel {
-    background: #0f172a;
+    background: #000000;
     padding: 20px;
     border-radius: 12px;
     width: 320px;

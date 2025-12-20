@@ -12,7 +12,7 @@
     padding: 10px 14px;
     border-radius: 8px;
     border: 1px solid #475569;
-    background: #1e293b;
+    background: #000000;
     color: #f1f5f9;
     font-size: 14px;
 }
@@ -123,11 +123,11 @@
     border-top: 1px solid #334155;
 }
 
-.admin-profile-dropdown .logout-link {
+.admin-profile-dropdown .logout-btn {
     color: #ef4444;
 }
 
-.admin-profile-dropdown .logout-link:hover {
+.admin-profile-dropdown .logout-btn:hover {
     background: rgba(239, 68, 68, 0.1);
     color: #ef4444;
 }

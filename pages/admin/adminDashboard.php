@@ -49,11 +49,11 @@ include 'adminHeader.php';
         </div>
 
         <div class="admin-profile-dropdown" id="adminProfileDropdown">
-            <a href="<?= $pathPrefix ?>/pages/member/profile.php">
+            <a href="<?= $pathPrefix ?>/pages/admin/adminProfile.php">
                 <i class="fa-regular fa-user"></i> My Profile
             </a>
             <hr>
-            <a href="javascript:void(0)" class="logout-link" onclick="handleAdminLogout()">
+            <a href="#" class="logout-btn">
                 <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
             </a>
         </div>
@@ -150,12 +150,16 @@ include 'adminHeader.php';
         <!-- Right Section - Quick Actions -->
         <div class="quick-actions">
             <h3>Quick Actions</h3>
-            <button class="qa-btn primary" onclick="window.location.href='<?= $pathPrefix ?>/pages/admin/products.php'">
+            <button class="qa-btn primary"
+                onclick="window.location.href='admin-product.php'">
                 <i class="fa-solid fa-plus"></i> Add New Product
             </button>
-            <button class="qa-btn" onclick="window.location.href='<?= $pathPrefix ?>/pages/admin/inventory.php'">
-                <i class="fa-solid fa-boxes"></i> Manage Inventory
+
+            <button class="qa-btn"
+                onclick="window.location.href='adminCustomer.php'">
+                <i class="fa-solid fa-user-gear"></i> Manage Users
             </button>
+
             <button class="qa-btn" onclick="window.location.href='<?= $pathPrefix ?>/pages/admin/tickets.php'">
                 <i class="fa-solid fa-ticket"></i> Customer Tickets
             </button>
@@ -269,13 +273,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Logout Handler
-function handleAdminLogout() {
-    if (confirm('Are you sure you want to logout?')) {
-        window.location.href = '<?= $pathPrefix ?>/logout.php';
-    }
-}
-
 // Sales Chart
 let salesChart = null;
 
@@ -359,6 +356,19 @@ function initSalesChart(period) {
             alert('Failed to load chart data. Please check the console for details.');
         });
 }
+
+$('.logout-btn').on('click', function (e) {
+    e.preventDefault();
+
+    if (confirm('Are you sure you want to logout?')) {
+        $.post('<?= $pathPrefix ?>/_logout.php', {
+            logout: true
+        }).done(function () {
+            window.location.href = '<?= $pathPrefix ?>/pages/guest/login.php';
+        });
+    }
+});
+
 </script>
 
 <?php include 'adminFooter.php'; ?>
