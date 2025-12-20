@@ -1,4 +1,113 @@
 (function ($) {
+  function escapeHtml(text) {
+    return String(text)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/\"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function renderSidebarCart(payload) {
+    const items = (payload && payload.items) || [];
+    if (!items.length) {
+      $("#cartItems").html('<p class="empty-cart">Your cart is empty</p>');
+      $("#cartTotalPrice").text("RM 0.00");
+      if (typeof payload.cartCount !== "undefined") {
+        $("#cartCount").text(payload.cartCount);
+      } else {
+        $("#cartCount").text("0");
+      }
+      return;
+    }
+
+    const html = items
+      .map(function (it) {
+        const itemId = parseInt(it.item_id, 10) || 0;
+        const name = escapeHtml(it.product_name || "");
+        const price = parseFloat(it.unit_price) || 0;
+        const qty = parseInt(it.qty, 10) || 1;
+        const total = (price * qty).toFixed(2);
+        const isCheck = parseInt(it.is_check, 10) ? true : false;
+        const filePath = (it.file_path || "").replace(/^\/+/, "");
+        const imgSrc = filePath ? ROOT_DIR + "/" + filePath : "";
+
+        return (
+          '<div class="cart-item flex align-center" data-item-id="' +
+          itemId +
+          '" data-price="' +
+          price +
+          '">' +
+          '<div class="item-checkbox-container">' +
+          '<input type="checkbox" class="item-checkbox is-check-checkbox" data-item-id="' +
+          itemId +
+          '" ' +
+          (isCheck ? "checked" : "") +
+          " />" +
+          "</div>" +
+          (imgSrc
+            ? '<img src="' +
+              imgSrc +
+              '" alt="' +
+              name +
+              '" class="product-image" style="width:50px;height:50px;object-fit:cover;" />'
+            : "") +
+          '<div class="cart-item-info">' +
+          '<div class="product-name-small">' +
+          name +
+          "</div>" +
+          '<div class="product-price-small">RM ' +
+          price.toFixed(2) +
+          "</div>" +
+          "</div>" +
+          '<div class="quantity-control-small">' +
+          '<a href="javascript:void(0)" class="qty-btn minus ' +
+          (qty <= 1 ? "disabled" : "") +
+          '">-</a>' +
+          '<span class="product-quantity-display">' +
+          qty +
+          "</span>" +
+          '<a href="javascript:void(0)" class="qty-btn plus">+</a>' +
+          "</div>" +
+          '<div class="product-total-small">RM <span class="product-total">' +
+          total +
+          "</span></div>" +
+          '<a href="javascript:void(0)" class="delete-btn" data-item-id="' +
+          itemId +
+          '">Remove</a>' +
+          "</div>"
+        );
+      })
+      .join("");
+
+    $("#cartItems").html(html);
+    if (typeof payload.cartTotal !== "undefined") {
+      const t = parseFloat(payload.cartTotal) || 0;
+      $("#cartTotalPrice").text("RM " + t.toFixed(2));
+    }
+    if (typeof payload.cartCount !== "undefined") {
+      $("#cartCount").text(payload.cartCount);
+    }
+  }
+
+  function refreshSidebarCart() {
+    return $.ajax({
+      url: ROOT_DIR + "/AJAX/get_cart_sidebar.php",
+      type: "POST",
+      dataType: "json",
+      data: { get_cart_sidebar: true },
+    }).done(function (resp) {
+      if (resp && resp.success) {
+        renderSidebarCart(resp);
+        recalcHeaderCart();
+      }
+    });
+  }
+
+  // Allow other scripts to refresh the sidebar when needed
+  window.FixAndGo = window.FixAndGo || {};
+  window.FixAndGo.refreshSidebarCart = refreshSidebarCart;
+
   function recalcHeaderCart() {
     // Recalculate total only for items checked (is_check)
     // But count should show total number of items regardless of is_check
@@ -36,6 +145,9 @@
       e.stopPropagation();
       $("#cartSidebar").addClass("open");
       $("#cartOverlay").show();
+
+      // Pull fresh cart data so newly-added items appear immediately
+      refreshSidebarCart();
     });
 
     $(".close-cart, #cartOverlay").on("click", function () {

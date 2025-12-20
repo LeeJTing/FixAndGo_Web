@@ -109,6 +109,37 @@ p {
   background-color: #374151;
 }
 
+/* Cart toast (used by add-to-cart) */
+.cart-toast {
+  position: fixed;
+  top: calc(var(--header-height) + 12px);
+  right: 16px;
+  z-index: 10000;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateX(120%);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  color: var(--text-light);
+  background: var(--bg-dark);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+}
+
+.cart-toast.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.cart-toast.success {
+  background: var(--success-color);
+}
+
+.cart-toast.error {
+  background: var(--error-color);
+}
+
 /* Header */
 header {
   background-color: var(--bg-dark);
