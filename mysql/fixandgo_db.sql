@@ -479,8 +479,8 @@ ALTER TABLE `profilepicture`
 -- Indexes for table `otp`
 --
 ALTER TABLE `token`
-  ADD PRIMARY KEY (`user_id`,`start_at`),
-  ADD KEY `user_id` (`user_id`);
+  ADD PRIMARY KEY (`start_at`),
+  ADD KEY `start_at` (`start_at`);
 
 --
 -- Indexes for table `review`
