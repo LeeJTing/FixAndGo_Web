@@ -23,6 +23,17 @@ $order = $items[0];
 // Calculations
 $total_items = count($items);
 $total_quantity = array_sum(array_map(fn($i) => $i->qty, $items));
+
+$shipping_fee = 10.00;
+$items_total = 0.0;
+foreach ($items as $i) {
+    $items_total += (float)$i->subtotal;
+}
+$pre_total_cents = (int)round((($items_total + $shipping_fee) * 100));
+$final_total_cents = (int)round(((float)$order->total_price) * 100);
+$discount_cents = max(0, $pre_total_cents - $final_total_cents);
+$used_points = (int)round($discount_cents / 10);
+$discount_rm = $discount_cents / 100;
 displayFlashMessage();
 ?>
 
@@ -75,9 +86,9 @@ displayFlashMessage();
 
             <div class="card info">
                 <h3>Payment Information</h3>
-                <p>Method: <span><?= $payment->payment_id ?></span></p>
+                <p>Method: <span><?= htmlspecialchars($payment->payment_method ?? 'Cash') ?></span></p>
                 <p>Status: <span><?= htmlspecialchars($order->payment_status) ?></span></p>
-                <p>Transaction ID: <span><?= $payment->payment_id ?></span></p>
+                <p>Transaction ID: <span><?= htmlspecialchars($payment->payment_id ?? '-') ?></span></p>
             </div>
 
             <div class="card">
@@ -133,6 +144,18 @@ displayFlashMessage();
                 <span>Payment Status</span>
                 <span><?= ucfirst($order->payment_status) ?></span>
             </div>
+
+            <div class="summary-row">
+                <span>Shipping Fee</span>
+                <span>RM <?= number_format((float)$shipping_fee, 2) ?></span>
+            </div>
+
+            <?php if ($used_points > 0 && $discount_cents > 0): ?>
+                <div class="summary-row">
+                    <span>Loyalty Points Deducted</span>
+                    <span>-RM <?= number_format((float)$discount_rm, 2) ?> (<?= (int)$used_points ?> points)</span>
+                </div>
+            <?php endif; ?>
 
             <div class="summary-total">
                 Total: RM <?= number_format($order->total_price, 2) ?>

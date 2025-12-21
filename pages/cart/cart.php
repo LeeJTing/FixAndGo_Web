@@ -6,6 +6,7 @@ include "../../_head.php";
 require_once "../../DAO/cart_dao.php";
 require "../../DAO/product_dao.php";
 require "../../DAO/profile_dao.php";
+require_once "../../DAO/loyaltypoint_dao.php";
 
 // Determine user ID - use logged in user or generate guest session ID
 $user_id = temp('USER_ID') ?? null;
@@ -22,6 +23,11 @@ $cart = getCartByUserId($user_id);
 $cart_items = $cart ? getCartItems($cart->cart_id) : [];
 $total = 0;
 $selected_total = 0;
+
+$loyalty_points = 0;
+if (temp('USER_ID')) {
+    $loyalty_points = getAvailableLoyaltyPointsDao(temp('USER_ID'));
+}
 
 // Get customer addresses (only if logged in)
 $addresses = temp('USER_ID') ? getAddressesByUserId(temp('USER_ID')) : [];
@@ -43,6 +49,9 @@ foreach ($cart_items as $item) {
 
 <script>
     const ROOT_DIR = '<?= $rootDir ?>';
+    const LOYALTY_POINTS = <?= (int)$loyalty_points ?>;
+    const LOYALTY_POINT_VALUE_RM = 0.1;
+    const SHIPPING_FEE_RM = 10.00;
 </script>
 <script src="<?= $rootDir ?>/js/cart.js"></script>
 
@@ -307,8 +316,39 @@ foreach ($cart_items as $item) {
         <div class="cart-footer">
             <div class="total-section">
                 <span class="selected-total-label">Selected Total: RM <span id="selected-total"><?= number_format($selected_total, 2) ?></span></span>
+                <span class="shipping-fee-label">Shipping Fee: RM <span id="shipping-fee">10.00</span></span>
+                <?php if (temp('USER_ID')): ?>
+                    <div class="loyalty-summary">
+                        <div class="loyalty-inline">
+                            <span class="selected-total-label loyalty-points-line">
+                                Loyalty Points: <b><span id="loyalty-points-available"><?= (int)$loyalty_points ?></span></b>
+                                <span class="loyalty-hint">(RM <span id="loyalty-points-rm"><?= number_format(((int)$loyalty_points) * 0.10, 2) ?></span>)</span>
+                                <span id="loyalty-using" class="loyalty-using" style="display:none;">
+                                    Using: <b><span id="loyalty-points-used">0</span></b>
+                                    <span class="loyalty-hint">(RM <span id="loyalty-points-used-rm">0.00</span>)</span>
+                                </span>
+                            </span>
+
+                            <label class="loyalty-toggle loyalty-toggle-compact" title="Use loyalty points">
+                                <input type="checkbox" id="use_loyalty_points" />
+                            </label>
+                        </div>
+
+                        <span id="loyalty-discount" class="loyalty-discount-hidden">0.00</span>
+
+                        <span class="final-total-label">
+                            Final Total (incl. shipping): RM <span id="final-total"><?= number_format($selected_total + 10.00, 2) ?></span>
+                        </span>
+                    </div>
+                <?php else: ?>
+                    <div class="loyalty-summary loyalty-summary-guest">
+                        <span class="final-total-label">
+                            Final Total (incl. shipping): RM <span id="final-total"><?= number_format($selected_total + 10.00, 2) ?></span>
+                        </span>
+                    </div>
+                <?php endif; ?>
             </div>
-            <button id="btnCheckout" type="button" onclick="proceedToCheckout()">Proceed to Checkout</button>
+            <button id="btnCheckout" class="checkout-btn" type="button" onclick="proceedToCheckout()">Proceed to Checkout</button>
         </div>
     <?php endif; ?>
 </main>

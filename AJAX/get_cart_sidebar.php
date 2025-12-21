@@ -9,7 +9,6 @@ if (!is_post() || !isset($_POST['get_cart_sidebar'])) {
     exit;
 }
 
-// Same user/guest logic as the server-rendered header cart
 $user_id = temp('USER_ID') ?? null;
 if (!$user_id) {
     if (!isset($_SESSION['guest_session_id'])) {

@@ -1,7 +1,4 @@
 <?php
-// AJAX/save_address.php
-// Return JSON only; guard includes and catch errors.
-
 if (substr(php_sapi_name(), 0, 3) !== 'cli') {
     @header('Content-Type: application/json; charset=utf-8');
 }
@@ -19,9 +16,7 @@ try {
 
 $response = ['success' => false, 'message' => ''];
 
-// Ensure we return JSON even if something later emits a warning
 try {
-    // Only allow logged-in users to add addresses
     $user_id = temp('USER_ID') ?? null;
     if (!$user_id) {
         $response['message'] = 'You must be logged in to add addresses';
@@ -36,10 +31,8 @@ try {
         echo json_encode($response);
         exit();
     }
-    // Read address_id from POST (if present) so we can distinguish create vs update
     $address_id = post('address_id', '');
 
-    // Enforce 3-address limit only when creating a new address (no address_id provided)
     if (empty($address_id) && getAddressCountByUserId($user_id) >= 3) {
         $response['message'] = 'You may add at most 3 addresses';
         ob_end_clean();
