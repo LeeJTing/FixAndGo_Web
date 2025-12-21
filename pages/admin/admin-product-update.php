@@ -1,6 +1,7 @@
 <link rel="stylesheet" href="../../css/admin-product-update.css">
 <link rel="stylesheet" href="../../css/msg.css">
 <?php
+$_title = 'Fix & Go | Admin Product Update';
 require '../../controller/admin-controller.php';
 require_once '../../component/msg.php';
 include 'adminHeader.php';

@@ -1,6 +1,7 @@
 <?php
 require_once "../../_base.php";
 include "../../_head.php";
+$_title = 'Fix & Go | Member Order Detail';
 require '../../controller/order-controller.php';
 require '../../component/msg.php';
 $user_id = temp('USER_ID');
@@ -140,7 +141,7 @@ displayFlashMessage();
                 <input type="hidden" name="order_id" value="<?= $order_id ?>">
                 <input type="hidden" name="user_id" value="<?= $user_id ?>">
                 <div class="actions">
-                    <button class="btn btn-outline">Download Invoice</button>
+                    <a class="btn btn-outline" target="_blank" href="generate_pdf.php?id=<?= $order_id ?>">Download Invoice</a>
                     <?php if ($order->order_status === 'Processing'): ?>
                         <button type="submit" class="btn btn-danger">Cancel Order</button>
                     <?php endif; ?>

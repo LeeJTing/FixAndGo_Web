@@ -1,4 +1,5 @@
 <?php
+$_title = 'Fix & Go | Admin Product List';
 require_once '../../_base.php';
 include 'adminHeader.php';
 require '../../controller/admin-controller.php';

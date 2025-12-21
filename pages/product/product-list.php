@@ -1,14 +1,15 @@
 <link rel="stylesheet" href="../../css/product-list.css">
+<link rel="stylesheet" href="../../css/msg.css">
 <?php
 require '../../_base.php';
-$_title = "Fix & Go | Product";
+$_title = "Fix & Go | Product List";
 include '../../_head.php';
 require '../../controller/product-controller.php';
 $products = getProductList();
 $items = getCountAllProduct();
 $category = getAllCategory();
-
 $selected_category = $_SESSION['selected_category'] ?? '';
+displayFlashMessage();
 ?>
 
 <body>

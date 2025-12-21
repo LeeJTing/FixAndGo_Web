@@ -1,4 +1,5 @@
 <?php
+$_title = 'Fix & Go | Admin Order Detail';
 require '../../_base.php';
 require '../../controller/order-controller.php';
 require_once '../../component/msg.php';

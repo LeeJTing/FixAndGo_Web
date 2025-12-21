@@ -1,4 +1,5 @@
 <?php
+$_title = 'Fix & Go | Admin Update Category';
 require '../../_base.php';
 require '../../controller/category-controller.php';
 require_once '../../component/msg.php';
