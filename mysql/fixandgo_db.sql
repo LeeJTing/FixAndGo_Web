@@ -309,35 +309,19 @@ CREATE TABLE `review` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `userdevices`
+-- Table structure for table `token`
 --
-
-CREATE TABLE `userdevices` (
-  `mac_address` varchar(17) NOT NULL,
-  `device_name` varchar(100) DEFAULT NULL,
-  `user_id` varchar(12) NOT NULL
+CREATE TABLE `token` (
+  `user_id` varchar(12) NOT NULL,
+  `start_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `token` varchar(255) NOT NULL,
+  `used_for` enum('Remember','Register') NOT NULL,
+  `expired_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `userdevices`
+-- Dumping data for table `userprofile`
 --
-
-INSERT INTO `userdevices` (`mac_address`, `device_name`, `user_id`) VALUES
-('E0:77:2C:5B:9F:13', 'iPhone 13 Pro', 'A001'),
-('F1:88:3E:7D:22:41', 'Dell XPS 15', 'A002'),
-('A2:6B:5C:3A:11:92', 'iPad Mini', 'A003'),
-('B5:9D:8F:1E:44:27', 'Samsung S22 Ultra', 'A004'),
-('C6:2A:7B:9C:55:30', 'MacBook Air M1', 'A005'),
-('A4:12:6F:9B:3C:11', 'iPhone 12', 'M001'),
-('B8:4F:2A:7D:88:29', 'Samsung Galaxy S21', 'M002'),
-('C0:98:3D:4A:1F:55', 'iPad Air', 'M003'),
-('D1:7B:66:22:5E:90', 'Huawei Matebook D14', 'M004'),
-('E3:55:AF:9C:77:01', 'Xiaomi Redmi Note 11', 'M005'),
-('F7:62:1D:2E:4B:88', 'MacBook Pro 13', 'M006'),
-('A1:33:4E:5F:99:77', 'Samsung Galaxy Tab A7', 'M007'),
-('B2:8A:7C:3D:11:44', 'ASUS ROG Phone 5', 'M008'),
-('C7:21:9D:6E:45:22', 'Lenovo IdeaPad Slim', 'M009'),
-('D9:44:8F:1A:30:66', 'Oppo Reno 8', 'M010');
 
 -- --------------------------------------------------------
 
@@ -496,19 +480,19 @@ ALTER TABLE `profilepicture`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indexes for table `otp`
+--
+ALTER TABLE `token`
+  ADD PRIMARY KEY (`user_id`,`start_at`),
+  ADD KEY `user_id` (`user_id`);
+
+--
 -- Indexes for table `review`
 --
 ALTER TABLE `review`
   ADD PRIMARY KEY (`review_id`),
   ADD KEY `user_id` (`user_id`),
   ADD KEY `product_id` (`product_id`);
-
---
--- Indexes for table `userdevices`
---
-ALTER TABLE `userdevices`
-  ADD PRIMARY KEY (`user_id`,`mac_address`),
-  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `userprofile`
@@ -655,17 +639,17 @@ ALTER TABLE `profilepicture`
   ADD CONSTRAINT `profilepicture_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
 
 --
+-- Constraints for table `otp`
+--
+ALTER TABLE `token`
+  ADD CONSTRAINT `token_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
+
+--
 -- Constraints for table `review`
 --
 ALTER TABLE `review`
   ADD CONSTRAINT `review_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
   ADD CONSTRAINT `review_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`);
-
---
--- Constraints for table `userdevices`
---
-ALTER TABLE `userdevices`
-  ADD CONSTRAINT `userdevices_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
 
 --
 -- Constraints for table `userprofile`
