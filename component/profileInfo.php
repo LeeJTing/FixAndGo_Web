@@ -8,7 +8,6 @@ $user_role = temp('USER_ROLE');
 $user_status = temp('ACCOUNT_STATUS');
 $user_email = temp('EMAIL');
 $user_profile = getUserProfileDetails($user_id);
-$user_devices = getUserDevices($user_id);
 $addresses = getAddressesByUserId($user_id);
 ?>
 
@@ -154,27 +153,6 @@ $addresses = getAddressesByUserId($user_id);
 
             <!-- Right Column - Addresses & Actions -->
             <div class="right-column">
-                <div class="info-card">
-                    <div class="card-header">
-                        <h2><i class="fas fa-laptop"></i> My Devices</h2>
-                    </div>
-                    <div class="card-body">
-                        <?php foreach ($user_devices as $key => $value): ?>
-                            <div class="device-card">
-                                <div class="device-info">
-                                    <div class="device-details">
-                                        <h3><?= $value->device_name ?></h3>
-                                    </div>
-                                </div>
-                                <div class="device-meta">
-                                    <button class="device-action remove">
-                                        <i class="fas fa-trash"></i> Remove
-                                    </button>
-                                </div>
-                            </div>
-                        <?php endforeach ?>
-                    </div>
-                </div>
                 <div class="info-card">
                     <div class="card-header">
                         <h2><i class="fas fa-map-marker-alt"></i> My Addresses</h2>

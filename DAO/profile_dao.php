@@ -71,14 +71,14 @@ function getUserProfileDetails($user_id)
     return $stmt->fetch();
 }
 
-function getUserDevices($id)
-{
-    global $_db;
-    $stmt = $_db->prepare("SELECT * FROM UserDevices WHERE user_id = ?");
-    $stmt->execute([$id]);
+// function getUserDevices($id)
+// {
+//     global $_db;
+//     $stmt = $_db->prepare("SELECT * FROM UserDevices WHERE user_id = ?");
+//     $stmt->execute([$id]);
 
-    return $stmt->fetchAll();
-}
+//     return $stmt->fetchAll();
+// }
 
 function countOrdersById($id)
 {
