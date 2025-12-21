@@ -365,7 +365,7 @@ CREATE TABLE `users` (
   `user_role` enum('Member','Admin') NOT NULL DEFAULT 'Member',
   `email` varchar(50) NOT NULL,
   `hash_password` varchar(255) NOT NULL,
-  `account_status` enum('Unblock','Blocked','Unverify') NOT NULL DEFAULT 'Unblock'
+  `account_status` enum('Verified','Unverified','Blocked') NOT NULL DEFAULT 'Unverified'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -373,22 +373,22 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `user_name`, `user_role`, `email`, `hash_password`, `account_status`) VALUES
-('A001', 'Daniel Brooks', 'Admin', 'daniel.brooks@example.com', '$2y$10$LljQnB2O.ukj9VkDW.B/D.ziL9GHx0aUDqZRmAUWwZkKch7AwNL82', 'Unblock'),
-('A0011', 'HELLO', 'Admin', 'benjamin11.hayes@example.com', '$2y$10$hoGi1EZtx5LQGzg0tTb7AeRzTzvlso2GPQzqQhmPhgDVrz4BaVdiS', 'Unblock'),
-('A002', 'Emma Collins', 'Admin', 'emma.collins@example.com', '$2y$10$4aI9qJHeY8Mu4Sc9fmVd3OEeu.uCtuuJj5JqHrbvNyGA3rmFukzyW', 'Unblock'),
-('A003', 'Michael Scott', 'Admin', 'michael.scott@example.com', '$2y$10$JfxW/FXPlwpA7PM7v7EYT.nblqOs62e5Lzkra7MlXiW/Koi.Rwz5.', 'Unblock'),
-('A004', 'Chloe Adams', 'Admin', 'chloe.adams@example.com', '$2y$10$OYyXMiSTRp0xYtQ97DS5SeFWif1LaC0pK/kdbY.dIG2gJlNCp7Foi', 'Unblock'),
-('A005', 'Henry Watson', 'Admin', 'henry.watson@example.com', '$2y$10$kUA3gN3A.reQJpYtU0QWRud/nNGWzUFwW2C/AxyzK6PYCjbbmiLk6', 'Unblock'),
-('M001', 'Evelyn Carter', 'Member', 'evelyn.carter@example.com', '$2y$10$S.9ckKf5vVV.0a/mcK6wUeHYWWvv33wRwjYtmM0ul9JK.G.FkhCqK', 'Unblock'),
-('M002', 'Liam Johnson', 'Member', 'liam.johnson@example.com', '$2y$10$B2R683QQRLElyMMcCz9s2uNagC3KCq22VKueg4VEVMd7yeGI4gi6C', 'Unblock'),
-('M003', 'Olivia Bennett', 'Member', 'olivia.bennett@example.com', '$2y$10$35kttDVnkLemZK7DnIEq/u80A/c.MzmmThLpULVMFPeY.ha5SOBJ.', 'Unblock'),
-('M004', 'Noah Williams', 'Member', 'noah.williams@example.com', '$2y$10$rWqtd30FWksxa7NYMTbwWOSJQ5RLeKEynY1ejIhxGJ5zeDxbvD17i', 'Unblock'),
-('M005', 'Ava Mitchell', 'Member', 'ava.mitchell@example.com', '$2y$10$sSvpjs.GEX62hCz/HCNOJ.9wLx1NUYygXPue4cMYB6ghM5xt166x.', 'Unblock'),
-('M006', 'Mason Rivera', 'Member', 'mason.rivera@example.com', '$2y$10$0TceV9uxxbuHyoElrFkMOeQHnDgh6Nz0cqyfXVnGug3vU16e6jTG.', 'Unblock'),
-('M007', 'Sophia Turner', 'Member', 'sophia.turner@example.com', '$2y$10$4UQwzHDOHjrMT8KnLDn.8OYlXRZZAoZ.XojzemA.1QV68bI6o3Bme', 'Unblock'),
-('M008', 'James Parker', 'Member', 'james.parker@example.com', '$2y$10$BS7JfHTSvWEO29zFLARTueIUkqxWyJrZSXEQVd/h7FIqePo9JQ7jG', 'Unblock'),
-('M009', 'Isabella Flores', 'Member', 'isabella.flores@example.com', '$2y$10$GuSL8oAuK/iGXAglOTVgtOCzfoain7q7x01TAIo5MEtNn3OdlNs82', 'Unblock'),
-('M010', 'Benjamin Hayes', 'Member', 'benjamin.hayes@example.com', '$2y$10$Gc6xNqwxRwookAjwqrRHjuqPbeW2TRFnfPqNPK/XFhH/WPhppaZNa', 'Unblock');
+('A001', 'Daniel Brooks', 'Admin', 'daniel.brooks@example.com', '$2y$10$LljQnB2O.ukj9VkDW.B/D.ziL9GHx0aUDqZRmAUWwZkKch7AwNL82', 'Verified'),
+('A0011', 'HELLO', 'Admin', 'benjamin11.hayes@example.com', '$2y$10$hoGi1EZtx5LQGzg0tTb7AeRzTzvlso2GPQzqQhmPhgDVrz4BaVdiS', 'Verified'),
+('A002', 'Emma Collins', 'Admin', 'emma.collins@example.com', '$2y$10$4aI9qJHeY8Mu4Sc9fmVd3OEeu.uCtuuJj5JqHrbvNyGA3rmFukzyW', 'Verified'),
+('A003', 'Michael Scott', 'Admin', 'michael.scott@example.com', '$2y$10$JfxW/FXPlwpA7PM7v7EYT.nblqOs62e5Lzkra7MlXiW/Koi.Rwz5.', 'Verified'),
+('A004', 'Chloe Adams', 'Admin', 'chloe.adams@example.com', '$2y$10$OYyXMiSTRp0xYtQ97DS5SeFWif1LaC0pK/kdbY.dIG2gJlNCp7Foi', 'Verified'),
+('A005', 'Henry Watson', 'Admin', 'henry.watson@example.com', '$2y$10$kUA3gN3A.reQJpYtU0QWRud/nNGWzUFwW2C/AxyzK6PYCjbbmiLk6', 'Verified'),
+('M001', 'Evelyn Carter', 'Member', 'evelyn.carter@example.com', '$2y$10$S.9ckKf5vVV.0a/mcK6wUeHYWWvv33wRwjYtmM0ul9JK.G.FkhCqK', 'Verified'),
+('M002', 'Liam Johnson', 'Member', 'liam.johnson@example.com', '$2y$10$B2R683QQRLElyMMcCz9s2uNagC3KCq22VKueg4VEVMd7yeGI4gi6C', 'Verified'),
+('M003', 'Olivia Bennett', 'Member', 'olivia.bennett@example.com', '$2y$10$35kttDVnkLemZK7DnIEq/u80A/c.MzmmThLpULVMFPeY.ha5SOBJ.', 'Verified'),
+('M004', 'Noah Williams', 'Member', 'noah.williams@example.com', '$2y$10$rWqtd30FWksxa7NYMTbwWOSJQ5RLeKEynY1ejIhxGJ5zeDxbvD17i', 'Verified'),
+('M005', 'Ava Mitchell', 'Member', 'ava.mitchell@example.com', '$2y$10$sSvpjs.GEX62hCz/HCNOJ.9wLx1NUYygXPue4cMYB6ghM5xt166x.', 'Verified'),
+('M006', 'Mason Rivera', 'Member', 'mason.rivera@example.com', '$2y$10$0TceV9uxxbuHyoElrFkMOeQHnDgh6Nz0cqyfXVnGug3vU16e6jTG.', 'Verified'),
+('M007', 'Sophia Turner', 'Member', 'sophia.turner@example.com', '$2y$10$4UQwzHDOHjrMT8KnLDn.8OYlXRZZAoZ.XojzemA.1QV68bI6o3Bme', 'Verified'),
+('M008', 'James Parker', 'Member', 'james.parker@example.com', '$2y$10$BS7JfHTSvWEO29zFLARTueIUkqxWyJrZSXEQVd/h7FIqePo9JQ7jG', 'Verified'),
+('M009', 'Isabella Flores', 'Member', 'isabella.flores@example.com', '$2y$10$GuSL8oAuK/iGXAglOTVgtOCzfoain7q7x01TAIo5MEtNn3OdlNs82', 'Verified'),
+('M010', 'Benjamin Hayes', 'Member', 'benjamin.hayes@example.com', '$2y$10$Gc6xNqwxRwookAjwqrRHjuqPbeW2TRFnfPqNPK/XFhH/WPhppaZNa', 'Verified');
 
 --
 -- Indexes for table `address`
