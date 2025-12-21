@@ -73,63 +73,73 @@ class CustomerController {
     // 处理创建用户
     public static function handleCreate() {
         if (is_post()) {
-            $data = [
-                'custom_user_id' => post('custom_user_id'), // 新增：自定义 User ID
-                'user_name' => post('user_name'),
-                'email' => post('email'),
-                'password' => post('password', '123456abc'), // 默认密码
-                'contact_num' => post('contact_num'),
-                'gender' => post('gender'),
-                'user_role' => post('user_role', 'Member'),
-                'account_status' => post('account_status', 'Verified')
-            ];
-            
-            if (!is_unique($data['email'], 'users', 'email')) {
-                flash('error', 'Email already exists!');
-                redirect('adminCustomer.php');
-                return;
-            }
-            
-            if (CustomerDAO::createCustomer($data)) {
+            try {
+                $data = [
+                    'custom_user_id' => post('custom_user_id'),
+                    'user_name' => post('user_name'),
+                    'email' => post('email'),
+                    'password' => post('password', '123456abc'),
+                    'contact_num' => post('contact_num'),
+                    'gender' => post('gender'),
+                    'user_role' => post('user_role', 'Member'),
+                    'account_status' => post('account_status', 'Verified')
+                ];
+
+                // Email 唯一性检查（保留）
+                if (!is_unique($data['email'], 'users', 'email')) {
+                    throw new Exception('Email already exists!');
+                }
+
+                // ✅ 这里如果有任何问题（User ID 规则 / 重复 ID）
+                // DAO 会直接 throw
+                CustomerDAO::createCustomer($data);
+
                 flash('success', 'Customer created successfully!');
-                redirect('adminCustomer.php');
-            } else {
-                flash('error', 'Failed to create customer. Check if User ID already exists.');
-                redirect('adminCustomer.php');
+            } catch (Exception $e) {
+                // ✅ 显示 DAO 或 Controller 抛出的真实错误
+                flash('error', $e->getMessage());
             }
+
+            redirect('adminCustomer.php');
         }
     }
+
     
     // 处理更新用户
     public static function handleUpdate() {
         if (is_post()) {
             $id = post('user_id');
-            
-            $data = [
-                'user_name' => post('user_name'),
-                'email' => post('email'),
-                'contact_num' => post('contact_num'),
-                'gender' => post('gender'),
-                'account_status' => post('account_status'),
-                'password' => post('password')
-            ];
-            
-            if (CustomerDAO::updateCustomer($id, $data)) {
-                // 处理头像上传
-                $uploadResult = self::handleFileUpload($id);
-                
-                if ($uploadResult) {
-                    flash('success', 'Customer and profile picture updated successfully!');
-                } else {
-                    flash('success', 'Customer updated successfully!');
-                }
-                redirect('adminCustomer.php?edit=' . $id);
-            } else {
-                flash('error', 'Failed to update customer');
-                redirect('adminCustomer.php?edit=' . $id);
+
+            try {
+                $data = [
+                    'user_name'      => post('user_name'),
+                    'email'          => post('email'),
+                    'contact_num'    => post('contact_num'),
+                    'gender'         => post('gender'),
+                    'account_status' => post('account_status'),
+                    'password'       => post('password') // 可能为空
+                ];
+
+                // 👉 DAO 内部会负责：
+                // - user_name 校验
+                // - password 校验（如果有输入）
+                // - contact_num 国际格式校验
+                // - 更新 users + userprofile
+                CustomerDAO::updateCustomer($id, $data);
+
+                // 头像上传（失败不影响用户资料更新）
+                self::handleFileUpload($id);
+
+                flash('success', 'Customer updated successfully!');
+            } catch (Exception $e) {
+                // ✅ 显示真正的错误原因
+                flash('error', $e->getMessage());
             }
+
+            redirect('adminCustomer.php?edit=' . $id);
         }
     }
+
     
     // 处理删除用户
     public static function handleDelete($id) {

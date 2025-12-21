@@ -81,6 +81,13 @@ class CustomerDAO {
             if (!empty($data['custom_user_id'])) {
                 $userId = trim($data['custom_user_id']);
 
+                // ✅ 格式校验：4–12，不能有 @ 和空格，只允许字母数字 _ -
+                if (!preg_match('/^[A-Za-z0-9_-]{4,12}$/', $userId)) {
+                    throw new Exception(
+                        "User ID must be 4–12 characters long and can only contain letters, numbers, '_' or '-'."
+                    );
+                }
+
                 // 只做一件事：检查是否已存在
                 $stmt = $_db->prepare("SELECT COUNT(*) FROM users WHERE user_id = ?");
                 $stmt->execute([$userId]);
@@ -102,6 +109,31 @@ class CustomerDAO {
                 $nextNum = ($result->max_id ?? 0) + 1;
                 $userId = $prefix . str_pad($nextNum, 3, '0', STR_PAD_LEFT);
             }
+
+            // ✅ 如果有输入新密码才校验
+            if (!empty($data['password'])) {
+                if (!preg_match('/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,12}$/', $data['password'])) {
+                    throw new Exception(
+                        'Password must be 8–12 characters long and contain at least one letter and one number.'
+                    );
+                }
+            }
+
+            if (!empty($data['contact_num'])) {
+                if (!preg_match('/^\+[1-9][0-9]{7,14}$/', $data['contact_num'])) {
+                    throw new Exception(
+                        'Contact number must be in international format, e.g. +60187824530'
+                    );
+                }
+            }
+
+            $userName = trim($data['user_name']);
+
+            if (!preg_match('/^[A-Za-z ]{4,50}$/', $userName)) {
+                throw new Exception(
+                    'User name must be 4–50 characters long and contain only English letters and spaces.'
+                );
+            }
             
             // 插入 users 表
             $query = "INSERT INTO users (user_id, user_name, user_role, email, hash_password, account_status) 
@@ -115,7 +147,7 @@ class CustomerDAO {
 
             $stmt->execute([
                 $userId,
-                $data['user_name'],
+                $userName,
                 $data['user_role'],
                 $data['email'],
                 $hashedPassword,
@@ -138,8 +170,7 @@ class CustomerDAO {
             return true;
         } catch (Exception $e) {
             $_db->rollBack();
-            error_log("Create Customer Error: " . $e->getMessage());
-            return false;
+            throw $e;
         }
     }
     
@@ -149,11 +180,37 @@ class CustomerDAO {
         
         try {
             $_db->beginTransaction();
+
+            // ✅ User Name 校验（更新时）
+            $userName = trim($data['user_name']);
+
+            if (!preg_match('/^[A-Za-z ]{4,50}$/', $userName)) {
+                throw new Exception(
+                    'User name must be 4–50 characters long and contain only English letters and spaces.'
+                );
+            }
+
+            //2️⃣ Password 校验（⭐重点）
+            if (!empty($data['password'])) {
+                if (!preg_match('/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,12}$/', $data['password'])) {
+                    throw new Exception(
+                        'Password must be 8–12 characters long and contain at least one letter and one number.'
+                    );
+                }
+            }
+
+            if (!empty($data['contact_num'])) {
+                if (!preg_match('/^\+[1-9][0-9]{7,14}$/', $data['contact_num'])) {
+                    throw new Exception(
+                        'Contact number must be in international format, e.g. +60187824530'
+                    );
+                }
+            }
             
             // 1. 构建动态 SQL 查询
             $query = "UPDATE users SET user_name = ?, email = ?, account_status = ?";
             $params = [
-                $data['user_name'],
+                $userName,
                 $data['email'],
                 $data['account_status']
             ];
@@ -190,8 +247,7 @@ class CustomerDAO {
             return true;
         } catch (Exception $e) {
             $_db->rollBack();
-            error_log("Update Error: " . $e->getMessage()); // 建议加上错误日志
-            return false;
+            throw $e;
         }
     }
     
