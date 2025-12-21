@@ -247,7 +247,9 @@
 .cart-footer {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 18px;
   padding: 25px;
   background: #f9f9f9;
   border-top: 2px solid #ffa000;
@@ -272,6 +274,103 @@
   font-size: 1.2em;
   font-weight: bold;
   color: #28a745;
+}
+
+.shipping-fee-label {
+  font-size: 1em;
+  font-weight: 600;
+  color: #6c757d;
+}
+
+/* Loyalty + Final Total Summary */
+.loyalty-summary {
+  margin-top: 10px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+.loyalty-inline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.loyalty-points-line {
+  flex: 1;
+}
+
+.loyalty-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.95em;
+}
+
+.loyalty-label {
+  color: #333;
+  font-weight: 600;
+}
+
+.loyalty-value {
+  color: #333;
+}
+
+.loyalty-hint {
+  color: #6c757d;
+  font-weight: 400;
+  margin-left: 6px;
+  white-space: nowrap;
+}
+
+.loyalty-using {
+  margin-left: 12px;
+  color: #6c757d;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.loyalty-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95em;
+  color: #333;
+  cursor: pointer;
+}
+
+.loyalty-toggle-compact {
+  padding: 2px 4px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+}
+
+.loyalty-toggle input {
+  transform: scale(1.2);
+  cursor: pointer;
+  accent-color: #28a745;
+}
+
+.loyalty-discount-hidden {
+  display: none;
+}
+
+/* Cart footer: make the checkout button slightly shorter */
+.cart-footer .checkout-btn {
+  padding: 12px 26px;
+  font-size: 1.05em;
+}
+
+.final-total-label {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #ffa000;
 }
 
 .checkout-btn {

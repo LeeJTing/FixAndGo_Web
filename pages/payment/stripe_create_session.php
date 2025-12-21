@@ -4,7 +4,10 @@ require "../../vendor/autoload.php";
 require "../../DAO/order-dao.php";
 
 $user_id = temp('USER_ID');
-if (!$user_id) { header("Location: {$rootDir}/pages/auth/login.php"); exit; }
+if (!$user_id) {
+  header("Location: {$rootDir}/pages/auth/login.php");
+  exit;
+}
 
 $order_id = (int)($_GET['order_id'] ?? 0);
 if ($order_id <= 0) die("Invalid order.");
@@ -19,7 +22,19 @@ if ($order->payment_status === 'Paid') {
 $selectedMethod = $_SESSION['order_payment_method'][$order_id] ?? 'Cash';
 if ($selectedMethod === 'Cash') die("This order is Cash on Delivery.");
 
-\Stripe\Stripe::setApiKey('sk_test_51SeFjZJ0NvBCcCJetZZw02Tf4Hjz1ZUMyT9S1hMPiENlEBR5ZBT7F3b9l6ylskvJ2lED5qpp9nPVxXVeqOwwhZvV00IxMEImWN'); // put your Stripe Secret Key here
+$defaultStripeSecretKey = 'sk_test_51SeFjZJ0NvBCcCJetZZw02Tf4Hjz1ZUMyT9S1hMPiENlEBR5ZBT7F3b9l6ylskvJ2lED5qpp9nPVxXVeqOwwhZvV00IxMEImWN';
+$envStripeSecretKey = getenv('STRIPE_SECRET_KEY');
+$stripeSecretKey = $defaultStripeSecretKey;
+if (
+  is_string($envStripeSecretKey)
+  && $envStripeSecretKey !== ''
+  && str_starts_with($envStripeSecretKey, 'sk_')
+  && !str_starts_with($envStripeSecretKey, 'PASTE_')
+) {
+  $stripeSecretKey = $envStripeSecretKey;
+}
+
+\Stripe\Stripe::setApiKey($stripeSecretKey);
 
 $payment_method_types = ($selectedMethod === 'Online Banking') ? ['fpx'] : ['card'];
 
@@ -37,9 +52,24 @@ $session = \Stripe\Checkout\Session::create([
   'metadata' => [
     'order_id' => (string)$order_id,
   ],
-  'success_url' => $rootDir . "/pages/payment/stripe_success.php?order_id={$order_id}",
+  'success_url' => $rootDir . "/pages/payment/stripe_success.php?order_id={$order_id}&session_id={CHECKOUT_SESSION_ID}",
   'cancel_url'  => $rootDir . "/pages/order/order_detail.php?order_id={$order_id}",
-]); // :contentReference[oaicite:5]{index=5}
+]); 
+
+try {
+  if (!paymentExistsForOrderDao($order_id)) {
+    createPaymentPendingDao($order_id, $selectedMethod);
+  }
+
+  if (!empty($session->id)) {
+    saveStripeSessionIdDao($order_id, (string)$session->id);
+  }
+  if (!empty($session->payment_intent)) {
+    saveStripePaymentIntentIdDao($order_id, (string)$session->payment_intent);
+  }
+} catch (Throwable $e) {
+  error_log('Stripe session persist failed for order ' . $order_id . ': ' . $e->getMessage());
+}
 
 header("Location: " . $session->url);
 exit;

@@ -17,6 +17,17 @@ if (!$order) die("Order not found or not yours.");
 $items = getOrderItemsDao($order_id);
 $payRow = getPaymentRowByOrderIdDao($order_id);
 
+$shipping_fee = 10.00;
+$items_total = 0.0;
+foreach ($items as $it) {
+    $items_total += (float)$it->subtotal;
+}
+$pre_total_cents = (int)round((($items_total + $shipping_fee) * 100));
+$final_total_cents = (int)round(((float)$order->total_price) * 100);
+$discount_cents = max(0, $pre_total_cents - $final_total_cents);
+$used_points = (int)round($discount_cents / 10);
+$discount_rm = $discount_cents / 100;
+
 if ($payRow) {
     if ($payRow->payment_method === 'Bank Transfer') $selectedMethod = 'Online Banking';
     else if ($payRow->payment_method === 'Credit Card' || $payRow->payment_method === 'Debit Card') $selectedMethod = 'Credit/Debit Card';
@@ -119,9 +130,19 @@ if ($payRow) {
                 <div class="totals">
                     <div class="box">
                         <div class="row">
-                            <div class="k">Shipping Fee</div>
-                            <div class="v">RM 10</div>
+                            <div class="k">Subtotal</div>
+                            <div class="v">RM <?= number_format((float)$items_total, 2) ?></div>
                         </div>
+                        <div class="row">
+                            <div class="k">Shipping Fee</div>
+                            <div class="v">RM <?= number_format((float)$shipping_fee, 2) ?></div>
+                        </div>
+                        <?php if ($used_points > 0 && $discount_cents > 0): ?>
+                            <div class="row">
+                                <div class="k">Loyalty Points Deducted</div>
+                                <div class="v">-RM <?= number_format((float)$discount_rm, 2) ?> (<?= (int)$used_points ?> points)</div>
+                            </div>
+                        <?php endif; ?>
                         <div class="row">
                             <div class="k">Total</div>
                             <div class="v">RM <?= number_format((float)$order->total_price, 2) ?></div>

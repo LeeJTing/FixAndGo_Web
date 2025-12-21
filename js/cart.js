@@ -186,24 +186,82 @@ function removeItem(itemId, $item) {
 }
 
 function updateCartTotals() {
-  let cartTotal = 0;
-  let selectedTotal = 0;
+  refreshCartSummary();
+}
 
-  $(".cart-item").each(function () {
-    const $item = $(this);
-    const quantity = parseInt($item.find(".product-quantity-display").text());
-    const unitPrice = parseFloat($item.data("price"));
-    const itemTotal = unitPrice * quantity;
+let _cartSummaryReq = null;
+function refreshCartSummary() {
+  const usePoints = $("#use_loyalty_points").length
+    ? $("#use_loyalty_points").is(":checked")
+      ? 1
+      : 0
+    : 0;
 
-    cartTotal += itemTotal;
-
-    if ($item.find(".is-take-checkbox").is(":checked")) {
-      selectedTotal += itemTotal;
+  // Abort any in-flight request to avoid race conditions.
+  if (_cartSummaryReq && _cartSummaryReq.readyState !== 4) {
+    try {
+      _cartSummaryReq.abort();
+    } catch (e) {
+      // ignore
     }
-  });
+  }
 
-  $(".total-label").text("Cart Total: RM " + cartTotal.toFixed(2));
-  $("#selected-total").text(selectedTotal.toFixed(2));
+  _cartSummaryReq = $.ajax({
+    url: ROOT_DIR + "/AJAX/get_cart_summary.php",
+    method: "GET",
+    dataType: "json",
+    data: { use_loyalty_points: usePoints },
+    success: function (res) {
+      if (!res || !res.success) return;
+
+      if ($("#selected-total").length) {
+        $("#selected-total").text(
+          (parseFloat(res.selected_total) || 0).toFixed(2)
+        );
+      }
+      if ($("#loyalty-discount").length) {
+        $("#loyalty-discount").text((parseFloat(res.discount) || 0).toFixed(2));
+      }
+      if ($("#shipping-fee").length) {
+        $("#shipping-fee").text((parseFloat(res.shipping_fee) || 0).toFixed(2));
+      }
+      if ($("#final-total").length) {
+        $("#final-total").text((parseFloat(res.final_total) || 0).toFixed(2));
+      }
+
+      // Keep points display consistent too (in case points changed elsewhere)
+      if ($("#loyalty-points-available").length) {
+        $("#loyalty-points-available").text(
+          parseInt(res.loyalty_points || 0, 10)
+        );
+      }
+      if ($("#loyalty-points-rm").length) {
+        $("#loyalty-points-rm").text(
+          (parseFloat(res.loyalty_points_rm) || 0).toFixed(2)
+        );
+      }
+
+      // Show how many points will be used for this checkout selection.
+      if ($("#loyalty-using").length && $("#use_loyalty_points").length) {
+        const isUsing = $("#use_loyalty_points").is(":checked");
+        const usedPoints = parseInt(res.used_points || 0, 10);
+        const usedPointsRm = (parseFloat(res.used_points_rm) || 0).toFixed(2);
+
+        if ($("#loyalty-points-used").length) {
+          $("#loyalty-points-used").text(usedPoints);
+        }
+        if ($("#loyalty-points-used-rm").length) {
+          $("#loyalty-points-used-rm").text(usedPointsRm);
+        }
+
+        if (isUsing && usedPoints > 0) {
+          $("#loyalty-using").show();
+        } else {
+          $("#loyalty-using").hide();
+        }
+      }
+    },
+  });
 }
 
 function updateQuantityButtons($item, currentQty) {
@@ -594,6 +652,12 @@ function proceedToCheckout() {
     return;
   }
 
+  const usePoints = $("#use_loyalty_points").length
+    ? $("#use_loyalty_points").is(":checked")
+      ? 1
+      : 0
+    : 0;
+
   // Submit to create_order.php
   const form = $("<form>", {
     method: "POST",
@@ -601,8 +665,27 @@ function proceedToCheckout() {
     style: "display:none;",
   });
 
-  form.append($("<input>", { type: "hidden", name: "payment_method", value: paymentMethod }));
-  form.append($("<input>", { type: "hidden", name: "address_id", value: $selectedAddress.val() }));
+  form.append(
+    $("<input>", {
+      type: "hidden",
+      name: "payment_method",
+      value: paymentMethod,
+    })
+  );
+  form.append(
+    $("<input>", {
+      type: "hidden",
+      name: "address_id",
+      value: $selectedAddress.val(),
+    })
+  );
+  form.append(
+    $("<input>", {
+      type: "hidden",
+      name: "use_loyalty_points",
+      value: usePoints,
+    })
+  );
 
   $("body").append(form);
   form.submit();
@@ -623,8 +706,21 @@ function updateCheckoutButtonState() {
   }
 }
 
-$(document).on("change", ".is-take-checkbox, input[name='selected_address'], input[name='payment_method']", function () {
-  updateCheckoutButtonState();
+$(document).on(
+  "change",
+  ".is-take-checkbox, input[name='selected_address'], input[name='payment_method']",
+  function () {
+    updateCheckoutButtonState();
+  }
+);
+
+$(document).on("change", "#use_loyalty_points", function () {
+  updateCartTotals();
+});
+
+$(document).ready(function () {
+  // Make sure Final Total is correct on first load.
+  updateCartTotals();
 });
 
 $(document).ready(function () {

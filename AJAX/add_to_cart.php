@@ -18,7 +18,6 @@ if ($product_id <= 0) {
     exit;
 }
 
-// Allow both logged-in users and guests (same approach used by header cart)
 $user_id = temp('USER_ID') ?? null;
 if (!$user_id) {
     if (!isset($_SESSION['guest_session_id'])) {
@@ -55,7 +54,6 @@ try {
         'cartCount' => $totalQty,
     ]);
 } catch (Throwable $e) {
-    // Don't leak details to client; log server-side.
     error_log('add_to_cart error: ' . $e->getMessage());
     echo json_encode(['success' => false, 'error' => 'Server error']);
 }
