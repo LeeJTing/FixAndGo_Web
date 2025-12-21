@@ -22,6 +22,14 @@ $(document).ready(function () {
         }
     });
 
+    $('#rememberMe').on('change', function () {
+    if ($(this).is(':checked')) {
+        $(this).val('true');
+    }else{
+        $(this).val('false');
+    }
+});
+
     $('#password').on('input', function () {
         password = $(this).val();
         if (!passwordFormat(password)) {

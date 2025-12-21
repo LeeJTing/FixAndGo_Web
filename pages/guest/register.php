@@ -48,7 +48,6 @@ include_once "../../_head.php";
                     <div class="password-strength">
                         <div class="password-strength-bar" id="passwordStrengthBar"></div>
                     </div>
-
                 </div>
 
                 <div class="form-group">

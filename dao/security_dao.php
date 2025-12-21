@@ -1,6 +1,7 @@
 <?php
 
-function getUserById($id){
+function getUserById($id)
+{
     global $_db;
     $stm = $_db->prepare("SELECT * FROM USERS WHERE user_id=?;");
     $stm->execute([$id]);
@@ -8,7 +9,8 @@ function getUserById($id){
     return $stm->fetch();
 }
 
-function getUserByEmail($email){
+function getUserByEmail($email)
+{
     global $_db;
     $stm = $_db->prepare("SELECT * FROM USERS WHERE email=?;");
     $stm->execute([$email]);

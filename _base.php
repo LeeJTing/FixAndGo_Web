@@ -1,6 +1,7 @@
 <?php
 
 date_default_timezone_set('Asia/Kuala_Lumpur');
+ini_set('session.cookie_lifetime', 0);
 session_start();
 
 // ============================================================================
@@ -9,6 +10,7 @@ session_start();
 $rootDir = 'http://' . $_SERVER['HTTP_HOST'];
 
 $pathPrefix = (strpos($_SERVER['SCRIPT_NAME'], '/FixAndGo_Web') === 0) ? '/FixAndGo_Web' : '';
+
 
 // ============================================================================
 // General Page Functions
@@ -164,6 +166,25 @@ try {
     //echo "Connected successfully!";
 } catch (PDOException $err) {
     die("Connection failed: " . $err->getMessage());
+}
+
+// Auto-login via remember me cookie: if no session user but remember_token exists, validate and restore session
+if (!empty($_COOKIE['remember_token'])) {
+    require_once __DIR__ . '/dao/token-dao.php';
+    require_once __DIR__ . '/dao/security_dao.php';
+
+    $rememberToken = $_COOKIE['remember_token'];
+    $userId = getIDBytoken($rememberToken, 'Remember');
+    if ($userId) {
+        $user = getUserById($userId);
+        if ($user) {
+            temp('USER_ID', $user->user_id);
+            temp('USER_NAME', $user->user_name);
+            temp('USER_ROLE', $user->user_role);
+            temp('EMAIL', $user->email);
+            temp('ACCOUNT_STATUS', $user->account_status);
+        }
+    }
 }
 
 // connect to db

@@ -36,7 +36,7 @@ include_once "../../_head.php";
             </div>
             
             <div class="remember-me">
-                <input type="checkbox" id="rememberMe" name="rememberMe">
+                <input type="checkbox" id="rememberMe" name="rememberMe" value="false">
                 <label for="rememberMe">Remember me</label>
             </div>
             

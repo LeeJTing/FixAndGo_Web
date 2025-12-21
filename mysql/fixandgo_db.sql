@@ -365,7 +365,7 @@ CREATE TABLE `users` (
   `user_role` enum('Member','Admin') NOT NULL DEFAULT 'Member',
   `email` varchar(50) NOT NULL,
   `hash_password` varchar(255) NOT NULL,
-  `account_status` enum('Unblock','Blocked') NOT NULL DEFAULT 'Unblock'
+  `account_status` enum('Unblock','Blocked','Unverify') NOT NULL DEFAULT 'Unblock'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
