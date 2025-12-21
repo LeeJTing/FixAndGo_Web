@@ -21,6 +21,18 @@ if ($function == 'allProduct') {
     header('Content-Type: application/json');
     echo json_encode($result);
     exit;
+} // In product-controller.php
+else if ($function === 'clickCategory') {
+    $category = get('category'); // from GET parameter
+
+    if ($category !== null && $category !== '') {
+        $_SESSION['selected_category'] = (int)$category; // Sanitize as integer
+    } else {
+        unset($_SESSION['selected_category']); // Clear if empty
+    }
+
+    // Redirect to product list page
+    redirect("/pages/product/product-list.php");
 }
 
 function getProductById($id)

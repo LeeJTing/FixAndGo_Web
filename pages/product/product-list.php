@@ -7,6 +7,8 @@ require '../../controller/product-controller.php';
 $products = getProductList();
 $items = getCountAllProduct();
 $category = getAllCategory();
+
+$selected_category = $_SESSION['selected_category'] ?? '';
 ?>
 
 <body>
@@ -23,13 +25,17 @@ $category = getAllCategory();
                     <label>Category</label>
                     <select class="filter-select" id="category_filter">
                         <option value="">All Categories</option>
-                        <?php foreach ($category as $c): ?>
-                            <option value="<?= $c->category_code ?>">
+                        <?php
+                        foreach ($category as $c):
+                        ?>
+                            <option value="<?= $c->category_code ?>"
+                                <?= ($c->category_code == $selected_category) ? 'selected' : '' ?>>
                                 <?= htmlspecialchars($c->category_name) ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
                 </div>
+
 
                 <!-- Price Range -->
                 <div class="filter-group">

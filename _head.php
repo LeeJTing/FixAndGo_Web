@@ -27,7 +27,7 @@
 </head>
 
 <body>
-
+    <div id="message-container"></div>
     <header>
         <div class="container flex justify-between">
             <a href="<?= homePageURL() ?>" class="logo" data-link="home">

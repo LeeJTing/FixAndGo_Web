@@ -21,14 +21,16 @@ $("#cancelOrderForm").on("submit", function (e) {
               .addClass("cancelled")
               .text("Cancelled");
             $(".btn-danger").remove();
-            alert("Order cancelled successfully.");
+            showMessage("Order cancelled successfully.", "success");
           } else {
-            alert("Error: " + (response.message || "Unable to cancel order."));
+            showMessage(
+              "Error: " + (response.message || "Unable to cancel order."),
+              "error"
+            );
           }
         })
         .fail(function (xhr) {
-          alert("Request failed. Check console for details.");
-          console.error(xhr.responseText);
+          showMessage("Request failed. Check console for details.", "error");
         })
         .always(function () {
           cancelBtn.prop("disabled", false).text("Cancel Order");

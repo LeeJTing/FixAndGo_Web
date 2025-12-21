@@ -1,7 +1,11 @@
 $(document).ready(function () {
-  let currentCategory = "";
+  let currentCategory = $("#category_filter").val() || "";
   let currentSort = "";
   let currentValue = $("#priceRange").val();
+
+  if (currentCategory !== "") {
+    $("#category_filter").val(currentCategory);
+  }
 
   loadProduct(currentCategory, currentSort, currentValue);
 
