@@ -2,9 +2,8 @@
 require "../../_base.php";
 $_title = "Fix & Go | Order-History Page";
 include  "../../_head.php";
-
-$user_id = temp('USER_ID');
 require '../../controller/order-controller.php';
+$user_id = temp('USER_ID');
 $orders = getOrderHistoryMember($user_id);
 ?>
 <link rel="stylesheet" href="../../css/msg.css">

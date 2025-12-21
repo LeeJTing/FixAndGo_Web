@@ -123,6 +123,7 @@ function getOrderByIdDao($id)
     try {
         $sql = "SELECT 
                     o.order_id,
+                    o.address_id,
                     o.deliver_at,
                     o.user_id,
                     o.order_at,
@@ -148,6 +149,46 @@ function getOrderByIdDao($id)
     } catch (PDOException $e) {
         error_log("Get All Orders Admin Error: " . $e->getMessage());
         return [];
+    }
+}
+
+function cancelCustomerOrder($order_id, $user_id)
+{
+    global $_db;
+
+    try {
+        $_db->beginTransaction();
+
+        // 1. Update order status
+        $stmt = $_db->prepare("
+            UPDATE orders 
+            SET status = 'Cancelled', 
+                payment_status = 'Refunded'
+            WHERE order_id = ? 
+              AND user_id = ? 
+              AND status IN ('Pending', 'Processing')
+        ");
+        $stmt->execute([$order_id, $user_id]);
+
+        if ($stmt->rowCount() === 0) {
+            throw new Exception("Order cannot be cancelled (already processed or not yours).");
+        }
+
+        // 2. Restore stock
+        $stmt = $_db->prepare("
+            UPDATE product p
+            JOIN orderitem oi ON p.product_id = oi.product_id
+            SET p.stock_quantity = p.stock_quantity + oi.qty
+            WHERE oi.order_id = ?
+        ");
+        $stmt->execute([$order_id]);
+
+        $_db->commit();
+
+        return ['success' => true, 'message' => 'Order cancelled and stock restored.'];
+    } catch (Exception $e) {
+        $_db->rollBack();
+        return ['success' => false, 'message' => $e->getMessage()];
     }
 }
 
@@ -298,7 +339,7 @@ function cancelOrder($order_id)
     }
 }
 
-function getMemberOrderHistory($user_id)
+function getMemberOrderHistory($id)
 {
     global $_db;
 
@@ -321,7 +362,7 @@ function getMemberOrderHistory($user_id)
                 ORDER BY o.order_at ASC";
 
         $stmt = $_db->prepare($sql);
-        $stmt->execute([$user_id]);
+        $stmt->execute([$id]);
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     } catch (PDOException $e) {
         error_log("Get Member Order History Error: " . $e->getMessage());

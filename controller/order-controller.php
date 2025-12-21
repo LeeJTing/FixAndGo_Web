@@ -168,6 +168,24 @@ if ($action === 'getAddress') {
         // Redirect back to the orders list page
         header("Location: ../../../pages/admin/admin-order-detail.php?id={$orderId}");
         exit;
+    } else if ($action === 'cancelOrder') {
+        $orderId = (int)post('order_id');
+        $userId = post('userId');
+        $result = cancelCustomerOrder($orderId, $userId);
+        header('Content-Type: application/json');
+
+        if ($result) {
+            echo json_encode([
+                'success' => true,
+                'message' => 'Order cancelled successfully.'
+            ]);
+        } else {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Cannot cancel order. It may be already shipped or invalid.'
+            ]);
+        }
+        exit;
     }
 }
 function getUserOrder($order, $user)
@@ -207,9 +225,9 @@ function getPaymentRecord($order_id)
     return getPaymentRowByOrderIdDao($order_id);
 }
 
-function getMemberAddress($user_id)
+function getMemberAddress($user_id, $order_id)
 {
-    return getMemberAddressDao($user_id);
+    return getMemberAddressDao($user_id, $order_id);
 }
 function getAllCategory()
 {

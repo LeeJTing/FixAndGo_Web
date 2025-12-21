@@ -1,15 +1,16 @@
 <?php
 require_once "../../_base.php";
-$_title = "Fix & Go | Order History";
 include "../../_head.php";
 require '../../controller/order-controller.php';
-
+require '../../component/msg.php';
+$user_id = temp('USER_ID');
+$_title = "Fix & Go | Member - Order Detail";
 $order_id = (int)get('id');
 $order = getOrderById($order_id);
 $items = getOrderItem($order_id);
 $user = getUserOrder($order_id, $order->user_id);
 $payment = getPayment($order_id);
-
+$current_order_address = $order->address_id;
 if (empty($items)) {
     echo "<p>No order found.</p>";
     exit;
@@ -21,6 +22,7 @@ $order = $items[0];
 // Calculations
 $total_items = count($items);
 $total_quantity = array_sum(array_map(fn($i) => $i->qty, $items));
+displayFlashMessage();
 ?>
 
 <link rel="stylesheet" href="../../css/member-order-detail.css">
@@ -30,7 +32,7 @@ $total_quantity = array_sum(array_map(fn($i) => $i->qty, $items));
     <!-- Order Overview -->
     <div class="order-header">
         <div>
-            <h2>Order #<?= htmlspecialchars($order->order_id) ?></h2>
+            <h2>Order: <?= htmlspecialchars($order->order_id) ?></h2>
             <p class="text-muted">
                 Placed on <?= date('d M Y, H:i', strtotime($order->order_at)) ?>
             </p>
@@ -46,25 +48,28 @@ $total_quantity = array_sum(array_map(fn($i) => $i->qty, $items));
 
         <!-- Left Column -->
         <div>
-
             <div class="card info">
-                <h3>Shipping Information</h3>
-                <p><span></span></p>
-                <p></p>
-                <?= htmlspecialchars($user->address_one) ?><br>
+                <div class="card-header-flex">
+                    <h3>Shipping Information</h3>
+                </div>
 
-                <?php if ($user->address_two): ?>
-                    <?= htmlspecialchars($user->address_two) ?><br>
-                <?php endif; ?>
+                <div id="shippingDisplay">
+                    <p><span></span></p>
+                    <p></p>
+                    <?= htmlspecialchars($user->address_one) ?><br>
 
-                <?php if ($user->address_three): ?>
-                    <?= htmlspecialchars($user->address_three) ?><br>
-                <?php endif; ?>
+                    <?php if ($user->address_two): ?>
+                        <?= htmlspecialchars($user->address_two) ?><br>
+                    <?php endif; ?>
 
-                <?= htmlspecialchars($user->post_code) ?>
-                <?= htmlspecialchars($user->state) ?><br>
-                <?= htmlspecialchars($user->country) ?>
-                <p>Shipping: <span>Standard Delivery</span></p>
+                    <?php if ($user->address_three): ?>
+                        <?= htmlspecialchars($user->address_three) ?><br>
+                    <?php endif; ?>
+
+                    <?= htmlspecialchars($user->post_code) ?> <?= htmlspecialchars($user->state) ?><br>
+                    <?= htmlspecialchars($user->country) ?>
+                    <p>Shipping: <span>Standard Delivery</span></p>
+                </div>
             </div>
 
             <div class="card info">
@@ -131,18 +136,20 @@ $total_quantity = array_sum(array_map(fn($i) => $i->qty, $items));
             <div class="summary-total">
                 Total: RM <?= number_format($order->total_price, 2) ?>
             </div>
-
-            <div class="actions">
-                <button class="btn btn-primary">Track Order</button>
-                <button class="btn btn-outline">Download Invoice</button>
-
-                <?php if ($order->order_status === 'processing'): ?>
-                    <button class="btn btn-danger">Cancel Order</button>
-                <?php endif; ?>
-            </div>
+            <form method="post" id="cancelOrderForm">
+                <input type="hidden" name="order_id" value="<?= $order_id ?>">
+                <input type="hidden" name="user_id" value="<?= $user_id ?>">
+                <div class="actions">
+                    <button class="btn btn-outline">Download Invoice</button>
+                    <?php if ($order->order_status === 'Processing'): ?>
+                        <button type="submit" class="btn btn-danger">Cancel Order</button>
+                    <?php endif; ?>
+                </div>
+            </form>
         </div>
     </div>
 
 </div>
-
+<script src="../../js/confirmMsg.js"></script>
+<script src="../../js/member-order-detail.js"></script>
 <?php include '../../_foot.php'; ?>

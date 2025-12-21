@@ -27,7 +27,7 @@
 </head>
 
 <body>
-    
+
     <header>
         <div class="container flex justify-between">
             <a href="<?= homePageURL() ?>" class="logo" data-link="home">
@@ -37,7 +37,7 @@
             <nav class="desktop-nav">
                 <ul class="flex">
                     <li><a href="<?= homePageURL() ?>">Home</a></li>
-                    <li><a href="<?= $rootDir ?>#">Products</a></li>
+                    <li><a href="<?= $rootDir ?>/pages/product/product-list.php">Products</a></li>
                     <li><a href="<?= $rootDir ?>/pages/guest/aboutUs.php">About</a></li>
                     <li><a href="<?= $rootDir ?>">Contact</a></li>
                 </ul>
@@ -62,11 +62,8 @@
                         <a href="<?= $rootDir ?>/pages/member/profile.php">
                             <i class="fa-regular fa-user"></i> My Profile
                         </a>
-                        <a href="<?= $rootDir ?>/pages/member/orders.php">
+                        <a href="<?= $rootDir ?>/pages/order/member-order-history.php">
                             <i class="fa-regular fa-clipboard"></i> My Orders
-                        </a>
-                        <a href="<?= $rootDir ?>/pages/member/wishlist.php">
-                            <i class="fa-regular fa-heart"></i> Wishlist
                         </a>
                         <hr>
                         <a href="javascript:void(0)" class="logout-btn">
@@ -87,6 +84,7 @@
                         </a>
                     </div>
                 <?php endif; ?>
+
                 <!-- Cart Icon (click to open sidebar) - Hidden on cart page -->
                 <?php
                 $current_page = basename($_SERVER['PHP_SELF']);
@@ -103,7 +101,7 @@
                 <div class="mobile-dropdown" id="mobileDropdown">
                     <ul>
                         <li><a href="<?= homePageURL() ?>">Home</a></li>
-                        <li><a href="<?= $rootDir ?>#">Products</a></li>
+                        <li><a href="<?= $rootDir ?>/pages/product/product-list.php">Products</a></li>
                         <li><a href="<?= $rootDir ?>/pages/guest/aboutUs.php">About</a></li>
                         <li><a href="<?= $rootDir ?>">Contact</a></li>
                     </ul>
@@ -186,5 +184,5 @@
                 <div id="cartOverlay" class="cart-overlay"></div>
             </div>
     </header>
-<script src="<?= $rootDir ?>/js/logout.js"></script>
+    <script src="<?= $rootDir ?>/js/logout.js"></script>
 </body>

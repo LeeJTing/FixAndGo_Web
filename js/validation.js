@@ -12,6 +12,9 @@ function validateField(fieldName, rules) {
     return false;
   }
 
+  // Skip further validation if empty and not required
+  if (value === "") return true;
+
   // Min length
   if (rules.min && value.length < rules.min) {
     showError(input, `Minimum ${rules.min} characters`);
@@ -24,27 +27,58 @@ function validateField(fieldName, rules) {
     return false;
   }
 
-  // Number
+  // Phone number (Malaysian format: 01x-xxxxxxx)
+  if (rules.phone && !/^01[0-46-9]-\d{7,8}$/.test(value.replace(/\s/g, ""))) {
+    showError(
+      input,
+      "Please enter a valid Malaysian phone number (e.g., 012-3456789)"
+    );
+    return false;
+  }
+
+  // Malaysian Postcode (5 digits)
+  if (rules.postcode && !/^\d{5}$/.test(value)) {
+    showError(input, "Postcode must be exactly 5 digits");
+    return false;
+  }
+
+  // Number (integer)
   if (rules.number && isNaN(value)) {
-    showError(input, "Must be a number");
+    showError(input, "Must be a valid number");
     return false;
   }
 
-  // Decimal (positive only)
+  // Decimal (positive decimal or integer)
   if (rules.decimal && !/^\d+(\.\d+)?$/.test(value)) {
-    showError(input, "Must be a positive decimal number");
+    showError(input, "Must be a positive decimal or whole number");
     return false;
   }
 
-  // Positive
-  if (rules.positive && Number(value) < 0) {
+  // Positive number
+  if ((rules.positive || rules.decimal || rules.number) && Number(value) < 0) {
     showError(input, "Must be a positive number");
     return false;
   }
 
-  if (rules.Mimstock && value < 5) {
-    showError(input, "Stock Must be more than 5");
+  // Minimum stock (custom rule)
+  if (rules.minStock && Number(value) < rules.minStock) {
+    showError(input, `Stock must be at least ${rules.minStock}`);
     return false;
+  }
+
+  // Low stock threshold (e.g., cannot set below 5)
+  if (rules.lowStockThreshold && Number(value) < 5) {
+    showError(input, "Low stock threshold cannot be less than 5");
+    return false;
+  }
+
+  // Custom message rule
+  if (rules.custom && typeof rules.custom === "function") {
+    const result = rules.custom(value);
+    if (result !== true) {
+      showError(input, result || "Invalid input");
+      return false;
+    }
   }
 
   return true;
