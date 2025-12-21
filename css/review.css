@@ -1,0 +1,167 @@
+/* Review Section CSS */
+:root {
+    --primary-color: #f59e0b;
+    --primary-hover: #d97706;
+    --bg-card: #f3f4f6;
+    --text-color: #1f2937;
+}
+
+.reviewSection {
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-top: 1.5rem;
+}
+
+.reviewSection .section-title {
+    margin-bottom: 1rem;
+}
+
+.reviews-summary {
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.big-rating {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.stars {
+    color: #f59e0b;
+}
+
+.review-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.review-item {
+    padding: 1rem;
+    border: 1px solid #f3f3f3;
+    border-radius: 8px;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.reviewer strong {
+    display: block;
+}
+
+.review-text {
+    margin-top: 0.5rem;
+    color: var(--text-color);
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    z-index: 2000;
+}
+
+.modal.open {
+    display: flex;
+}
+
+.modal-dialog {
+    margin: 40vh auto;
+    background: #fff;
+    border-radius: 10px;
+    padding: 1.25rem;
+    width: 100%;
+    max-width: 600px;
+    position: relative;
+    box-shadow: 0 12px 40px rgba(2, 6, 23, 0.2);
+}
+
+.modal-close {
+    position: absolute;
+    right: 12px;
+    top: 8px;
+    background: transparent;
+    border: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    margin-top: 0.75rem;
+}
+
+.review-action {
+    margin-top: 0.5rem;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.review-action button {
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+.review-action .btn-edit:hover {
+    background-color: #b37409;
+}
+
+.review-action .btn-edit {
+    background: var(--primary-color);
+    color: white;
+}
+
+.review-action .btn-delete:hover {
+    background-color: #802424;
+}
+
+.review-action .btn-delete {
+    background: #ef4444;
+    color: white;
+}
+
+.add-review-top {
+    margin-bottom: 1rem;
+}
+
+.add-review-top .btn-primary {
+    padding: 0.5rem 0.8rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    color: white;
+}
+
+.modal button {
+    padding: 0.5rem 0.8rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    color: white;
+}
+
+.modal .form-group {
+    margin-bottom: 0.75rem;
+}
+
+.modal select,
+.modal textarea {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+}

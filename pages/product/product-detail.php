@@ -1,6 +1,6 @@
 <?php
 require '../../_base.php';
-$_title = 'Fix & Go | Product Detail';
+$_title = 'Fix & Go | Product';
 include '../../_head.php';
 require '../../controller/product-controller.php';
 $id = get('id') ?? 0;
@@ -109,114 +109,7 @@ $mainImage = getProductImages($id);
             </div>
         </div>
         <!-- Reviews Section -->
-        <!-- ==================== HARD-CODED REVIEWS SECTION (Paste below .detail-grid) ==================== -->
-        <div class="reviews-section">
-            <h2 class="section-title">Customer Reviews</h2>
-
-            <!-- Summary -->
-            <div class="reviews-summary">
-                <div class="average-rating">
-                    <span class="big-rating">4.8</span>
-                    <div class="stars">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star-half-alt"></i>
-                    </div>
-                    <p>Based on 127 reviews</p>
-                </div>
-            </div>
-
-            <!-- Review List -->
-            <div class="reviews-list">
-
-                <div class="review-item">
-                    <div class="review-header">
-                        <div class="reviewer">
-                            <strong>Ahmad Z.</strong>
-                            <span class="verified">Verified Buyer</span>
-                        </div>
-                        <div class="review-rating">
-                            <i class="fa-solid fa-star filled"></i>
-                            <i class="fa-solid fa-star filled"></i>
-                            <i class="fa-solid fa-star filled"></i>
-                            <i class="fa-solid fa-star filled"></i>
-                            <i class="fa-solid fa-star filled"></i>
-                        </div>
-                    </div>
-                    <p class="review-date">15 Nov 2025</p>
-                    <p class="review-text">Hammer berkualiti tinggi! Berat seimbang, mudah digenggam. Dah guna untuk pasang rak TV — tak goyang langsung. Recommended!</p>
-                </div>
-
-                <div class="review-item">
-                    <div class="review-header">
-                        <div class="reviewer">
-                            <strong>Siti Nurhaliza</strong>
-                            <span class="verified">Verified Buyer</span>
-                        </div>
-                        <div class="review-rating">
-                            <i class="fa-solid fa-star filled"></i>
-                            <i class="fa-solid fa-star filled"></i>
-                            <i class="fa-solid fa-star filled"></i>
-                            <i class="fa-solid fa-star filled"></i>
-                            <i class="fa-regular fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="review-date">10 Nov 2025</p>
-                    <p class="review-text">Cantik design dia, nampak premium. Cuma pemegang getah sikit licin bila berpeluh. Tapi overall sangat berpuas hati</p>
-                </div>
-
-                <div class="review-item">
-                    <div class="review-header">
-                        <div class="reviewer">
-                            <strong>Rajesh Kumar</strong>
-                            <span class="verified">Verified Buyer</span>
-                        </div>
-                        <div class="review-rating">
-                            <i class="fa-solid fa-star filled"></i>
-                            <i class="fa-solid fa-star filled"></i>
-                            <i class="fa-solid fa-star filled"></i>
-                            <i class="fa-solid fa-star filled"></i>
-                            <i class="fa-solid fa-star filled"></i>
-                        </div>
-                    </div>
-                    <p class="review-date">3 Nov 2025</p>
-                    <p class="review-text">Best hammer I ever bought! Solid steel, no rust, very strong. Worth every sen. Will buy again for my brother.</p>
-                </div>
-
-                <div class="review-item">
-                    <div class="review-header">
-                        <div class="reviewer">
-                            <strong>Lina Tan</strong>
-                            <span class="verified">Verified Buyer</span>
-                        </div>
-                        <div class="review-rating">
-                            <i class="fa-solid fa-star filled"></i>
-                            <i class="fa-solid fa-star filled"></i>
-                            <i class="fa-solid fa-star filled"></i>
-                            <i class="fa-solid fa-star filled"></i>
-                            <i class="fa-regular fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="review-date">28 Oct 2025</p>
-                    <p class="review-text">Packaging cantik, sampai dengan selamat. Hammer berat yang sesuai, tak terlalu berat untuk wanita. Terima kasih FixAndGo!</p>
-                </div>
-
-            </div>
-
-            <!-- Fake Review Form (for demo) -->
-            <div class="add-review">
-                <h3>Write a Review</h3>
-                <div style="background:#f1f5f9; padding:2rem; border-radius:16px; text-align:center; color:#64748b;">
-                    <i class="fa-regular fa-comment-dots" style="font-size:3rem; margin-bottom:1rem;"></i>
-                    <p><strong>Login required to write a review</strong></p>
-                    <a href="login.php" style="color:#f59e0b; font-weight:600;">Click here to login →</a>
-                </div>
-            </div>
-        </div>
-        <!-- ==================== END OF HARD-CODED REVIEWS ==================== -->
-    </div>
+        <?php include_once __DIR__ . "/../../component/reviewSection.php" ?>    </div>
 
     <?php include "../../_foot.php" ?>
 </body>
