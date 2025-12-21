@@ -28,7 +28,7 @@
           </div>
           <div class="categories-circle-grid">
               <?php foreach ($category as $cat): ?>
-                  <a href="products.php?cat=<?= urlencode($cat->category_code) ?>" class="circle-cat">
+                  <a href="../../controller/product-controller.php?function=clickCategory&category=<?= urlencode($cat->category_code) ?>" class="circle-cat">
                       <div class="circle-img">
                           <img src="<?= $path ?><?= $cat->img_path ?>" alt="<?= htmlspecialchars($cat->description) ?>">
                       </div>
@@ -73,7 +73,7 @@
                       </div>
 
                       <div class="product-actions">
-                          <a href="product-details.php?id=<?= $item->product_id ?>" class="btn-view">
+                          <a href="product-detail.php?id=<?= $item->product_id ?>" class="btn-view">
                               View Details
                           </a>
                           <button class="btn-cart add-to-cart"
