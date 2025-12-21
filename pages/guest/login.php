@@ -35,10 +35,10 @@ include_once "../../_head.php";
                 <div class="error" id="passwordError">Please enter your password</div>
             </div>
             
-            <!-- <div class="remember-me">
+            <div class="remember-me">
                 <input type="checkbox" id="rememberMe" name="rememberMe">
                 <label for="rememberMe">Remember me</label>
-            </div> -->
+            </div>
             
             <div class="forgot-password">
                 <a href="forgot_password.php">Forgot Password?</a>

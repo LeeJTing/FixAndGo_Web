@@ -37,7 +37,7 @@ if(is_post()){
         $hashed_password = hash_password($password);
         $stm = $_db->prepare("INSERT INTO USERS (user_id, user_name, user_role, email, hash_password, account_status)
                              VALUES (?, ?, ?, ?, ?, ?)");
-        $stm->execute([$userID, $userName, 'Member', $email, $hashed_password, 'Unverified']);
+        $stm->execute([$userID, $userName, 'Member', $email, $hashed_password, 'Unblock']);
         $stmt = $_db->prepare("INSERT INTO CART (user_id)
                               VALUES (?)");
         $stmt->execute([$userID]);
@@ -46,7 +46,7 @@ if(is_post()){
         temp('USER_ROLE', 'Member');
         temp('USER_NAME', $userName);
         temp('USER_EMAIL', $email);
-        temp('ACCOUNT_STATUS', 'Unverified');
+        temp('ACCOUNT_STATUS', 'Unblock');
 
         redirect(homePageURL());
     }

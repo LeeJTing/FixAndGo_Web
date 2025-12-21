@@ -30,11 +30,11 @@ if (is_post()) {
         return;
     }
 
-    // ===== 3. password authentification（bcrypt + 旧 SHA1）=====
+    // ===== 3. password authentification bcrypt =====
     $stored = $user->hash_password;
 
     if (password_verify($password, $stored)) {
-        // ✅ newuser（bcrypt）
+        // newuser（bcrypt）
         login_success($user);
     }
     else {
