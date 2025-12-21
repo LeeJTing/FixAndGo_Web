@@ -34,7 +34,7 @@ function largerThanZeroFive($num): bool
         </div>
     <?php else: ?>
         <div class="add-review-top">
-            <a href="<?= $rootDir ?>/pages/guest/login.php" class="btn-primary">Log in to review</a>
+            <a href="<?= $rootDir ?>/pages/guest/login.php" class="btn-primary" style="text-decoration: none;">Log in to review</a>
         </div>
     <?php endif; ?>
 
@@ -87,15 +87,16 @@ function largerThanZeroFive($num): bool
                                 for ($i = $start; $i > $rating; $i--) : ?>
                                     <i class="fa-regular fa-star filled"></i>
                                 <?php endfor ?>
+                                <?php endif ?>
+                                <?php if ($user_id == temp('USER_ID')) : ?>
+                                <div class="review-action">
+                                    <button class="btn-edit" data-review-id="<?= htmlspecialchars($review_id) ?>" data-rating="<?= htmlspecialchars($rating) ?>" data-comment="<?= htmlspecialchars($comment) ?>">Edit</button>
+                                    <button class="btn-delete" data-review-id="<?= htmlspecialchars($review_id) ?>">Delete</button>
+                                </div>
                             <?php endif ?>
                         </div>
-                        <?php if ($user_id == temp('USER_ID')) : ?>
-                            <div class="review-action">
-                                <button class="btn-edit" data-review-id="<?= htmlspecialchars($review_id) ?>" data-rating="<?= htmlspecialchars($rating) ?>" data-comment="<?= htmlspecialchars($comment) ?>">Edit</button>
-                                <button class="btn-delete" data-review-id="<?= htmlspecialchars($review_id) ?>">Delete</button>
-                            </div>
-                        <?php endif ?>
                     </div>
+
                     <p class="review-date"><?= htmlspecialchars($created) ?></p>
                     <p class="review-text"><?= nl2br(htmlspecialchars($comment)) ?></p>
                 </div>
@@ -107,51 +108,51 @@ function largerThanZeroFive($num): bool
 
     <!-- Add/Edit Modals -->
     <?php if (temp('USER_ID') && temp('USER_ID') !== 'Guest'): ?>
-    <div id="addReviewModal" class="modal" aria-hidden="true">
-        <div class="modal-dialog">
-            <button class="modal-close">x</button>
-            <h3>Add Review</h3>
-            <form id="addReviewForm">
-                <input type="hidden" name="action" value="add">
-                <input type="hidden" name="product_id" value="<?= htmlspecialchars($productId) ?>">
-                <div class="form-group">
-                    <label for="addRating">Rating <span id="addRatingValue"></span></label>
-                    <input type="range" name="rating" id="addRating" min="0" max="5" step="0.1" value="5" required>
-                </div>
-                <div class="form-group">
-                    <label for="addComment">Comment</label>
-                    <textarea name="comment" id="addComment" rows="4" maxlength="2000" required></textarea>
-                </div>
-                <div class="modal-actions">
-                    <button type="submit" class="btn-primary">Submit</button>
-                    <button type="button" class="modal-cancel btn-dark">Cancel</button>
-                </div>
-            </form>
+        <div id="addReviewModal" class="modal" aria-hidden="true">
+            <div class="modal-dialog">
+                <button class="modal-close">x</button>
+                <h3>Add Review</h3>
+                <form id="addReviewForm">
+                    <input type="hidden" name="action" value="add">
+                    <input type="hidden" name="product_id" value="<?= htmlspecialchars($productId) ?>">
+                    <div class="form-group">
+                        <label for="addRating">Rating <span id="addRatingValue"></span></label>
+                        <input type="range" name="rating" id="addRating" min="0" max="5" step="0.1" value="5" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addComment">Comment</label>
+                        <textarea name="comment" id="addComment" rows="4" maxlength="2000" required></textarea>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="submit" class="btn-primary">Submit</button>
+                        <button type="button" class="modal-cancel btn-dark">Cancel</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
 
-    <div id="editReviewModal" class="modal" aria-hidden="true">
-        <div class="modal-dialog">
-            <button class="modal-close">x</button>
-            <h3>Edit Review</h3>
-            <form id="editReviewForm">
-                <input type="hidden" name="action" value="edit">
-                <input type="hidden" name="review_id" id="modalReviewId">
-                <div class="form-group">
-                    <label for="modalRating">Rating <span id="modalRatingValue"></span></label>
-                    <input type="range" name="rating" id="modalRating" min="0" max="5" step="0.1" value="" required>
-                </div>
-                <div class="form-group">
-                    <label for="modalComment">Comment</label>
-                    <textarea name="comment" id="modalComment" rows="4" maxlength="2000" required></textarea>
-                </div>
-                <div class="modal-actions">
-                    <button type="submit" class="btn-primary">Save</button>
-                    <button type="button" class="modal-cancel btn-dark">Cancel</button>
-                </div>
-            </form>
+        <div id="editReviewModal" class="modal" aria-hidden="true">
+            <div class="modal-dialog">
+                <button class="modal-close">x</button>
+                <h3>Edit Review</h3>
+                <form id="editReviewForm">
+                    <input type="hidden" name="action" value="edit">
+                    <input type="hidden" name="review_id" id="modalReviewId">
+                    <div class="form-group">
+                        <label for="modalRating">Rating <span id="modalRatingValue"></span></label>
+                        <input type="range" name="rating" id="modalRating" min="0" max="5" step="0.1" value="" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="modalComment">Comment</label>
+                        <textarea name="comment" id="modalComment" rows="4" maxlength="2000" required></textarea>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="submit" class="btn-primary">Save</button>
+                        <button type="button" class="modal-cancel btn-dark">Cancel</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
     <?php endif; ?>
 
     <script>

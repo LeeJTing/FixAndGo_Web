@@ -1,0 +1,707 @@
+/* Combined CSS for Product List and Admin Review Page */
+
+/* ==================== COMMON STYLES ==================== */
+:root {
+  --primary-color: #f59e0b;
+  --primary-hover: #d97706;
+  --primary-dark: #000a2e;
+  --bg-dark: #111827;
+  --bg-card: #f3f4f6;
+  --text-light: #f9fafb;
+  --text-color: #1f2937;
+  --text-muted: #6b7280;
+  --border-color: #ddd;
+  --error-color: #e74c3c;
+  --success-color: #2ecc71;
+  --spacing-unit: 1rem;
+  --container-width: 1500px;
+  --header-height: 80px;
+}
+
+/* ==================== PRODUCT LIST STYLES ==================== */
+/* Product List Container */
+.product-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 20px;
+    max-width: var(--container-width);
+    margin: 0 auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg-card);
+}
+
+/* Product Item Card */
+.product-item {
+    background: linear-gradient(145deg, #ffffff, var(--bg-card));
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+    border: 1px solid var(--border-color);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.product-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 25px rgba(0, 0, 0, 0.15);
+    border-color: var(--primary-color);
+}
+
+.product-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+    border-radius: 16px 16px 0 0;
+}
+
+/* Product Image */
+.product-item img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease;
+    border: 1px solid var(--border-color);
+}
+
+.product-item:hover img {
+    transform: scale(1.02);
+}
+
+/* Product Title */
+.product-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 10px;
+    line-height: 1.4;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border-color);
+    transition: color 0.3s ease;
+}
+
+.product-item:hover .product-title {
+    color: var(--primary-color);
+}
+
+/* Product Meta */
+.product-meta {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 12px;
+    background: var(--bg-card);
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.product-meta::before {
+    content: "💰 Price";
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 3px;
+}
+
+/* Product Action Button */
+.product-action-btn {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+/* Common Button Styles */
+.btn {
+    padding: 14px 24px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.btn-view {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+    color: var(--text-light);
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+.btn-view::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-view:hover::before {
+    left: 100%;
+}
+
+.btn-view:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
+    background: linear-gradient(135deg, var(--primary-hover) 0%, var(--primary-color) 100%);
+}
+
+/* ==================== ADMIN REVIEW PAGE STYLES ==================== */
+/* Admin Review Page */
+.admin-review-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--text-color);
+    background: var(--bg-card);
+}
+
+/* Header */
+.admin-review-page h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid var(--primary-color);
+    display: inline-block;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Product Summary */
+.product-summary {
+    background: linear-gradient(135deg, #ffffff 0%, var(--bg-card) 100%);
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 40px;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.product-summary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--primary-color), var(--primary-hover));
+    border-radius: 12px 0 0 12px;
+}
+
+.product-summary img {
+    width: 160px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 3px solid white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    float: left;
+    margin-right: 25px;
+}
+
+.product-summary img:hover {
+    transform: scale(1.03);
+}
+
+.product-summary > div {
+    overflow: hidden;
+}
+
+.product-summary strong {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 10px;
+}
+
+.product-summary div div {
+    margin-bottom: 8px;
+    font-size: 1rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.product-summary div div::before {
+    font-size: 1.1em;
+}
+
+.product-summary div div:nth-child(2)::before {
+    content: "💰";
+}
+
+.product-summary div div:nth-child(3)::before {
+    content: "📦";
+}
+
+/* Review List */
+.admin-review-list {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Review Row */
+.review-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 25px;
+    border-bottom: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    position: relative;
+    background: white;
+}
+
+.review-row:hover {
+    background: linear-gradient(90deg, var(--bg-card) 0%, #ffffff 100%);
+    transform: translateX(5px);
+}
+
+.review-row:last-child {
+    border-bottom: none;
+}
+
+.review-row::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    background: transparent;
+    transition: background 0.3s ease;
+}
+
+.review-row:hover::after {
+    background: linear-gradient(to bottom, var(--primary-color), var(--primary-hover));
+}
+
+/* Avatar */
+.avatar {
+    flex-shrink: 0;
+}
+
+.avatar img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.avatar img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1);
+}
+
+/* Review Body */
+.review-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.review-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.review-meta strong {
+    font-size: 1.1rem;
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+.review-meta span {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.review-meta small {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+    color: var(--text-light);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.review-meta small::before {
+    content: "★";
+}
+
+/* Review Comment */
+.review-comment {
+    background: var(--bg-card);
+    padding: 18px;
+    border-radius: 10px;
+    border-left: 4px solid var(--border-color);
+    line-height: 1.6;
+    color: var(--text-color);
+    font-size: 1rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    position: relative;
+}
+
+.review-comment::before {
+    content: "💬";
+    position: absolute;
+    left: -10px;
+    top: -10px;
+    background: white;
+    border-radius: 50%;
+    padding: 5px;
+    font-size: 0.8rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Review Actions */
+.review-actions {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 180px;
+}
+
+/* Review Page Button Variants */
+.btn-valid-toggle {
+    background: linear-gradient(135deg, var(--success-color), #27ae60);
+    color: var(--text-light);
+    border: none;
+}
+
+.btn-valid-toggle.btn-valid::before {
+    content: "✓";
+}
+
+.btn-valid-toggle.btn-invalid {
+    background: linear-gradient(135deg, var(--error-color), #c0392b);
+    color: var(--text-light);
+}
+
+.btn-valid-toggle.btn-invalid::before {
+    content: "✗";
+}
+
+.btn-block-user {
+    background: linear-gradient(135deg, var(--text-muted), #4a5568);
+    color: var(--text-light);
+    border: none;
+}
+
+.btn-block-user::before {
+    content: "⛔";
+}
+
+.btn-blocked {
+    background: linear-gradient(135deg, #9ca3af, var(--text-muted));
+    color: var(--text-light);
+    cursor: not-allowed;
+    border: none;
+}
+
+.btn-blocked::before {
+    content: "🔒";
+}
+
+.btn-delete-review {
+    background: linear-gradient(135deg, var(--error-color), #c0392b);
+    color: var(--text-light);
+    border: none;
+}
+
+.btn-delete-review::before {
+    content: "🗑️";
+}
+
+/* Admin Review Button States */
+.review-actions .btn {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.review-actions .btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.review-actions .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Empty State */
+.admin-review-list > p {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    background: linear-gradient(135deg, var(--bg-card), #f1f5f9);
+    border-radius: 12px;
+    margin: 0;
+}
+
+.admin-review-list > p::before {
+    content: "📝";
+    display: block;
+    font-size: 3rem;
+    margin-bottom: 15px;
+    opacity: 0.5;
+}
+
+/* ==================== SHARED RESPONSIVE DESIGN ==================== */
+/* Remove the <br> tag styling for product list */
+.product-list br {
+    display: none;
+}
+
+/* Responsive Design for Product List */
+@media (max-width: 1200px) {
+    .product-list {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 25px;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .product-list {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+        padding: 10px;
+    }
+    
+    .product-item {
+        padding: 15px;
+    }
+    
+    .product-item img {
+        height: 180px;
+    }
+}
+
+/* Responsive Design for Admin Review Page */
+@media (max-width: 1024px) {
+    .admin-review-page {
+        padding: 20px;
+    }
+    
+    .review-row {
+        flex-wrap: wrap;
+    }
+    
+    .review-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+        width: 100%;
+        margin-top: 20px;
+        justify-content: flex-end;
+        padding-top: 20px;
+        border-top: 1px dashed var(--border-color);
+    }
+    
+    .review-actions .btn {
+        flex: 1;
+        min-width: 140px;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-review-page h1 {
+        font-size: 1.8rem;
+    }
+    
+    .product-summary {
+        text-align: center;
+    }
+    
+    .product-summary img {
+        float: none;
+        margin: 0 auto 20px;
+        display: block;
+    }
+    
+    .review-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .review-actions {
+        justify-content: center;
+    }
+    
+    .review-actions .btn {
+        min-width: 120px;
+    }
+    
+    .product-list {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .btn-view, .btn {
+        padding: 12px 20px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-review-page {
+        padding: 15px;
+    }
+    
+    .review-row {
+        padding: 20px 15px;
+    }
+    
+    .avatar img {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .review-actions .btn {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+        min-width: 100px;
+    }
+}
+
+/* ==================== ANIMATIONS ==================== */
+/* Loading Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.product-item {
+    animation: fadeIn 0.6s ease forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.review-row {
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+/* Stagger animations for product items */
+.product-item:nth-child(2) { animation-delay: 0.1s; }
+.product-item:nth-child(3) { animation-delay: 0.2s; }
+.product-item:nth-child(4) { animation-delay: 0.3s; }
+.product-item:nth-child(5) { animation-delay: 0.4s; }
+.product-item:nth-child(6) { animation-delay: 0.5s; }
+
+/* Stagger animations for review rows */
+.review-row:nth-child(2) { animation-delay: 0.1s; }
+.review-row:nth-child(3) { animation-delay: 0.2s; }
+.review-row:nth-child(4) { animation-delay: 0.3s; }
+.review-row:nth-child(5) { animation-delay: 0.4s; }
+
+/* Status Badge Animation */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.review-meta small {
+    animation: pulse 2s infinite;
+}
+
+/* Hover Effects for Interactive Elements */
+.btn-valid-toggle:not(:disabled):hover,
+.btn-block-user:not(:disabled):hover,
+.btn-delete-review:not(:disabled):hover {
+    filter: brightness(1.1);
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-3px); }
+    75% { transform: translateX(3px); }
+}
+
+.btn-delete-review:not(:disabled):hover {
+    animation: shake 0.5s ease;
+}
+
+/* Price highlighting for product list */
+.product-meta::after {
+    content: "₱" attr(data-price);
+    font-weight: 700;
+    color: var(--success-color);
+    font-size: 1.2rem;
+    display: block;
+    margin-top: 5px;
+}
+
+/* Clear fix for floated elements */
+.product-summary::after {
+    content: "";
+    display: table;
+    clear: both;
+}

@@ -161,35 +161,39 @@ $addresses = getAddressesByUserId($user_id);
                         </button>
                     </div>
                     <div class="card-body">
-                        <?php foreach ($addresses as $key => $value) : ?>
-                            <div class="address-card">
-                                <div class="address-header">
-                                    <h3><?= $value->address_name ?></h3>
+                        <?php if ($addresses) :
+                            foreach ($addresses as $key => $value) : ?>
+                                <div class="address-card">
+                                    <div class="address-header">
+                                        <h3><?= $value->address_name ?></h3>
+                                    </div>
+                                    <div class="address-content">
+                                        <p><?= $value->address_one ? $value->address_one . ',' : '<i>None</i>' ?></p>
+                                        <p><?= $value->address_two ? $value->address_two . ',' : '' ?></p>
+                                        <p><?= $value->address_three ? $value->address_three . ', ' : '' ?><?= $value->post_code . ',' ?></p>
+                                        <p><?= $value->state ?>, <?= $value->country ?></p>
+                                    </div>
+                                    <div class="address-actions">
+                                        <button class="action-btn edit edit-address-btn" value="updateAddress"
+                                            data-address-id="<?= $value->address_id ?>"
+                                            data-address-name="<?= htmlspecialchars($value->address_name) ?>"
+                                            data-address-one="<?= htmlspecialchars($value->address_one) ?>"
+                                            data-address-two="<?= $value->address_two ? htmlspecialchars($value->address_two) : NULL ?>"
+                                            data-address-three="<?= $value->address_three ? htmlspecialchars($value->address_three) : NULL ?>"
+                                            data-post-code="<?= htmlspecialchars($value->post_code) ?>"
+                                            data-state="<?= htmlspecialchars($value->state) ?>"
+                                            data-country="<?= htmlspecialchars($value->country) ?>">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </button>
+                                        <button class="action-btn delete delete-address-btn" data-address-id="<?= $value->address_id ?>">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="address-content">
-                                    <p><?= $value->address_one ? $value->address_one . ',' : '<i>None</i>' ?></p>
-                                    <p><?= $value->address_two ? $value->address_two . ',' : '' ?></p>
-                                    <p><?= $value->address_three ? $value->address_three . ', ' : '' ?><?= $value->post_code . ',' ?></p>
-                                    <p><?= $value->state ?>, <?= $value->country ?></p>
-                                </div>
-                                <div class="address-actions">
-                                    <button class="action-btn edit edit-address-btn" value="updateAddress"
-                                        data-address-id="<?= $value->address_id ?>"
-                                        data-address-name="<?= htmlspecialchars($value->address_name) ?>"
-                                        data-address-one="<?= htmlspecialchars($value->address_one) ?>"
-                                        data-address-two="<?= $value->address_two ? htmlspecialchars($value->address_two) : NULL ?>"
-                                        data-address-three="<?= $value->address_three ? htmlspecialchars($value->address_three) : NULL ?>"
-                                        data-post-code="<?= htmlspecialchars($value->post_code) ?>"
-                                        data-state="<?= htmlspecialchars($value->state) ?>"
-                                        data-country="<?= htmlspecialchars($value->country) ?>">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </button>
-                                    <button class="action-btn delete delete-address-btn" data-address-id="<?= $value->address_id ?>">
-                                        <i class="fas fa-trash"></i> Delete
-                                    </button>
-                                </div>
-                            </div>
-                        <?php endforeach ?>
+                        <?php endforeach;
+                        else : ?>
+                            <p style="color: rgba(135, 135, 135, 1);"><i>No address exist</i></p>
+                        <?php endif ?>
                     </div>
                 </div>
 
@@ -201,7 +205,7 @@ $addresses = getAddressesByUserId($user_id);
                         <div class="action-grid">
                             <button id="openChangePassword" class="action-card">
                                 <i class="fas fa-lock"></i>
-                                <span >Change Password</span>
+                                <span>Change Password</span>
                             </button>
                             <!-- <button class="action-card">
                                 <i class="fas fa-bell"></i>

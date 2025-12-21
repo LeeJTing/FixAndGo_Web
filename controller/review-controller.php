@@ -84,7 +84,7 @@ if (is_post()) {
 		}
 
 		// soft delete
-		invalidReview($review_id);
+		deleteReviewId($review_id);
 		header('Content-Type: application/json');
 		echo json_encode(['ok' => true]);
 		exit;

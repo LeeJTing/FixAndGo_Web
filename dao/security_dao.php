@@ -25,3 +25,11 @@ function updateUserPassword($userId, $hashedPassword)
     $stm = $_db->prepare("UPDATE users SET hash_password = ? WHERE user_id = ?");
     return $stm->execute([$hashedPassword, $userId]);
 }
+
+function setUserAccountStatus($userId, $status)
+{
+    global $_db;
+    $stm = $_db->prepare("UPDATE users SET account_status = ? WHERE user_id = ?");
+    $stm->execute([$status, $userId]);
+    return $stm->rowCount() > 0;
+}

@@ -24,7 +24,7 @@ $userProfilePic = $currentUser->user_id ? getUserProfilePicture($currentUser->us
         <li><a href="admin-product.php" class="<?= basename($_SERVER['PHP_SELF']) == 'admin-product.php' ? 'active' : '' ?>">Products</a></li>
         <li><a href="adminCustomer.php" class="<?= basename($_SERVER['PHP_SELF']) == 'adminCustomer.php' ? 'active' : '' ?>">Customer</a></li>
         <li><a href="admin-category.php" class="<?= basename($_SERVER['PHP_SELF']) == 'admin-add-category.php' ? 'active' : '' ?>">Category</a></li>
-        <li><a href="analytics.php" class="<?= basename($_SERVER['PHP_SELF']) == 'analytics.php' ? 'active' : '' ?>">Analytics</a></li>
+        <li><a href="admin-manage-review.php" class="<?= basename($_SERVER['PHP_SELF']) == 'admin-manage-review.php' ? 'active' : '' ?>">Product Review</a></li>
     </ul>
 
     <div class="sidebar-footer">
