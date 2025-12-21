@@ -14,7 +14,7 @@
 
 <body>
     <div class="admin-layout">
-
+        <div id="message-container"></div>
         <?php include 'adminSidebar.php'; ?>
 
         <div class="admin-main">

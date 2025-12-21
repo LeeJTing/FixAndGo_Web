@@ -1,6 +1,4 @@
 $(document).ready(function () {
-  let imageSelected = false;
-
   // Image preview
   $("#categoryImageInput").on("change", function (e) {
     const file = e.target.files[0];
@@ -10,7 +8,6 @@ $(document).ready(function () {
         $("#previewImg").attr("src", e.target.result);
         $("#previewContainer").show();
         $(".add-new").hide();
-        imageSelected = true;
         $("#image-error").text("");
       };
       reader.readAsDataURL(file);
@@ -22,7 +19,6 @@ $(document).ready(function () {
     $("#categoryImageInput").val("");
     $("#previewContainer").hide();
     $(".add-new").show();
-    imageSelected = false;
     $("#image-error").text("Please select an image.");
   });
 
@@ -35,17 +31,27 @@ $(document).ready(function () {
     if (!validateField("category_name", { required: true, min: 3, max: 30 })) {
       isValid = false;
     }
-
-    if (!validateField("description", { required: true, min: 20, max: 1500 })) {
+    if (
+      !validateField("description", { required: false, min: 20, max: 1500 })
+    ) {
       isValid = false;
     }
 
-    // Validate image upload
-    if (!validateFileInput($("#categoryImageInput"))) {
-      isValid = false;
+    if ($("select[name='status']").val() === "active") {
+      // Validate image upload
+      if (!validateFileInput("#categoryImageInput", { required: true })) {
+        isValid = false;
+      }
+    } else {
+      isValid = validateFileInput("#categoryImageInput", {
+        types: ["image/jpeg", "image/png", "image/gif", "image/webp"],
+        maxSize: 2 * 1024 * 1024,
+        required: false,
+      });
     }
 
     if (!isValid) {
+      $(".input-error:first").focus();
       e.preventDefault();
     }
   });

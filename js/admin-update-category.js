@@ -1,6 +1,4 @@
 $(document).ready(function () {
-  let imageSelected = false;
-
   // Track new image selection
   $("#categoryImageInput").on("change", function (e) {
     const file = e.target.files[0];
@@ -10,9 +8,6 @@ $(document).ready(function () {
         $("#previewImg").attr("src", e.target.result);
         $("#previewContainer").show();
         $(".add-new").hide();
-        imageSelected = true;
-
-        // Remove any previous error
         $("#categoryImageInput").next(".error-msg").remove();
       };
       reader.readAsDataURL(file);
@@ -29,7 +24,9 @@ $(document).ready(function () {
       isValid = false;
     }
 
-    if (!validateField("description", { required: true, min: 20, max: 1500 })) {
+    if (
+      !validateField("description", { required: false, min: 20, max: 1500 })
+    ) {
       isValid = false;
     }
 
@@ -37,13 +34,16 @@ $(document).ready(function () {
     const hasCurrentImage = $("#currentImgBox").length > 0;
     const hasNewImage = $("#categoryImageInput")[0].files.length > 0;
 
+    if (status === "1") {
+      if (!hasNewImage) {
+        $("select[name='status']").val(0);
+        clearError();
+        showError("#categoryImageInput", "Please upload a new image.");
+      }
+    }
     if (status === "1" && !hasCurrentImage && !hasNewImage) {
+      $("select[name='status']").val(0);
       isValid = false;
-
-      showFileError(
-        "#categoryImageInput",
-        "Active category must have an image."
-      );
     }
 
     if (!isValid) {
@@ -57,14 +57,13 @@ $(document).ready(function () {
     $("#categoryImageInput").val("");
     $("#previewContainer").hide();
     $(".add-new").show();
-    imageSelected = false;
-    $("#image-error").text("Please select an image.");
+    showError("#categoryImageInput", "Please select an image.");
   });
 
   $("#removeCurrent").on("click", function () {
     const categoryCode = $("input[name='category_code']").val();
     if (!categoryCode) {
-      alert("Category code missing.");
+      showMessage("Category code missing.", "error");
       return;
     }
     showConfirm(
@@ -88,14 +87,16 @@ $(document).ready(function () {
                 clearError();
                 showError("#categoryImageInput", "Please upload a new image.");
 
-                imageSelected = false;
                 $("select[name='status']").val(0);
               } else {
-                alert("Failed to delete image.");
+                showMessage(".admin-layout", "Failed to delete image.");
               }
             },
             error: function () {
-              alert("Server error while deleting image.");
+              showMessage(
+                ".admin-layout",
+                "Server error while deleting image."
+              );
             },
           });
         } else {

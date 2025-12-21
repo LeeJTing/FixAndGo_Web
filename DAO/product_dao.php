@@ -760,3 +760,52 @@ function getTop5BestSellersDifferentCategories()
         return [];
     }
 }
+
+function hasProductsInCategoryDao($category_code)
+{
+    global $_db;
+
+    try {
+        $sql = "SELECT COUNT(*) FROM product 
+                  WHERE category_code = :category_code 
+                  AND isdeleted = 0";
+
+        $stmt = $_db->prepare($sql);
+        $stmt->bindParam(':category_code', $category_code, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $count = $stmt->fetchColumn();
+        return $count > 0;
+    } catch (PDOException $e) {
+        error_log("PDO Error: " . $e->getMessage());
+        return false;
+    }
+}
+
+function checkCategoryExistsDao($category_name, $exclude_id = 0)
+{
+    global $_db;
+
+    try {
+        if ($exclude_id > 0) {
+            $sql = "SELECT COUNT(*) FROM category 
+                    WHERE category_name = ? 
+                    AND category_code != ? 
+                    AND is_deleted = 0";
+            $stmt = $_db->prepare($sql);
+            $stmt->execute([$category_name, $exclude_id]);
+        } else {
+            $sql = "SELECT COUNT(*) FROM category 
+                    WHERE category_name = ? 
+                    AND is_deleted = 0";
+            $stmt = $_db->prepare($sql);
+            $stmt->execute([$category_name]);
+        }
+
+        $count = $stmt->fetchColumn();
+        return $count > 0;
+    } catch (PDOException $e) {
+        error_log("PDO Error: " . $e->getMessage());
+        return false;
+    }
+}

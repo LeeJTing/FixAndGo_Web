@@ -4,12 +4,11 @@ require_once '../../_base.php';
 require '../../controller/category-controller.php';
 require_once '../../component/msg.php';
 include 'adminHeader.php';
-
-$category = getAllCategoryDao();
+$category = getAllCategoryDao() ?? [];
 ?>
 <link rel="stylesheet" href="../../css/admin-add-category.css">
-
 <?php displayFlashMessage(); ?>
+
 <div class="admin-container">
     <div class="admin-header">
         <h1><i class="fa-solid fa-folder-plus"></i> Add New Category</h1>
@@ -29,16 +28,16 @@ $category = getAllCategoryDao();
                 </div>
 
                 <div class="form-group">
-                    <label for="description">Description</label>
+                    <label for="description">Description (Optional)</label>
                     <textarea name="description"
                         id="description"
                         rows="5"
-                        placeholder="Brief description of this category (optional)"></textarea>
+                        placeholder="Brief description of this category"></textarea>
                 </div>
 
                 <div class="form-group">
                     <label>Status</label>
-                    <select name="status" class="form-input">
+                    <select name="status" class="form-input" required>
                         <option value="active" selected>Active</option>
                         <option value="inactive">Inactive</option>
                     </select>

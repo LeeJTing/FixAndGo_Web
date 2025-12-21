@@ -48,8 +48,8 @@ $category = getCategoryByCode($category_code);
                 <div class="form-group">
                     <label>Status</label>
                     <select name="status" class="form-input">
-                        <option value="1" <?= $category->is_show ? 'selected' : '' ?>>Active</option>
-                        <option value="0" <?= !$category->is_show ? 'selected' : '' ?>>Inactive</option>
+                        <option value="active" <?= $category->is_show == 1 ? 'selected' : '' ?>>Active</option>
+                        <option value="inactive" <?= $category->is_show == 0 ? 'selected' : '' ?>>Inactive</option>
                     </select>
                 </div>
             </div>
@@ -102,6 +102,7 @@ $category = getCategoryByCode($category_code);
         </div>
     </form>
 </div>
+<script src="../../js/displayMsg.js"></script>
 <script src="../../js/confirmMsg.js"></script>
 <script src="../../js/validation.js"></script>
 <script src="../../js/admin-update-category.js"></script>
