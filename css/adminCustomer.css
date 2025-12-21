@@ -42,6 +42,28 @@
     margin-right: 5px;
 }
 
+/* 批量删除按钮 */
+.bulk-delete-btn {
+    background: #ef4444;
+    padding: 10px 20px;
+    border: none;
+    color: white;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 10px;
+}
+
+.bulk-delete-btn:hover {
+    background: #dc2626;
+}
+
+.bulk-delete-btn span {
+    font-size: 16px;
+    margin-right: 5px;
+}
+
 .customers-content {
     display: flex;
     gap: 25px;
@@ -66,10 +88,9 @@
     display: flex;
     align-items: center;
     gap: 10px;
-
     width: 300px;
     max-width: 400px;
-    flex-shrink: 0
+    flex-shrink: 0;
 }
 
 .search-box input {
@@ -112,6 +133,14 @@
     font-weight: 500;
 }
 
+/* 复选框样式 */
+.customer-table input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: #3b82f6;
+}
+
 .customer-table td {
     padding: 12px 0;
     border-bottom: 1px solid #1e293b;
@@ -127,7 +156,6 @@
 
 /* 表格行悬停效果 */
 .customer-table tbody tr {
-    cursor: pointer;
     transition: background-color 0.2s ease;
 }
 
@@ -147,15 +175,6 @@
 .customer-table .highlight {
     color: #60a5fa;
     font-weight: 600;
-}
-
-/* Actions 列不要触发行点击 */
-.customer-table td:last-child {
-    pointer-events: none;
-}
-
-.customer-table td:last-child a {
-    pointer-events: auto;
 }
 
 /* Status Badges */
@@ -197,29 +216,29 @@
     padding: 6px 12px;
     border-radius: 6px;
     color: white;
-    text-decoration: none; /* 移除超链接下划线 */
+    text-decoration: none;
     cursor: pointer;
     transition: background 0.2s;
     font-size: 14px;
-    display: inline-block; /* 确保 padding 生效 */
+    display: inline-block;
 }
 
 .pagination-btn:hover:not(.active):not(.disabled) {
-    background: #334155; /* 悬停效果 */
+    background: #334155;
 }
 
 /* 选中状态 */
 .pagination-btn.active {
-    background: #3b82f6; /* 选中页码使用主色调 */
+    background: #3b82f6;
     font-weight: bold;
-    pointer-events: none; /* 禁用点击当前页码 */
+    pointer-events: none;
 }
 
 /* 禁用状态 */
 .pagination-btn.disabled {
     opacity: 0.5;
     cursor: not-allowed;
-    pointer-events: none; /* 禁用点击 */
+    pointer-events: none;
 }
 
 /* ===== Right Panel ===== */
@@ -270,8 +289,7 @@
 }
 
 .avatar-upload-icon svg {
-    /* 使用 transform 向上移动 1 像素，修正视觉上的偏低 */
-    transform: translateY(5px); 
+    transform: translateY(5px);
 }
 
 .avatar-upload-icon:hover {
@@ -336,10 +354,11 @@
     border-radius: 6px;
     color: white;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .cancel:hover {
-    background: #334155; /* 悬停时颜色变深 */
+    background: #334155;
 }
 
 .save {
@@ -348,6 +367,7 @@
     padding: 8px 14px;
     border-radius: 6px;
     color: white;
+    cursor: pointer;
 }
 
 .save:hover {
@@ -362,6 +382,8 @@
     font-size: 13px;
     margin-right: 5px;
     display: inline-block;
+    border: none;
+    cursor: pointer;
 }
 
 .btn-edit {

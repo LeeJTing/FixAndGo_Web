@@ -6,8 +6,34 @@ require_once __DIR__ . '/../../controller/customer-controller.php';
 // 处理操作
 $action = get('action');
 
+// 单个删除
 if ($action == 'delete' && get('id')) {
     CustomerController::handleDelete(get('id'));
+}
+
+// 批量删除
+if ($action == 'bulk_delete' && is_post()) {
+    $selectedIds = post('selected_ids');
+    if (!empty($selectedIds) && is_array($selectedIds)) {
+        $successCount = 0;
+        $failCount = 0;
+        
+        foreach ($selectedIds as $id) {
+            if (CustomerDAO::deleteCustomer($id)) {
+                $successCount++;
+            } else {
+                $failCount++;
+            }
+        }
+        
+        if ($successCount > 0) {
+            flash('success', "Successfully deleted $successCount user(s).");
+        }
+        if ($failCount > 0) {
+            flash('error', "Failed to delete $failCount user(s).");
+        }
+        redirect('adminCustomer.php');
+    }
 }
 
 if ($action == 'update' && is_post()) {
@@ -22,17 +48,14 @@ if ($action == 'create' && is_post()) {
 $search = get('search');
 $status = get('status', 'All');
 $sortBy = get('sort', 'user_id');
-
 $roleFilter = get('role', 'Member');
 
-// ============== 新增分页逻辑 ==============
-$limit = 13; // 每页最大显示数量
-$page = (int)get('page', 1); // 获取当前页码，默认为第 1 页
+// 分页逻辑
+$limit = 13;
+$page = (int)get('page', 1);
 if ($page < 1) $page = 1;
 
-$offset = ($page - 1) * $limit; // 计算查询偏移量
-
-// 计算当前页显示的起始和结束编号
+$offset = ($page - 1) * $limit;
 $startNum = $offset + 1;
 
 $queryParams = http_build_query([
@@ -43,16 +66,10 @@ $queryParams = http_build_query([
     'page'   => $page
 ]);
 
-// 获取总用户数（用于计算总页数）
 $totalCustomers = CustomerDAO::getTotalCount($search, $status, $roleFilter);
-
-// 计算总页数
 $totalPages = ceil($totalCustomers / $limit);
-
-// 【修改此处】: 获取用户列表，传入 $limit 和 $offset 以实现分页
 $customers = CustomerDAO::getAllCustomers($search, $status, $sortBy, $roleFilter, $limit, $offset);
 
-// 如果没有用户，则 $startNum 应该为 0
 if ($totalCustomers == 0) {
     $startNum = 0;
     $endNum = 0;
@@ -61,13 +78,11 @@ if ($totalCustomers == 0) {
     $endNum = min($offset + count($customers), $totalCustomers);
 }
 
-// 获取选中的用户（用于编辑面板）
 $selectedCustomer = null;
 if (get('edit')) {
     $selectedCustomer = CustomerDAO::getCustomerById(get('edit'));
 }
 
-// 获取提示信息
 $successMsg = flash('success');
 $errorMsg = flash('error');
 
@@ -92,14 +107,16 @@ include 'adminHeader.php';
             <button class="add-btn" onclick="showAddModal()">
                 <span>＋</span> Add User
             </button>
+            <!-- 批量删除按钮 -->
+            <button class="bulk-delete-btn" id="bulkDeleteBtn" onclick="bulkDelete()" style="display:none;">
+                <span>🗑</span> Delete Selected
+            </button>
         </div>
     </div>
 
     <div class="customers-content">
-        <!-- LEFT SIDE -->
         <div class="left-section">
-
-            <!-- Top: Search + Filters -->
+            <!-- Search + Filters -->
             <form method="GET" action="adminCustomer.php" class="customer-toolbar">
                 <div class="search-box">
                     <svg width="16" height="16" fill="#64748b" viewBox="0 0 24 24">
@@ -116,7 +133,8 @@ include 'adminHeader.php';
 
                 <select name="status" class="filter-select" onchange="this.form.submit()">
                     <option value="All" <?= $status == 'All' ? 'selected' : '' ?>>Status: All</option>
-                    <option value="Unblock" <?= $status == 'Unblock' ? 'selected' : '' ?>>Unblock</option>
+                    <option value="Verified" <?= $status == 'Verified' ? 'selected' : '' ?>>Verified</option>
+                    <option value="Unverified" <?= $status == 'Unverified' ? 'selected' : '' ?>>Unverified</option>
                     <option value="Blocked" <?= $status == 'Blocked' ? 'selected' : '' ?>>Blocked</option>
                 </select>
 
@@ -133,6 +151,9 @@ include 'adminHeader.php';
                 <table class="customer-table">
                     <thead>
                         <tr>
+                            <th style="width: 40px;">
+                                <input type="checkbox" id="selectAll" onchange="toggleSelectAll()">
+                            </th>
                             <th>ID</th>
                             <th>Customer Name</th>
                             <th>Email</th>
@@ -145,29 +166,42 @@ include 'adminHeader.php';
                     <tbody>
                         <?php if (empty($customers)): ?>
                             <tr>
-                                <td colspan="6" style="text-align: center; padding: 30px;">
+                                <td colspan="7" style="text-align: center; padding: 30px;">
                                     No customers found
                                 </td>
                             </tr>
                         <?php else: ?>
                             <?php foreach ($customers as $customer): ?>
-                            <tr class="<?= ($selectedCustomer && $selectedCustomer->user_id == $customer->user_id) ? 'selected' : '' ?>" 
-                                onclick="window.location.href='?edit=<?= $customer->user_id ?>&<?= $queryParams ?>'"
-                                style="cursor: pointer;">
-                                <td><?= htmlspecialchars($customer->user_id) ?></td>
-                                <td class="<?= ($selectedCustomer && $selectedCustomer->user_id == $customer->user_id) ? 'highlight' : '' ?>">
+                            <tr class="<?= ($selectedCustomer && $selectedCustomer->user_id == $customer->user_id) ? 'selected' : '' ?>">
+                                <td onclick="event.stopPropagation();">
+                                    <input type="checkbox" class="user-checkbox" 
+                                           value="<?= htmlspecialchars($customer->user_id) ?>"
+                                           onchange="updateBulkDeleteBtn()">
+                                </td>
+                                <td onclick="window.location.href='?edit=<?= $customer->user_id ?>&<?= $queryParams ?>'" 
+                                    style="cursor: pointer;">
+                                    <?= htmlspecialchars($customer->user_id) ?>
+                                </td>
+                                <td onclick="window.location.href='?edit=<?= $customer->user_id ?>&<?= $queryParams ?>'" 
+                                    style="cursor: pointer;"
+                                    class="<?= ($selectedCustomer && $selectedCustomer->user_id == $customer->user_id) ? 'highlight' : '' ?>">
                                     <?= htmlspecialchars($customer->user_name) ?>
                                 </td>
-                                <td><?= htmlspecialchars($customer->email) ?></td>
-                                <td><?= htmlspecialchars($customer->contact_num ?? 'N/A') ?></td>
-                                <td>
+                                <td onclick="window.location.href='?edit=<?= $customer->user_id ?>&<?= $queryParams ?>'" 
+                                    style="cursor: pointer;">
+                                    <?= htmlspecialchars($customer->email) ?>
+                                </td>
+                                <td onclick="window.location.href='?edit=<?= $customer->user_id ?>&<?= $queryParams ?>'" 
+                                    style="cursor: pointer;">
+                                    <?= htmlspecialchars($customer->contact_num ?? 'N/A') ?>
+                                </td>
+                                <td onclick="window.location.href='?edit=<?= $customer->user_id ?>&<?= $queryParams ?>'" 
+                                    style="cursor: pointer;">
                                     <?php
                                     $statusClass = strtolower($customer->account_status);
-                                    if ($statusClass === 'unblock') {
-                                        $statusClass = 'active';
-                                    } elseif ($statusClass === 'blocked') {
-                                        $statusClass = 'suspended';
-                                    }
+                                    if ($statusClass == 'verified') $statusClass = 'active';
+                                    if ($statusClass == 'blocked') $statusClass = 'suspended';
+                                    if ($statusClass == 'unverified') $statusClass = 'new';
                                     ?>
                                     <span class="status <?= $statusClass ?>">
                                         <?= htmlspecialchars($customer->account_status) ?>
@@ -176,8 +210,8 @@ include 'adminHeader.php';
                                 <td onclick="event.stopPropagation();">
                                     <a href="?edit=<?= $customer->user_id ?>&<?= $queryParams ?>" class="btn-edit">Edit</a>
                                     <a href="?action=delete&id=<?= $customer->user_id ?>&<?= $queryParams ?>"
-                                    onclick="return confirm('Are you sure you want to delete this customer?')" 
-                                    class="btn-delete">Delete</a>
+                                       onclick="return confirm('Are you sure you want to delete this customer?')" 
+                                       class="btn-delete">Delete</a>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
@@ -190,7 +224,6 @@ include 'adminHeader.php';
                     <p>Showing <?= $startNum ?> to <?= $endNum ?> of <?= $totalCustomers ?> results</p>
                     <div class="pagination">
                         <?php 
-                        // 用于构建分页链接的基础查询参数（排除 'page'）
                         $baseQueryParams = http_build_query([
                             'search' => $search,
                             'status' => $status,
@@ -221,8 +254,7 @@ include 'adminHeader.php';
                     </div>
                 </div>
             </div>
-        </div> <!-- end left-section -->
-
+        </div>
 
         <!-- RIGHT PANEL (Edit) -->
         <?php if ($selectedCustomer): ?>
@@ -253,10 +285,7 @@ include 'adminHeader.php';
                     <p>JPG, GIF, PNG or WEBP. 1MB max.</p>
                 </div>
 
-                <!-- User ID - Read Only -->
-                <label>User ID<span style="color: #94a3b8; font-size: 12px;">(Optional - Auto-generates 
-                    <span id="modalPrefixHint" style="font-weight: bold;">M</span>### if empty)
-                </span></label>
+                <label>User ID</label>
                 <input type="text" value="<?= htmlspecialchars($selectedCustomer->user_id) ?>" readonly 
                     style="background: #0f172a; color: #94a3b8; cursor: not-allowed;">
 
@@ -281,12 +310,9 @@ include 'adminHeader.php';
 
                 <label>Status</label>
                 <select name="account_status">
-                    <option value="Unblock" <?= $selectedCustomer->account_status == 'Unblock' ? 'selected' : '' ?>>
-                        Unblock
-                    </option>
-                    <option value="Blocked" <?= $selectedCustomer->account_status == 'Blocked' ? 'selected' : '' ?>>
-                        Blocked
-                    </option>
+                    <option value="Verified" <?= $selectedCustomer->account_status == 'Verified' ? 'selected' : '' ?>>Verified</option>
+                    <option value="Unverified" <?= $selectedCustomer->account_status == 'Unverified' ? 'selected' : '' ?>>Unverified</option>
+                    <option value="Blocked" <?= $selectedCustomer->account_status == 'Blocked' ? 'selected' : '' ?>>Blocked</option>
                 </select>
 
                 <div class="edit-panel-buttons">
@@ -296,8 +322,7 @@ include 'adminHeader.php';
             </form>
         </div>
         <?php endif; ?>
-    </div> <!-- end customers-content -->
-
+    </div>
 </div>
 
 <!-- Add Customer Modal -->
@@ -307,8 +332,6 @@ include 'adminHeader.php';
         <h3>Add New Customer</h3>
         
         <form method="POST" action="?action=create" enctype="multipart/form-data">
-
-        <!-- User ID Input - Optional, will auto-generate if empty -->
             <label>User ID <span style="color: #94a3b8; font-size: 12px;">(Optional - Auto-generates M### if empty)</span></label>
             <input type="text" name="custom_user_id" placeholder="Leave empty for auto-generation (or enter any unique ID)">
                    
@@ -339,8 +362,8 @@ include 'adminHeader.php';
 
             <label>Status</label>
             <select name="account_status">
-                <option value="Unblock">Unblock</option>
-                <option value="Blocked">Blocked</option>
+                <option value="Verified">Verified</option>
+                <option value="Unverified">Unverified</option>
             </select>
 
             <div class="edit-panel-buttons">
@@ -352,6 +375,67 @@ include 'adminHeader.php';
 </div>
 
 <script>
+// 全选/取消全选
+function toggleSelectAll() {
+    const selectAll = document.getElementById('selectAll');
+    const checkboxes = document.querySelectorAll('.user-checkbox');
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = selectAll.checked;
+    });
+    
+    updateBulkDeleteBtn();
+}
+
+// 更新批量删除按钮显示状态
+function updateBulkDeleteBtn() {
+    const checkboxes = document.querySelectorAll('.user-checkbox:checked');
+    const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
+    const selectAll = document.getElementById('selectAll');
+    const allCheckboxes = document.querySelectorAll('.user-checkbox');
+    
+    // 显示/隐藏批量删除按钮
+    if (checkboxes.length > 0) {
+        bulkDeleteBtn.style.display = 'inline-block';
+        bulkDeleteBtn.textContent = `🗑 Delete Selected (${checkboxes.length})`;
+    } else {
+        bulkDeleteBtn.style.display = 'none';
+    }
+    
+    // 更新全选复选框状态
+    selectAll.checked = allCheckboxes.length > 0 && checkboxes.length === allCheckboxes.length;
+}
+
+// 批量删除
+function bulkDelete() {
+    const checkboxes = document.querySelectorAll('.user-checkbox:checked');
+    
+    if (checkboxes.length === 0) {
+        alert('Please select at least one user to delete.');
+        return;
+    }
+    
+    if (!confirm(`Are you sure you want to delete ${checkboxes.length} user(s)?`)) {
+        return;
+    }
+    
+    // 创建表单并提交
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '?action=bulk_delete';
+    
+    checkboxes.forEach(checkbox => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'selected_ids[]';
+        input.value = checkbox.value;
+        form.appendChild(input);
+    });
+    
+    document.body.appendChild(form);
+    form.submit();
+}
+
 function updateUserIdHint() {
     const roleSelect = document.getElementById('modalUserRole');
     const prefixHint = document.getElementById('modalPrefixHint');
@@ -362,7 +446,6 @@ function updateUserIdHint() {
 }
 
 function showAddModal() {
-    // 确保每次打开时角色选择器和提示都重置为 Member (默认)
     const roleSelect = document.getElementById('modalUserRole');
     if (roleSelect) {
         roleSelect.value = 'Member';
@@ -381,6 +464,7 @@ window.onclick = function(event) {
         modal.style.display = 'none';
     }
 }
+
 document.addEventListener('DOMContentLoaded', updateUserIdHint);
 </script>
 

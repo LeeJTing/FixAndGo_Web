@@ -198,34 +198,15 @@ class CustomerDAO {
     // 删除用户
     public static function deleteCustomer($id) {
         global $_db;
-        
+
         try {
-            $_db->beginTransaction();
-            
-            // 删除相关数据
-            $_db->prepare("DELETE FROM userprofile WHERE user_id = ?")->execute([$id]);
-            $_db->prepare("DELETE FROM profilepicture WHERE user_id = ?")->execute([$id]);
-            $_db->prepare("DELETE FROM address WHERE user_id = ?")->execute([$id]);
-            $_db->prepare("DELETE FROM userdevices WHERE user_id = ?")->execute([$id]);
-            $_db->prepare("DELETE FROM loyaltypoint WHERE user_id = ?")->execute([$id]);
-            
-            // 删除购物车相关
-            $stmt = $_db->prepare("SELECT cart_id FROM cart WHERE user_id = ?");
-            $stmt->execute([$id]);
-            $cart = $stmt->fetch();
-            if ($cart) {
-                $_db->prepare("DELETE FROM cartitem WHERE cart_id = ?")->execute([$cart->cart_id]);
-                $_db->prepare("DELETE FROM cart WHERE user_id = ?")->execute([$id]);
-            }
-            
-            // 删除用户
             $stmt = $_db->prepare("DELETE FROM users WHERE user_id = ?");
             $stmt->execute([$id]);
-            
-            $_db->commit();
-            return true;
+
+            return $stmt->rowCount() > 0;
+
         } catch (Exception $e) {
-            $_db->rollBack();
+            error_log("Delete Customer Error: " . $e->getMessage());
             return false;
         }
     }
