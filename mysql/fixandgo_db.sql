@@ -88,7 +88,9 @@ INSERT INTO `cart` (`cart_id`, `user_id`) VALUES
 (5, 'M005'),
 (6, 'M006'),
 (7, 'M007'),
-(8, 'M008');
+(8, 'M008'),
+(9, 'M009'),
+(10, 'M010');
 
 -- --------------------------------------------------------
 
@@ -361,15 +363,6 @@ CREATE TABLE `otp` (
   `hashed_password` varchar(255) NOT NULL,
   `expired_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `otp`
---
-
-INSERT INTO `otp` (`user_id`, `start_at`, `hashed_password`, `expired_at`) VALUES
-('M001', '2025-01-10 10:15:00', 'otp12345', '2025-01-10 10:20:00'),
-('M002', '2025-01-11 09:30:00', 'otp56789', '2025-01-11 09:35:00'),
-('M003', '2025-01-12 14:10:00', 'otpabc12', '2025-01-12 14:15:00');
 
 -- --------------------------------------------------------
 
