@@ -156,9 +156,11 @@ $addresses = getAddressesByUserId($user_id);
                 <div class="info-card">
                     <div class="card-header">
                         <h2><i class="fas fa-map-marker-alt"></i> My Addresses</h2>
+                        <?php if(getAddressCountByUserId($user_id) < 3) : ?>
                         <button class="add-address-btn">
                             <i class="fas fa-plus"></i> Add New
                         </button>
+                        <?php endif ?>
                     </div>
                     <div class="card-body">
                         <?php if ($addresses) :
