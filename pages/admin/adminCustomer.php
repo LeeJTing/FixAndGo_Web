@@ -3,15 +3,15 @@
 require_once __DIR__ . '/../../_base.php';
 require_once __DIR__ . '/../../controller/customer-controller.php';
 
-// 处理操作
+// processing operation
 $action = get('action');
 
-// 单个删除
+// remove individual
 if ($action == 'delete' && get('id')) {
     CustomerController::handleDelete(get('id'));
 }
 
-// 批量删除
+// Batch Remove
 if ($action == 'bulk_delete' && is_post()) {
     $selectedIds = post('selected_ids');
     if (!empty($selectedIds) && is_array($selectedIds)) {
@@ -44,13 +44,13 @@ if ($action == 'create' && is_post()) {
     CustomerController::handleCreate();
 }
 
-// 获取搜索和筛选参数
+// Obtain search and filter parameters
 $search = get('search');
 $status = get('status', 'All');
 $sortBy = get('sort', 'user_id');
 $roleFilter = get('role', 'Member');
 
-// 分页逻辑
+// paging logic
 $limit = 13;
 $page = (int)get('page', 1);
 if ($page < 1) $page = 1;
@@ -107,7 +107,7 @@ include 'adminHeader.php';
             <button class="add-btn" onclick="showAddModal()">
                 <span>＋</span> Add User
             </button>
-            <!-- 批量删除按钮 -->
+            <!-- Batch Delete button -->
             <button class="bulk-delete-btn" id="bulkDeleteBtn" onclick="bulkDelete()" style="display:none;">
                 <span>🗑</span> Delete Selected
             </button>
@@ -404,14 +404,14 @@ function toggleSelectAll() {
     updateBulkDeleteBtn();
 }
 
-// 更新批量删除按钮显示状态
+// Update the display status of the batch delete button
 function updateBulkDeleteBtn() {
     const checkboxes = document.querySelectorAll('.user-checkbox:checked');
     const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
     const selectAll = document.getElementById('selectAll');
     const allCheckboxes = document.querySelectorAll('.user-checkbox');
     
-    // 显示/隐藏批量删除按钮
+    // Show/Hide the batch delete button
     if (checkboxes.length > 0) {
         bulkDeleteBtn.style.display = 'inline-block';
         bulkDeleteBtn.textContent = `🗑 Delete Selected (${checkboxes.length})`;
@@ -419,11 +419,11 @@ function updateBulkDeleteBtn() {
         bulkDeleteBtn.style.display = 'none';
     }
     
-    // 更新全选复选框状态
+    // Update the status of the "Select All" checkbox
     selectAll.checked = allCheckboxes.length > 0 && checkboxes.length === allCheckboxes.length;
 }
 
-// 批量删除
+// Batch Remove
 function bulkDelete() {
     const checkboxes = document.querySelectorAll('.user-checkbox:checked');
     
@@ -436,7 +436,7 @@ function bulkDelete() {
         return;
     }
     
-    // 创建表单并提交
+    // Create a form and submit it
     const form = document.createElement('form');
     form.method = 'POST';
     form.action = '?action=bulk_delete';

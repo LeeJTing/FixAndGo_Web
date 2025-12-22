@@ -1,8 +1,8 @@
 <?php
 /**
  * UserDAO.php
- * 位置: DAO/UserDAO.php
- * 负责所有与用户相关的数据库操作
+ * location: DAO/UserDAO.php
+ * Be responsible for all database operations related to users
  */
 
 class UserDAO {
@@ -13,7 +13,7 @@ class UserDAO {
     }
     
     /**
-     * 获取总客户数（会员）
+     * Obtain the total number of customers (members)
      */
     public function getTotalCustomerCount() {
         try {
@@ -30,7 +30,7 @@ class UserDAO {
     }
     
     /**
-     * 获取上月新增客户数
+     * Obtain the number of new customers added last month
      */
     public function getLastMonthCustomerCount() {
         try {
@@ -49,7 +49,7 @@ class UserDAO {
     }
     
     /**
-     * 获取本月新增客户数
+     * Get the number of new customers added this month
      */
     public function getCurrentMonthCustomerCount() {
         try {
@@ -68,8 +68,8 @@ class UserDAO {
     }
     
     /**
-     * 获取最近注册的客户
-     * @param int $limit 返回数量
+     * Get the most recently registered customers
+     * @param int $limit returned qty
      */
     public function getRecentCustomers($limit = 10) {
         try {
@@ -96,7 +96,7 @@ class UserDAO {
     }
     
     /**
-     * 搜索客户
+     * Search for customers
      */
     public function searchCustomers($searchTerm, $limit = 50) {
         try {
@@ -135,7 +135,7 @@ class UserDAO {
     }
     
     /**
-     * 根据ID获取用户信息
+     * Obtain user information based on the ID
      */
     public function getUserById($userId) {
         try {
@@ -158,7 +158,7 @@ class UserDAO {
     }
     
     /**
-     * 获取客户增长趋势数据（过去12个月）
+     * Obtain customer growth trend data (for the past 12 months)
      */
     public function getCustomerGrowthData() {
         try {
@@ -182,7 +182,7 @@ class UserDAO {
     }
     
     /**
-     * 获取所有用户统计信息
+     * Obtain all user statistics
      */
     public function getUserStats() {
         try {

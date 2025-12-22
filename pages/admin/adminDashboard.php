@@ -1,31 +1,31 @@
 <?php 
 /**
  * adminDashboard.php
- * 位置: pages/admin/adminDashboard.php
- * 管理员仪表板主页面
+ * location: pages/admin/adminDashboard.php
+ * The main page of the administrator dashboard
  */
 
 require '../../_base.php';
 require_once '../../controller/DashboardController.php';
 
-// 获取当前登录用户信息
+// Obtain the information of the currently logged-in user
 $currentUser = getCurrentUser();
 if (!$currentUser) {
     redirect($pathPrefix . '/index.php');
 }
 
-// 检查是否是管理员
+// Check if it is an administrator
 // if ($currentUser->user_role !== 'Admin') {
 //     redirect($pathPrefix . '/index.php');
 // }
 
-// 获取用户头像
+// Obtain the user's avatar
 $userProfilePic = getUserProfilePicture($currentUser->user_id);
 
-// 初始化控制器
+// Initialize the controller
 $dashboardController = new DashboardController($_db);
 
-// 获取仪表板数据
+// Obtain dashboard data
 $stats = $dashboardController->getDashboardStats();
 $recentOrders = $dashboardController->getRecentOrders(10);
 
@@ -65,7 +65,7 @@ include 'adminHeader.php';
 
     <h1 class="page-title">Dashboard Overview</h1>
 
-    <!-- 统计卡片 -->
+    <!-- Statistical card -->
     <div class="cards-grid">
         <div class="card">
             <div class="card-icon">

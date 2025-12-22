@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // =======================
-// 获取 & 验证表单数据
+// Obtain & Verify form data
 // =======================
 $name    = trim($_POST['name'] ?? '');
 $email   = trim($_POST['email'] ?? '');
@@ -58,7 +58,7 @@ if (!empty($errors)) {
 }
 
 // =======================
-// 组织邮件内容
+// Organize the content of the email
 // =======================
 $to = 'leekeezhan@gmail.com';
 
@@ -75,7 +75,7 @@ $email_body .= "IP Address: " . $_SERVER['REMOTE_ADDR'] . "\n";
 $email_body .= "Date: " . date('Y-m-d H:i:s') . "\n";
 
 // =======================
-// 使用 PHPMailer + Gmail SMTP 发送
+// Send using PHPMailer + Gmail SMTP
 // =======================
 try {
     $mail = new PHPMailer(true);
@@ -83,34 +83,31 @@ try {
     $mail->SMTPDebug = 2;
     $mail->Debugoutput = 'error_log';
 
-    // SMTP 配置
     $mail->isSMTP();
     $mail->Host       = 'smtp.gmail.com';
     $mail->SMTPAuth   = true;
 
-    // 🔴 改这里（你的 Gmail）
     $mail->Username   = 'leekeezhan@gmail.com';
 
-    // 🔴 改这里（你的 App Password，无空格）
     $mail->Password   = 'ckcbjyujkkakzqjz';
 
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port       = 587;
 
-    // 发件人 & 收件人
+    // Sender & Recipient
     $mail->setFrom($mail->Username, 'FixAndGo Contact');
     $mail->addAddress($to);
     $mail->addReplyTo($email, $name);
 
-    // 内容
+    // content
     $mail->isHTML(false);
     $mail->Subject = $email_subject;
     $mail->Body    = $email_body;
 
-    // 发送
+    // send
     $mail->send();
 
-    // 成功响应
+    // respond with success
     echo json_encode([
         'success' => true,
         'message' => "Thank you for contacting us! We'll get back to you within 24 hours."

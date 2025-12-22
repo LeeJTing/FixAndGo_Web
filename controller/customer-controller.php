@@ -5,11 +5,11 @@ require_once __DIR__ . '/../DAO/customer_dao.php';
 
 class CustomerController {
     
-    // 处理文件上传
+    // Handle file upload
     private static function handleFileUpload($userId) {
         global $_db;
         
-        // 检查是否有文件上传
+        // Check if there are any files uploaded
         if (!isset($_FILES['profile_image']) || $_FILES['profile_image']['error'] === UPLOAD_ERR_NO_FILE) {
             return false;
         }
@@ -40,13 +40,13 @@ class CustomerController {
         $fileName = $userId . '.' . $extension;
         $targetFile = $targetDir . $fileName;
         
-        // 删除旧文件（如果存在）
+        // Delete old files (if they exist)
         if (file_exists($targetFile)) {
             unlink($targetFile);
         }
         
         if (move_uploaded_file($_FILES['profile_image']['tmp_name'], $targetFile)) {
-            // 更新或插入 profilepicture 表
+            // Update or insert the profilepicture table
             $stmt = $_db->prepare("SELECT user_id FROM profilepicture WHERE user_id = ?");
             $stmt->execute([$userId]);
             
@@ -70,7 +70,7 @@ class CustomerController {
         return false;
     }
     
-    // 处理创建用户
+    // Handle the creation of users
     public static function handleCreate() {
         if (is_post()) {
             try {
@@ -85,18 +85,18 @@ class CustomerController {
                     'account_status' => post('account_status', 'Unblock')
                 ];
 
-                // Email 唯一性检查（保留）
+                // Email Uniqueness Check (reserved word)
                 if (!is_unique($data['email'], 'users', 'email')) {
                     throw new Exception('Email already exists!');
                 }
 
-                // ✅ 这里如果有任何问题（User ID 规则 / 重复 ID）
-                // DAO 会直接 throw
+                // If there are any issues here (User ID rules/duplicate ids)
+                // The DAO will directly throw
                 CustomerDAO::createCustomer($data);
 
                 flash('success', 'Customer created successfully!');
             } catch (Exception $e) {
-                // ✅ 显示 DAO 或 Controller 抛出的真实错误
+                // Display the real errors thrown by the DAO or Controller
                 flash('error', $e->getMessage());
             }
 
@@ -104,8 +104,8 @@ class CustomerController {
         }
     }
 
-    
-    // 处理更新用户
+
+    // Handle the update of users
     public static function handleUpdate() {
         if (is_post()) {
             $id = post('user_id');
@@ -120,19 +120,19 @@ class CustomerController {
                     'password'       => post('password') // 可能为空
                 ];
 
-                // 👉 DAO 内部会负责：
-                // - user_name 校验
-                // - password 校验（如果有输入）
-                // - contact_num 国际格式校验
-                // - 更新 users + userprofile
+                // The DAO will be responsible for:
+                // - user_name verification
+                // - password verification (if input is provided)
+                // - contact_num international format validation
+                // - updating users + userprofile
                 CustomerDAO::updateCustomer($id, $data);
 
-                // 头像上传（失败不影响用户资料更新）
+                // Avatar upload (Failure does not affect user profile update)
                 self::handleFileUpload($id);
 
                 flash('success', 'Customer updated successfully!');
             } catch (Exception $e) {
-                // ✅ 显示真正的错误原因
+                // Show the true cause of the error
                 flash('error', $e->getMessage());
             }
 
@@ -141,7 +141,7 @@ class CustomerController {
     }
 
     
-    // 处理删除用户
+    // Handle the deletion of users
     public static function handleDelete($id) {
         if (CustomerDAO::deleteCustomer($id)) {
             flash('success', 'Customer deleted successfully!');

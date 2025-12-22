@@ -1,8 +1,8 @@
 <?php
 /**
  * DashboardController.php
- * 位置: controller/DashboardController.php
- * 负责仪表板的业务逻辑
+ * location: controller/DashboardController.php
+ * Be responsible for the business logic of the dashboard
  */
 
 require_once __DIR__ . '/../DAO/OrderDAO.php';
@@ -18,29 +18,29 @@ class DashboardController {
     }
     
     /**
-     * 获取仪表板统计数据
-     * @return array 包含所有统计指标的数组
+     * Get dashboard statistics
+     * @return array An array containing all statistical indicators
      */
     public function getDashboardStats() {
-        // 收入数据
+        // income data
         $totalRevenue = $this->orderDAO->getTotalRevenue();
         $lastMonthRevenue = $this->orderDAO->getLastMonthRevenue();
         $revenueChange = $this->calculatePercentageChange($lastMonthRevenue, $totalRevenue);
         
-        // 订单数据
+        // Order data
         $todayOrders = $this->orderDAO->getTodayOrderCount();
         $yesterdayOrders = $this->orderDAO->getYesterdayOrderCount();
         $ordersChange = $this->calculatePercentageChange($yesterdayOrders, $todayOrders);
         
-        // 客户数据
+        // Customer data
         $totalCustomers = $this->userDAO->getTotalCustomerCount();
         $currentMonthCustomers = $this->userDAO->getCurrentMonthCustomerCount();
         $lastMonthCustomers = $this->userDAO->getLastMonthCustomerCount();
         
-        // 计算客户增长（用本月新增 vs 上月新增）
+        // Calculate customer growth (current month vs last month)
         $customersChange = $this->calculatePercentageChange($lastMonthCustomers, $currentMonthCustomers);
         
-        // 平均订单金额
+        // Average order value
         $avgOrder = $this->orderDAO->getAverageOrderValue();
         $lastMonthAvg = $this->orderDAO->getLastMonthAverageOrderValue();
         $avgOrderChange = $this->calculatePercentageChange($lastMonthAvg, $avgOrder);
@@ -58,18 +58,18 @@ class DashboardController {
     }
     
     /**
-     * 获取最近订单
-     * @param int $limit 返回数量
-     * @return array 订单列表
+     * Get the latest order
+     * @param int $limit returned qty
+     * @return array order list
      */
     public function getRecentOrders($limit = 10) {
         return $this->orderDAO->getRecentOrders($limit);
     }
     
     /**
-     * 获取销售图表数据
-     * @param string $period 时间段 ('month', 'week', 'day')
-     * @return array 图表数据 ['labels' => [], 'values' => []]
+     * Obtain sales chart data
+     * @param string $period time quantum ('month', 'week', 'day')
+     * @return array Graph Data ['labels' => [], 'values' => []]
      */
     public function getSalesChartData($period = 'month') {
         $rawData = $this->orderDAO->getSalesDataByPeriod($period);
@@ -87,9 +87,9 @@ class DashboardController {
     }
     
     /**
-     * 搜索订单
-     * @param string $searchTerm 搜索关键词
-     * @return array 订单列表
+     * Search orders
+     * @param string $searchTerm search keyword
+     * @return array order list
      */
     public function searchOrders($searchTerm) {
         if (empty(trim($searchTerm))) {
@@ -99,8 +99,8 @@ class DashboardController {
     }
     
     /**
-     * 获取订单状态统计
-     * @return array 各状态的订单数量
+     * Get order status statistics
+     * @return array Order count for each status
      */
     public function getOrderStatusStats() {
         $statusCounts = $this->orderDAO->getOrderStatusCounts();
@@ -111,13 +111,13 @@ class DashboardController {
             'paymentStatus' => $paymentCounts
         ];
     }
-    
-    // ========== 私有辅助方法 ==========
+
+    // ========== Private Helper Methods ==========
     
     /**
-     * 计算百分比变化
-     * @param float $oldValue 旧值
-     * @param float $newValue 新值
+     * Calculate percentage change
+     * @param float $oldValue Old value
+     * @param float $newValue New value
      * @return float 变化百分比
      */
     private function calculatePercentageChange($oldValue, $newValue) {
@@ -128,18 +128,18 @@ class DashboardController {
     }
     
     /**
-     * 格式化月度数据
+     * Format monthly data
      */
     private function formatMonthlyData($rawData) {
         $labels = [];
         $values = [];
         
-        // 生成过去12个月的标签
+        // Generate past 12 months' labels
         for ($i = 11; $i >= 0; $i--) {
             $date = date('M Y', strtotime("-$i months"));
             $labels[] = $date;
             
-            // 查找对应月份的数据
+            // Find corresponding month's data
             $found = false;
             foreach ($rawData as $row) {
                 if ($row->label === $date) {
@@ -158,13 +158,13 @@ class DashboardController {
     }
     
     /**
-     * 格式化周数据
+     * Format weekly data
      */
     private function formatWeeklyData($rawData) {
         $labels = [];
         $values = [];
         
-        // 生成过去7天的标签
+        // Generate past 7 days' labels
         for ($i = 6; $i >= 0; $i--) {
             $date = date('D', strtotime("-$i days"));
             $fullDate = date('Y-m-d', strtotime("-$i days"));
@@ -188,13 +188,13 @@ class DashboardController {
     }
     
     /**
-     * 格式化日数据（24小时）
+     * Format daily data (24 hours)
      */
     private function formatDailyData($rawData) {
         $labels = [];
         $values = [];
-        
-        // 生成24小时的标签
+
+        // Generate 24-hour labels
         for ($i = 0; $i < 24; $i++) {
             $labels[] = sprintf('%02d:00', $i);
             

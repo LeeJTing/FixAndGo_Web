@@ -1,18 +1,18 @@
 <?php
 /**
  * getDashboardData.php
- * 位置: pages/admin/getDashboardData.php
- * API接口 - 提供图表数据
+ * location: pages/admin/getDashboardData.php
+ * API interface - Provides chart data
  */
 
 require '../../_base.php';
 require_once '../../controller/DashboardController.php';
 
-// 设置响应头为JSON格式
+// Set the response header to JSON format
 header('Content-Type: application/json');
 header('Cache-Control: no-cache, must-revalidate');
 
-// 检查用户是否登录且为管理员
+// Check if the user is logged in and is an administrator
 $currentUser = getCurrentUser();
 if (!$currentUser || $currentUser->user_role !== 'Admin') {
     http_response_code(403);
@@ -25,25 +25,25 @@ if (!$currentUser || $currentUser->user_role !== 'Admin') {
 }
 
 try {
-    // 获取时间段参数
+    // Obtain the time period parameters
     $period = $_GET['period'] ?? 'month';
     
-    // 验证period参数
+    // Validate period parameter
     if (!in_array($period, ['month', 'week', 'day'])) {
         $period = 'month';
     }
     
-    // 初始化控制器
+    // Initialize the controller
     $dashboardController = new DashboardController($_db);
     
-    // 获取图表数据
+    // Obtain chart data
     $chartData = $dashboardController->getSalesChartData($period);
     
-    // 返回JSON数据
+    // Return JSON data
     echo json_encode($chartData);
     
 } catch (Exception $e) {
-    // 错误处理
+    // Error handling
     error_log("Dashboard API Error: " . $e->getMessage());
     
     http_response_code(500);

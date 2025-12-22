@@ -1,8 +1,8 @@
 <?php
-// 获取当前登录用户的信息
+// Obtain the information of the currently logged-in user
 $currentUser = getCurrentUser();
 
-// 如果没有登录用户，使用默认值
+// If there is no logged-in user, use the default value
 if (!$currentUser) {
     $currentUser = (object)[
         'user_id' => null,
@@ -11,7 +11,7 @@ if (!$currentUser) {
     ];
 }
 
-// 获取用户头像
+// Obtain the user's avatar
 $userProfilePic = $currentUser->user_id ? getUserProfilePicture($currentUser->user_id) : $pathPrefix . '/images/profile/default_profile_picture.webp';
 ?>
 
