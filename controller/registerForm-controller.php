@@ -90,7 +90,7 @@ if (is_get() && get('token')) {
     printf($userId);
     if (!$userId) {
         // invalid or expired token
-        $url = $rootDir . "/pages/guest/register.php";
+        $url = $rootDir . "/pages/guest/login.php";
     }
 
     if ($action == 'yes') {
@@ -99,8 +99,8 @@ if (is_get() && get('token')) {
         $stmt->execute(['Unblock', $userId]);
 
         // remove the used token
-        // $del = $_db->prepare("DELETE FROM token WHERE token = ? AND used_for = ?");
-        // $del->execute([$getToken, 'Register']);
+        $del = $_db->prepare("DELETE FROM token WHERE token = ? AND used_for = ?");
+        $del->execute([$getToken, 'Register']);
 
         $user = getUserById($userId);
         temp('USER_ID', $user->user_id);
