@@ -24,3 +24,28 @@ enforce_authorization();
         <?php include 'adminSidebar.php'; ?>
 
         <div class="admin-main">
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const profileIcon = document.getElementById('adminProfileIcon');
+    const profileDropdown = document.getElementById('adminProfileDropdown');
+    const arrow = profileIcon?.querySelector('.dropdown-arrow');
+
+    if (!profileIcon || !profileDropdown) return;
+
+    profileIcon.addEventListener('click', function (e) {
+        e.stopPropagation();
+        profileDropdown.classList.toggle('active');
+        arrow?.classList.toggle('rotated');
+    });
+
+    profileDropdown.addEventListener('click', function (e) {
+        e.stopPropagation();
+    });
+
+    document.addEventListener('click', function () {
+        profileDropdown.classList.remove('active');
+        arrow?.classList.remove('rotated');
+    });
+});
+</script>
