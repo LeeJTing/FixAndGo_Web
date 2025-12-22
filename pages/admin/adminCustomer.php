@@ -153,6 +153,9 @@ include 'adminHeader.php';
                         <tr>
                             <th style="width: 40px;">
                                 <input type="checkbox" id="selectAll" onchange="toggleSelectAll()">
+                                <small style="color: var(--color-text-muted)">
+                                Select all on this page
+                                </small>
                             </th>
                             <th>ID</th>
                             <th>Customer Name</th>
@@ -432,7 +435,7 @@ function bulkDelete() {
         return;
     }
     
-    if (!confirm(`Are you sure you want to delete ${checkboxes.length} user(s)?`)) {
+    if (!confirm(`Are you sure you want to delete ${checkboxes.length} user(s) on this page?`)) {
         return;
     }
     
