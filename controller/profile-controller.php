@@ -46,14 +46,22 @@ if (is_post() && get('update')) {
     if (get('update') == 'addaddress')
         addAddress($id, $address_one, $address_two, $address_three, $state, $post_code, $country, $address_name);
 
-    if (get('update') == 'updateaddress')
-        updateAddress($address_id, $address_name, $address_one, $address_two, $address_three, $state, $post_code, $country, $address_name);
+    if (get('update') == 'updateaddress') {
+        $addr = getAddressById($address_id);
+        if ($addr && (string)$addr->user_id === (string)$id) {
+            updateAddress($address_id, $address_name, $address_one, $address_two, $address_three, $state, $post_code, $country);
+        }
+    }
 }
 
 if (is_get() && get('deleteAddress') != '') {
     $id = get('deleteAddress');
     if (is_exists($id, 'Address', 'address_id')) {
-        deleteAddress($id);
+        $userId = temp('USER_ID');
+        $addr = getAddressById($id);
+        if ($addr && (string)$addr->user_id === (string)$userId) {
+            deleteAddress($id);
+        }
     }
 }
 

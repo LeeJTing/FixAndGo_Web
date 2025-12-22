@@ -39,6 +39,7 @@ try {
         echo json_encode($response);
         exit();
     }
+    $address_name = post('address_name', 'Home');
     $address_one = post('address_one');
     $address_two = post('address_two');
     $address_three = post('address_three');
@@ -65,7 +66,7 @@ try {
 
     if (!empty($address_id)) {
         // updateAddress($address_id, $address_one, $address_two, $address_three, $state, $post_code, $country)
-        $ok = updateAddress($address_id, $address_one, $address_two, $address_three, $state, $post_code, $country);
+        $ok = updateAddress($address_id,$address_name, $address_one, $address_two, $address_three, $state, $post_code, $country);
         if ($ok) {
             $response['success'] = true;
             $response['message'] = 'Address updated successfully';
@@ -86,8 +87,8 @@ try {
     } else {
         $newId = addAddress($user_id, $address_one, $address_two, $address_three, $state, $post_code, $country, $address_name);
         if ($newId !== false && (int)$newId > 0) {
-            $response['success'] = true;
-            $response['message'] = 'Address saved successfully';
+            // updateAddress($address_id, $address_name, $address_one, $address_two, $address_three, $state, $post_code, $country)
+            $ok = updateAddress($address_id, $address_name, $address_one, $address_two, $address_three, $state, $post_code, $country);
             $response['address_id'] = (int)$newId;
             $response['address_display'] = [
                 'address_id' => (int)$newId,
