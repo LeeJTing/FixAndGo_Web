@@ -67,92 +67,94 @@ $(document).ready(function () {
         form.submit();
       }
     } else {
-      let isValid = true;
+      if (status === "active") {
+        let isValid = true;
 
-      isValid =
-        validateField("short_desc", { required: true, min: 10 }) && isValid;
-      isValid =
-        validateField("unit_price", {
-          required: true,
-          decimal: true,
-          positive: true,
-        }) && isValid;
-      isValid = validateField("category_code", { required: true }) && isValid;
-      isValid =
-        validateField("stock_quantity", {
-          required: true,
-          number: true,
-          positive: true,
-        }) && isValid;
-      isValid =
-        validateField("sold_number", {
-          required: true,
-          number: true,
-          positive: true,
-        }) && isValid;
-      isValid =
-        validateField("product_point", {
-          required: true,
-          number: true,
-          positive: true,
-          minPrice: "price",
-        }) && isValid;
-      isValid =
-        validateField("description", { required: true, min: 20 }) && isValid;
-      isValid =
-        validateField("low_stock", {
-          required: true,
-          positive: true,
-          number: true,
-          Mimstock: true,
-        }) && isValid;
+        isValid =
+          validateField("short_desc", { required: true, min: 10 }) && isValid;
+        isValid =
+          validateField("unit_price", {
+            required: true,
+            decimal: true,
+            positive: true,
+          }) && isValid;
+        isValid = validateField("category_code", { required: true }) && isValid;
+        isValid =
+          validateField("stock_quantity", {
+            required: true,
+            number: true,
+            positive: true,
+          }) && isValid;
+        isValid =
+          validateField("sold_number", {
+            required: true,
+            number: true,
+            positive: true,
+          }) && isValid;
+        isValid =
+          validateField("product_point", {
+            required: true,
+            number: true,
+            positive: true,
+            minPrice: "price",
+          }) && isValid;
+        isValid =
+          validateField("description", { required: true, min: 20 }) && isValid;
+        isValid =
+          validateField("low_stock", {
+            required: true,
+            positive: true,
+            number: true,
+            Mimstock: true,
+          }) && isValid;
 
-      if (!isValid) {
-        return; // Stop here if validation fails
-      }
-      const statusSelect = $("select[name=status]").val();
-      const categorySelect = $("select[name=category_code]");
-      if (statusSelect != "inactive") {
-        if (categorySelect.val() === "5") {
-          showError(
-            categorySelect,
-            "Please select a valid category for the product."
-          );
-          return false;
+        if (!isValid) {
+          return; // Stop here if validation fails
         }
-      }
+        const statusSelect = $("select[name=status]").val();
+        const categorySelect = $("select[name=category_code]");
+        if (statusSelect != "inactive") {
+          if (categorySelect.val() === "5") {
+            showError(
+              categorySelect,
+              "Please select a valid category for the product."
+            );
+            return false;
+          }
+        }
 
-      if (point > price) {
-        showError(
-          $("input[name=product_point]"),
-          "The Product Point cannot be greater than Product Price."
-        );
-        return false; // stop further processing
-      }
-      if (lowStock > stock) {
-        showError(
-          $("input[name=low_stock]"),
-          "The Low Stock Handling Value cannot greater than stock quantity."
-        );
-        return false; // stop further processing
-      }
-
-      if (statusSelect === "active") {
-        if (!hasValidProductImage()) {
-          $("select[name='status']").val("inactive");
-          $("select[name='category_code']").val(5);
-
-          showConfirm(
-            "No product image detected. The product will be set to Inactive. Continue?",
-            function (result) {
-              if (result) {
-                form.submit();
-              } else {
-                $("#newImagesInput").focus();
-              }
-            }
+        if (point > price) {
+          showError(
+            $("input[name=product_point]"),
+            "The Product Point cannot be greater than Product Price."
           );
-          return;
+          return false; // stop further processing
+        }
+        if (lowStock > stock) {
+          showError(
+            $("input[name=low_stock]"),
+            "The Low Stock Handling Value cannot greater than stock quantity."
+          );
+          return false; // stop further processing
+        }
+
+        if (statusSelect === "active") {
+          if (!hasValidProductImage()) {
+            $("select[name='status']").val("inactive");
+            $("select[name='category_code']").val(5);
+
+            showConfirm(
+              "No product image detected. The product will be set to Inactive. Continue?",
+              function (result) {
+                if (result) {
+                  form.submit();
+                } else {
+                  $("#newImagesInput").focus();
+                }
+              }
+            );
+            return;
+          }
         }
       }
 
