@@ -15,9 +15,9 @@ if (!$currentUser) {
 }
 
 // 检查是否是管理员
-if ($currentUser->user_role !== 'Admin') {
-    redirect($pathPrefix . '/index.php');
-}
+// if ($currentUser->user_role !== 'Admin') {
+//     redirect($pathPrefix . '/index.php');
+// }
 
 // 获取用户头像
 $userProfilePic = getUserProfilePicture($currentUser->user_id);
