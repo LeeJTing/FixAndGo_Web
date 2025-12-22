@@ -97,17 +97,16 @@ body[data-theme="light"] {
   border-color: var(--color-text-muted);
 }
 .page-btn.active {
-  background: var(
-    --primary-color,
-    #000a2e
-  ); /* Fallback color if variable missing */
-  color: white;
-  border-color: var(--primary-color, #000a2e);
+  background: var(--color-primary);
+  color: #ffffff;
+  border-color: var(--color-primary);
 }
 .page-btn.disabled {
   opacity: 0.5;
   pointer-events: none;
-  background: #f8fafc;
+  background: var(--color-bg-body);
+  color: var(--color-text-muted);
+  border-color: var(--color-border);
 }
 
 .admin-container {
