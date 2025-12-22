@@ -1,14 +1,4 @@
 <?php
-
-/**
- * Authorization enforcement helper.
- *
- * Rules:
- * - Guest (no temp('USER_ROLE')): may access only /pages/guest/*, /pages/product/product-list.php,
- *   and /pages/product/product-detail.php. All other PHP pages redirect to login.
- * - Member: may access any non-admin pages.
- * - Admin: may access admin pages under /pages/admin/ and other pages.
- */
 function enforce_authorization(): void
 {
     // Allow when running from CLI or headers already sent
