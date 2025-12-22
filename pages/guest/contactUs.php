@@ -286,6 +286,11 @@ textarea.form-control {
     transform: translateY(-1px);
 }
 
+.form-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 .form-submit.loading::after {
     content: '';
     position: absolute;
@@ -312,6 +317,17 @@ textarea.form-control {
     text-align: center;
     display: none;
     animation: slideIn 0.5s ease;
+}
+
+.error-alert {
+    background: linear-gradient(135deg, var(--error-color), #c0392b);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    display: none;
+    animation: slideIn 0.5s ease;
+    margin-bottom: 20px;
 }
 
 @keyframes slideIn {
@@ -343,27 +359,15 @@ textarea.form-control {
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     border: 1px solid var(--border-color);
-    height: 400px;
+    height: 450px;
     background: var(--bg-card);
     position: relative;
 }
 
-.map-placeholder {
+.map-container iframe {
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-muted);
-    font-size: 1.2rem;
-}
-
-.map-placeholder i {
-    font-size: 3rem;
-    margin-bottom: 20px;
-    color: var(--primary-color);
-    display: block;
+    border: 0;
 }
 
 /* Business Hours */
@@ -521,7 +525,7 @@ textarea.form-control {
     }
     
     .map-container {
-        height: 300px;
+        height: 350px;
     }
 }
 
@@ -601,7 +605,7 @@ textarea.form-control {
                     </div>
                     <div class="info-content">
                         <h3>Email Address</h3>
-                        <p><a href="mailto:info@yourcompany.com">info@yourcompany.com</a><br><a href="mailto:support@yourcompany.com">support@yourcompany.com</a></p>
+                        <p><a href="mailto:leekeezhan@gmail.com">leekeezhan@gmail.com</a><br><a href="mailto:support@yourcompany.com">support@yourcompany.com</a></p>
                     </div>
                 </div>
             </div>
@@ -619,6 +623,7 @@ textarea.form-control {
         <!-- Contact Form -->
         <div class="contact-form-section">
             <h2>Send Us a Message</h2>
+            <div class="error-alert" id="errorAlert"></div>
             <form class="contact-form" id="contactForm">
                 <div class="form-group">
                     <label for="name">Full Name <span>*</span></label>
@@ -656,26 +661,19 @@ textarea.form-control {
         </div>
     </div>
 
-    <!-- Map Section -->
+    <!-- Map Section with Google Maps -->
     <div class="map-section">
         <h2>Find Our Location</h2>
         <div class="map-container">
-            <div class="map-placeholder">
-                <div>
-                    <i>📍</i>
-                    <p>Interactive Map Location</p>
-                    <small>(Google Maps integration available)</small>
-                </div>
-            </div>
-            <iframe 
-            src="6P8H+8F Kuala Lumpur, Federal Territory of Kuala Lumpur"
-            width="100%" 
-                height="100%" 
-                style="border:0;" 
-                allowfullscreen="" 
-                loading="lazy">
+            <!-- Google Maps Embed - TAR UMT Arena Location -->
+            <iframe
+            src="https://www.google.com/maps?q=TAR%20UMT%20Arena%20Setapak&output=embed"
+            width="100%"
+            height="100%"
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy">
             </iframe>
-           
         </div>
     </div>
 
@@ -775,9 +773,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Form Validation and Submission
+    // Form Validation and Submission with AJAX
     const contactForm = document.getElementById('contactForm');
     const successMessage = document.getElementById('successMessage');
+    const errorAlert = document.getElementById('errorAlert');
     
     contactForm.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -789,6 +788,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.form-control').forEach(el => {
             el.classList.remove('error');
         });
+        errorAlert.style.display = 'none';
+        successMessage.style.display = 'none';
         
         // Get form values
         const name = document.getElementById('name').value.trim();
@@ -837,26 +838,61 @@ document.addEventListener('DOMContentLoaded', function() {
         if (isValid) {
             // Show loading state
             const submitBtn = contactForm.querySelector('.form-submit');
+            submitBtn.disabled = true;
             submitBtn.classList.add('loading');
             submitBtn.innerHTML = '';
             
-            // Simulate form submission (replace with actual AJAX call)
-            setTimeout(() => {
+            // Prepare form data
+            const formData = new FormData(contactForm);
+            
+            // Send AJAX request
+            fetch('contact_handler.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                submitBtn.disabled = false;
                 submitBtn.classList.remove('loading');
                 submitBtn.innerHTML = '<span>Send Message</span>';
                 
-                // Show success message
-                successMessage.style.display = 'block';
-                contactForm.reset();
+                if (data.success) {
+                    // Show success message
+                    successMessage.style.display = 'block';
+                    contactForm.reset();
+                    
+                    // Scroll to success message
+                    successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
+                    // Hide success message after 8 seconds
+                    setTimeout(() => {
+                        successMessage.style.display = 'none';
+                    }, 8000);
+                } else {
+                    // Show error message
+                    if (data.errors && data.errors.length > 0) {
+                        errorAlert.innerHTML = '<strong>Error:</strong> ' + data.errors.join('<br>');
+                        errorAlert.style.display = 'block';
+                        errorAlert.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        
+                        // Hide error after 8 seconds
+                        setTimeout(() => {
+                            errorAlert.style.display = 'none';
+                        }, 8000);
+                    }
+                }
+            })
+            .catch(error => {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('loading');
+                submitBtn.innerHTML = '<span>Send Message</span>';
                 
-                // Scroll to success message
-                successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                errorAlert.innerHTML = '<strong>Error:</strong> There was a problem sending your message. Please try again or contact us directly at leekeezhan@gmail.com';
+                errorAlert.style.display = 'block';
+                errorAlert.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 
-                // Hide success message after 5 seconds
-                setTimeout(() => {
-                    successMessage.style.display = 'none';
-                }, 5000);
-            }, 1500);
+                console.error('Error:', error);
+            });
         }
     });
     
