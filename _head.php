@@ -175,7 +175,7 @@
                             <strong>Total: <span id="cartTotalPrice">RM <?= number_format($cart_total, 2) ?></span></strong>
                         </div>
                         <div class="cart-actions">
-                            <a href="<?= $rootDir ?>/pages/cart/cart.php"><button class="btn-primary checkout-btn">Checkout</button></a>
+                            <button class="btn-primary checkout-btn" type="button" onclick="window.location.href='<?= $rootDir ?>/pages/cart/cart.php'">Checkout</button>
                         </div>
                     </div>
                 </div>
