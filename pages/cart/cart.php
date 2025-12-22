@@ -83,8 +83,7 @@ foreach ($cart_items as $item) {
             <div class="empty-cart">
                 <i class="fa-solid fa-cart-shopping" style="font-size: 4em; color: #ccc; margin-bottom: 20px;"></i>
                 <p style="font-size: 1.3em; margin-bottom: 20px; color: #6c757d;">Your cart is empty</p>
-                <a href="<?= $rootDir ?>/pages/homepage.php" class="btn" style="background: #FFA000; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-size: 1.1em; transition: all 0.3s ease;">
-                    <i class="fa-solid fa-bag-shopping"></i> Continue Shopping
+                <a href="<?= $rootDir ?>/pages/product/product-list.php" class="btn" style="background: #FFA000; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-size: 1.1em; transition: all 0.3s ease;"> <i class="fa-solid fa-bag-shopping"></i> Continue Shopping
                 </a>
             </div>
         <?php else: ?>
@@ -193,8 +192,8 @@ foreach ($cart_items as $item) {
 
                                     <div class="address-actions">
                                         <button type="button" class="btn-edit edit-address-btn"
-                                            data-address-id="<?= $address->address_id?>"
-                                            data-address-name="<?= htmlspecialchars($address->address_name) ?? 'Home'?>"
+                                            data-address-id="<?= $address->address_id ?>"
+                                            data-address-name="<?= htmlspecialchars($address->address_name) ?? 'Home' ?>"
                                             data-address-one="<?= htmlspecialchars($address->address_one) ?>"
                                             data-address-two="<?= htmlspecialchars($address->address_two) ?? '' ?>"
                                             data-address-three="<?= htmlspecialchars($address->address_three) ?? '' ?>"
