@@ -537,6 +537,10 @@ body[data-theme="light"] {
 
 /* ==================== SHARED RESPONSIVE DESIGN ==================== */
 /* Remove the <br> tag styling for product list */
+.product-list{
+    max-width: 80vw;
+}
+
 .product-list br {
     display: none;
 }
