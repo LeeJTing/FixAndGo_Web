@@ -47,31 +47,24 @@ $category = getAllCategoryDao() ?? [];
             </div>
 
             <!-- Right Column: Image Upload -->
-            <div>
-                <div class="form-group">
-                    <label>Category Image <span class="required">*</span></label>
-                    <p class="help-text">Recommended size: 400x400px (JPG, PNG)</p>
+            <div class="form-group">
+                <label>Category Image <span class="required">*</span></label>
+                <p class="help-text">Recommended size: 400x400px (JPG, PNG)</p>
 
-                    <div class="image-preview" id="imagePreview">
-                        <!-- Default add image box -->
-                        <div class="img-box add-new">
-                            <i class="fa-solid fa-image" style="font-size:2.5rem; color:#94a3b8;"></i>
-                            <small>Upload Image</small>
-                            <input type="file"
-                                name="category_image"
-                                id="categoryImageInput"
-                                accept="image/*">
-                        </div>
-                    </div>
-
-                    <div id="previewContainer" style="display:none;">
-                        <div class="img-box preview-img">
-                            <img id="previewImg" src="#" alt="Preview">
-                            <button type="button" id="removePreview" class="remove-img">×</button>
-                        </div>
-                    </div>
+                <div class="img-box add-new" id="uploadContainer">
+                    <i class="fa-solid fa-image" id="placeholderIcon" style="font-size:2.5rem; color:#94a3b8;"></i>
+                    <img id="previewImg" src="#" alt="Preview" style="display:none; border-radius:8px; max-width:100%; max-height:150px;">
+                    <small>Drag & Drop or Click to Upload</small>
+                    <input type="file"
+                        name="category_image"
+                        id="categoryImageInput"
+                        accept="image/*"
+                        hidden>
+                    <button type="button" id="removePreview" class="remove-img" style="display:none;">×</button>
                 </div>
+
             </div>
+
         </div>
 
         <!-- Action Buttons -->

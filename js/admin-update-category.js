@@ -1,17 +1,62 @@
 $(document).ready(function () {
-  // Track new image selection
-  $("#categoryImageInput").on("change", function (e) {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        $("#previewImg").attr("src", e.target.result);
-        $("#previewContainer").show();
-        $(".add-new").hide();
-        $("#categoryImageInput").next(".error-msg").remove();
-      };
-      reader.readAsDataURL(file);
+  const uploadContainer = document.getElementById("addNewBox");
+  const fileInput = document.getElementById("categoryImageInput");
+  const previewImg = document.getElementById("previewImg");
+  const removePreview = document.getElementById("removePreview");
+  const placeholderIcon = document.getElementById("placeholderIcon");
+
+  // Click to open file dialog
+  uploadContainer.addEventListener("click", () => fileInput.click());
+
+  // Handle file preview
+  function handleFile(file) {
+    if (!file.type.startsWith("image/")) return;
+
+    // Update preview
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      previewImg.src = e.target.result;
+      previewImg.style.display = "block";
+      removePreview.style.display = "block";
+      placeholderIcon.style.display = "none";
+    };
+    reader.readAsDataURL(file);
+
+    // Set the file in the input so it will submit
+    const dataTransfer = new DataTransfer(); // modern browsers
+    dataTransfer.items.add(file);
+    fileInput.files = dataTransfer.files;
+  }
+
+  // Input change
+  fileInput.addEventListener("change", () => handleFile(fileInput.files[0]));
+
+  // Drag & Drop
+  uploadContainer.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    uploadContainer.classList.add("dragover");
+  });
+
+  uploadContainer.addEventListener("dragleave", () => {
+    uploadContainer.classList.remove("dragover");
+  });
+
+  uploadContainer.addEventListener("drop", (e) => {
+    e.preventDefault();
+    uploadContainer.classList.remove("dragover");
+    if (e.dataTransfer.files.length > 0) {
+      handleFile(e.dataTransfer.files[0]);
     }
+  });
+
+  // Remove preview
+  removePreview.addEventListener("click", function (e) {
+    e.stopPropagation();
+    fileInput.value = "";
+    previewImg.src = "#";
+    previewImg.style.display = "none";
+    removePreview.style.display = "none";
+    placeholderIcon.style.display = "block";
   });
 
   // Form submission validation
@@ -49,13 +94,6 @@ $(document).ready(function () {
     }
 
     this.submit();
-  });
-
-  $("#removePreview").on("click", function () {
-    $("#categoryImageInput").val("");
-    $("#previewContainer").hide();
-    $(".add-new").show();
-    showError("#categoryImageInput", "Please select an image.");
   });
 
   $("#removeCurrent").on("click", function () {

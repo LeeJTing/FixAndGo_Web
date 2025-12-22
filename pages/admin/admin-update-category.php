@@ -71,25 +71,17 @@ $category = getCategoryByCode($category_code);
                             </div>
                         <?php endif; ?>
 
-                        <!-- Upload New Image Box -->
+                        <!-- Upload / Drag & Drop New Image -->
                         <div class="img-box add-new" id="addNewBox" style="<?= !empty($category->img_path) ? 'display:none;' : '' ?>">
-                            <i class="fa-solid fa-image" style="font-size:2.5rem; color:#94a3b8;"></i>
-                            <small>Upload New Image</small>
-                            <input type="file"
-                                name="category_image"
-                                id="categoryImageInput"
-                                accept="image/*">
-                        </div>
-                    </div>
-
-                    <!-- Preview for new image -->
-                    <div id="previewContainer" style="display:none; margin-top:12px;">
-                        <div class="img-box preview-img">
-                            <img id="previewImg" src="#" alt="New Preview">
-                            <button type="button" id="removePreview" class="remove-img">×</button>
+                            <i class="fa-solid fa-image" id="placeholderIcon" style="font-size:2.5rem; color:#94a3b8;"></i>
+                            <img id="previewImg" src="#" alt="New Preview" style="display:none; max-width:100%; max-height:150px; border-radius:8px;">
+                            <small>Drag & Drop or Click to Upload</small>
+                            <input type="file" name="category_image" id="categoryImageInput" accept="image/*" hidden>
+                            <button type="button" id="removePreview" class="remove-img" style="display:none;">×</button>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
 
