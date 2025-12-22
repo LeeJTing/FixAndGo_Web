@@ -21,6 +21,12 @@ enforce_authorization();
 <body>
     <div class="admin-layout">
         <div id="message-container"></div>
+        <div id="loadingOverlay">
+            <div class="loading-box">
+                <div class="spinner"></div>
+                <p>Processing, please wait...</p>
+            </div>
+        </div>
         <?php include 'adminSidebar.php'; ?>
 
         <div class="admin-main">
