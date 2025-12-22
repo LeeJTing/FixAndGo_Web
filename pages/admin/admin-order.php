@@ -56,7 +56,10 @@ displayFlashMessage();
                             <td data-label="Order ID"><strong><?= $order->order_id ?></strong></td>
 
                             <td data-label="Customer">
-                                <a style="text-decoration:none; color:var(--color-text-primary);" href="../admin/admin-order-detail.php?id=<?= $order->order_id ?>">
+                                <a
+                                    style="text-decoration:none; color:var(--color-text-primary);"
+                                    href="<?= !empty($order->user_name) ? '../admin/admin-order-detail.php?id=' . $order->order_id : '#' ?>"
+                                    <?= empty($order->user_name) ? 'onclick="return false;"' : '' ?>>
                                     <div><strong><?= htmlspecialchars($order->user_name ?? 'Unknown') ?></strong></div>
                                 </a>
                             </td>
@@ -98,8 +101,9 @@ displayFlashMessage();
                             </td>
 
                             <td data-label="Action">
-                                <button class="btn-small btn-view" onclick="viewOrderDetails(<?= $order->order_id ?? 0 ?>)">
-                                    View Details
+                                <?php $disabled = empty($order->user_name) ? 'disabled' : ''; ?>
+                                <button class="btn-small btn-view" onclick="viewOrderDetails(<?= $order->order_id ?? 0 ?>)" <?= $disabled ?>>
+                                    View Order
                                 </button>
                             </td>
                         </tr>
