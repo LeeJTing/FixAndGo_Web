@@ -153,9 +153,6 @@ include 'adminHeader.php';
                         <tr>
                             <th style="width: 40px;">
                                 <input type="checkbox" id="selectAll" onchange="toggleSelectAll()">
-                                <small style="color: var(--color-text-muted)">
-                                Select all on this page
-                                </small>
                             </th>
                             <th>ID</th>
                             <th>Customer Name</th>

@@ -96,7 +96,7 @@
 .search-box input {
     background: transparent;
     border: none;
-    color: #e2e8f0;
+    color: var(--color-text-main);
     width: 100%;
 }
 
@@ -248,6 +248,7 @@
 /* 选中状态 */
 .pagination-btn.active {
     background: #3b82f6;
+    color: #ffffff;
     font-weight: bold;
     pointer-events: none;
 }
@@ -285,7 +286,7 @@
 .profile-upload .avatar {
     width: 90px;
     height: 90px;
-    background: #334155;
+    background: var(--color-border);
     margin: 0 auto 10px auto;
     border-radius: 50%;
     position: relative;
@@ -346,7 +347,7 @@
     display: block;
     margin-top: 15px;
     margin-bottom: 5px;
-    color: #cbd5e1;
+    color: var(--color-text-main);
 }
 
 .edit-panel input,
