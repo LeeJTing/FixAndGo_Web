@@ -280,7 +280,7 @@ function checkEmptyCart() {
             <div class="empty-cart">
                 <i class="fa-solid fa-cart-shopping" style="font-size: 4em; color: #ccc; margin-bottom: 20px;"></i>
                 <p style="font-size: 1.3em; margin-bottom: 20px; color: #6c757d;">Your cart is empty</p>
-                <a href="../product-list.php" class="btn" style="background: #FFA000; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-size: 1.1em; transition: all 0.3s ease;">
+                <a href="${ROOT_DIR}/pages/product/product-list.php" class="btn" style="background: #FFA000; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-size: 1.1em; transition: all 0.3s ease;">
                     <i class="fa-solid fa-bag-shopping"></i> Continue Shopping
                 </a>
             </div>
