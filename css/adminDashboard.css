@@ -340,14 +340,16 @@
     height: 100% !important;
 }
 
-.panel-header {
+.panel-header,
+.panel-header-flex {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
 }
 
-.panel-header h3 {
+.panel-header h3,
+.panel-header-flex h3 {
     font-size: 20px;
     font-weight: 600;
 }
