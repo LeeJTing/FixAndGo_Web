@@ -11,9 +11,9 @@
             <div class="footer-col">
                 <h4>Shop</h4>
                 <ul>
-                    <li><a href="#">All Products</a></li>
-                    <li><a href="#">New Arrivals</a></li>
-                    <li><a href="#">Best Sellers</a></li>
+                    <li><a href="<?= $rootDir ?>/pages/product/product-list.php">All Products</a></li>
+                    <li><a href="<?= $rootDir ?>/pages/guest/new_arrival.php">New Arrivals</a></li>
+                    <li><a href="<?= $rootDir ?>/pages/guest/top-sales.php">Top Sales</a></li>
                 </ul>
             </div>
             <div class="footer-col">

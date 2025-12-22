@@ -78,3 +78,11 @@ function getProductImages($id)
 {
     return getProductImagesDao($id);
 }
+function getNewArrivalProduct($limit = 8)
+{
+    return getNewArrivalProductDao($limit);
+}
+function getTopSellingProducts($limit)
+{
+    return getTopSellingProductsDao($limit);
+}

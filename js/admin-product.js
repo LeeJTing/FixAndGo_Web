@@ -49,8 +49,7 @@ function loadProduct(category, sortType, currentValue) {
       if (data.length > 1) {
         data.forEach(function (p) {
           const altText = p.alt_text || p.product_name;
-          const imagePath =
-            "../../" + (p.file_path || "images/placeholder.jpg");
+          const imagePath = "../../" + (p.file_path || "images/no-image.jpg");
           $(".products-grid").append(`
              <div class="product-card">
                         <div class="product-image">
@@ -122,7 +121,7 @@ function getSearchData(value) {
 
       data.forEach((p) => {
         const altText = p.alt_text || p.product_name;
-        const imagePath = "../../" + (p.file_path || "images/placeholder.jpg");
+        const imagePath = "../../" + (p.file_path || "images/no-image.jpg");
         $(".products-grid").append(`
              <div class="product-card">
                         <div class="product-image">

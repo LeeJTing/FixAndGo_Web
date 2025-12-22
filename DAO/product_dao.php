@@ -62,6 +62,52 @@ function getAllProductFilterDao($category, $sort, $price, $limit, $offset)
     return $stmt->fetchAll();
 }
 
+function getTopSellingProductsDao($limit = 5)
+{
+    global $_db;
+
+    $sql = "SELECT p.*, c.category_name, pvm.file_path, pvm.alt
+            FROM product p
+            JOIN category c ON p.category_code = c.category_code AND c.is_deleted = 0
+            LEFT JOIN productvisualmedia pvm ON pvm.product_id = p.product_id AND pvm.is_show = 1
+            WHERE p.isdeleted = 0 AND p.status = 'active'
+            ORDER BY p.sold_number DESC
+            LIMIT :limit";
+
+    $stmt = $_db->prepare($sql);
+    $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_OBJ);
+}
+
+
+function getNewArrivalProductDao($limit = 5)
+{
+    global $_db;
+
+    $sql = "SELECT p.*, c.category_name, pvm.file_path, pvm.alt
+            FROM product p
+            JOIN category c 
+              ON p.category_code = c.category_code
+             AND c.is_deleted = 0
+            LEFT JOIN productvisualmedia pvm 
+              ON pvm.product_id = p.product_id
+             AND pvm.is_show = 1
+            WHERE p.isdeleted = 0
+              AND p.status = 'active'
+            GROUP BY p.product_id
+            ORDER BY p.created_at DESC
+            LIMIT :limit";
+
+    $stmt = $_db->prepare($sql);
+    $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+    $stmt->execute();
+
+    // Return as objects
+    return $stmt->fetchAll(PDO::FETCH_OBJ);
+}
+
 function getAllProductFilterCountDao($category, $price)
 {
     global $_db;
@@ -94,7 +140,7 @@ function getAllProductFilterAdminDao($category, $sort, $price)
 {
     global $_db;
     $sql = "SELECT p.*, c.category_name, 
-            COALESCE(pvm.file_path, 'no-image.jpg') AS file_path, 
+            COALESCE(pvm.file_path, '/images/no-image.jpg') AS file_path, 
             pvm.alt
                 FROM product p
                 JOIN category c ON p.category_code = c.category_code
@@ -422,7 +468,7 @@ function getProductBySearchAdminDao($keyword)
 
     $searchTerm = "%" . $keyword . "%";
 
-    $sql = "SELECT p.*,pvm.alt,COALESCE(pvm.file_path, 'no-image.jpg') AS file_path,c.category_name
+    $sql = "SELECT p.*,pvm.alt,COALESCE(pvm.file_path, '/images/no-image.jpg') AS file_path,c.category_name
             FROM product p
             JOIN category c ON c.category_code = p.category_code AND c.is_deleted = 0
             LEFT JOIN productvisualmedia pvm ON pvm.product_id = p.product_id AND pvm.is_show = 1
