@@ -28,6 +28,8 @@
 
   --color-accent: #38bdf8;
   --color-accent-soft: rgba(56, 189, 248, 0.15);
+
+  --color-form-input: #0f172a;
 }
 
 /* Light Theme */
@@ -61,6 +63,8 @@ body[data-theme="light"] {
 
   --color-accent: #0284c7;
   --color-accent-soft: rgba(2, 132, 199, 0.12);
+
+  --color-form-input: #f8fafc;
 }
 
 

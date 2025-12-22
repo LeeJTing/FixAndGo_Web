@@ -129,7 +129,7 @@
 .customer-table th {
     text-align: left;
     padding-bottom: 12px;
-    color: #94a3b8;
+    color: var(--color-text-muted);
     font-weight: 500;
 }
 
@@ -143,7 +143,8 @@
 
 .customer-table td {
     padding: 12px 0;
-    border-bottom: 1px solid #1e293b;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-main);
 }
 
 .customer-table tr.selected {
@@ -160,7 +161,7 @@
 }
 
 .customer-table tbody tr:hover {
-    background: rgba(59, 130, 246, 0.1);
+    background: var(--color-hover-bg);
 }
 
 .customer-table tr.selected {
@@ -350,11 +351,11 @@
 .edit-panel input,
 .edit-panel select {
     width: 100%;
-    background: #1e293b;
-    border: none;
+    background: var(--color-form-input);
+    border: 1px solid var(--color-border);
     padding: 10px;
     border-radius: 8px;
-    color: white;
+    color: var(--color-text-main);
 }
 
 .edit-panel-buttons {
@@ -461,7 +462,7 @@
 }
 
 .modal-content {
-    background: #0f172a;
+    background: var(--color-form-input);
     padding: 30px;
     border-radius: 12px;
     width: 90%;
@@ -477,17 +478,17 @@
     display: block;
     margin-top: 15px;
     margin-bottom: 5px;
-    color: #cbd5e1;
+    color: var(--color-menu-text);
 }
 
 .modal-content input,
 .modal-content select {
     width: 100%;
-    background: #1e293b;
-    border: none;
+    background: var(--color-form-input);
+    border: 1px solid var(--color-border);
     padding: 10px;
     border-radius: 8px;
-    color: white;
+    color: var(--color-text-main);
 }
 
 .close {
@@ -496,10 +497,55 @@
     top: 15px;
     font-size: 28px;
     font-weight: bold;
-    color: #94a3b8;
+    color: var(--color-text-muted);
     cursor: pointer;
 }
 
 .close:hover {
-    color: #f1f5f9;
+    color: var(--color-text-main);
+}
+
+label {
+    display: block;
+    margin-top: 14px;
+    margin-bottom: 6px;
+    color: var(--color-text-main);
+    font-size: 14px;
+}
+
+.form-input,
+.form-select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-form-input);
+    color: var(--color-text-main);
+    font-size: 14px;
+}
+
+
+/* placeholder */
+.form-input::placeholder {
+    color: var(--color-text-muted);
+}
+
+/* readonly input */
+.form-input.readonly {
+    color: var(--color-text-muted);
+    cursor: not-allowed;
+}
+
+/* select 修复（重点） */
+.form-select option {
+    background-color: var(--color-form-input);
+    color: var(--color-text-main);
+}
+
+/* focus 效果 */
+.form-input:focus,
+.form-select:focus {
+    outline: none;
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 1px #38bdf8;
 }
