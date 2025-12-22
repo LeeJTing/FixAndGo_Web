@@ -691,7 +691,7 @@
 
 /* Price highlighting for product list */
 .product-meta::after {
-    content: "₱" attr(data-price);
+    content: "RM" attr(data-price);
     font-weight: 700;
     color: var(--success-color);
     font-size: 1.2rem;

@@ -2,7 +2,8 @@
 
 return [
     // 'test' or 'live'
-    'mode' => 'live',
+    // Set to 'test' to match the provided sk_test_... secret key below.
+    'mode' => 'test',
 
     // For live mode: starts with sk_live_
     // For test mode: starts with sk_test_

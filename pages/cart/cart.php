@@ -193,11 +193,11 @@ foreach ($cart_items as $item) {
 
                                     <div class="address-actions">
                                         <button type="button" class="btn-edit edit-address-btn"
-                                            data-address-id="<?= $address->address_id ?>"
-                                            data-address-name="<?= htmlspecialchars($address->address_name) ?>"
+                                            data-address-id="<?= $address->address_id?>"
+                                            data-address-name="<?= htmlspecialchars($address->address_name) ?? 'Home'?>"
                                             data-address-one="<?= htmlspecialchars($address->address_one) ?>"
-                                            data-address-two="<?= htmlspecialchars($address->address_two) ?>"
-                                            data-address-three="<?= htmlspecialchars($address->address_three) ?>"
+                                            data-address-two="<?= htmlspecialchars($address->address_two) ?? '' ?>"
+                                            data-address-three="<?= htmlspecialchars($address->address_three) ?? '' ?>"
                                             data-state="<?= htmlspecialchars($address->state) ?>"
                                             data-post-code="<?= htmlspecialchars($address->post_code) ?>"
                                             data-country="<?= htmlspecialchars($address->country) ?>">

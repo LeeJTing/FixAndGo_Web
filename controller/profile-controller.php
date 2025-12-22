@@ -47,7 +47,7 @@ if (is_post() && get('update')) {
         addAddress($id, $address_one, $address_two, $address_three, $state, $post_code, $country, $address_name);
 
     if (get('update') == 'updateaddress')
-        updateAddress($address_id, $address_one, $address_two, $address_three, $state, $post_code, $country, $address_name);
+        updateAddress($address_id, $address_name, $address_one, $address_two, $address_three, $state, $post_code, $country, $address_name);
 }
 
 if (is_get() && get('deleteAddress') != '') {

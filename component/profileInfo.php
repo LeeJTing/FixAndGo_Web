@@ -156,10 +156,10 @@ $addresses = getAddressesByUserId($user_id);
                 <div class="info-card">
                     <div class="card-header">
                         <h2><i class="fas fa-map-marker-alt"></i> My Addresses</h2>
-                        <?php if(getAddressCountByUserId($user_id) < 3) : ?>
-                        <button class="add-address-btn">
-                            <i class="fas fa-plus"></i> Add New
-                        </button>
+                        <?php if (getAddressCountByUserId($user_id) < 3) : ?>
+                            <button class="add-address-btn">
+                                <i class="fas fa-plus"></i> Add New
+                            </button>
                         <?php endif ?>
                     </div>
                     <div class="card-body">
@@ -192,7 +192,7 @@ $addresses = getAddressesByUserId($user_id);
                                         </button>
                                     </div>
                                 </div>
-                        <?php endforeach;
+                            <?php endforeach;
                         else : ?>
                             <p style="color: rgba(135, 135, 135, 1);"><i>No address exist</i></p>
                         <?php endif ?>
@@ -217,10 +217,10 @@ $addresses = getAddressesByUserId($user_id);
                                 <i class="fas fa-credit-card"></i>
                                 <span>Payment Methods</span>
                             </button> -->
-                            <button class="action-card">
+                            <a href="<?= $rootDir ?>/pages/order/member-order-history.php" class="action-card" style="text-decoration: none;">
                                 <i class="fas fa-history"></i>
                                 <span>Order History</span>
-                            </button>
+                            </a>
                             <!-- <button class="action-card">
                                 <i class="fas fa-heart"></i>
                                 <span>Wishlist</span>

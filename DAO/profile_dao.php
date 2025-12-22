@@ -35,15 +35,15 @@ function addAddress($user_id, $address_one, $address_two, $address_three, $state
     }
 }
 // Update an existing address
-function updateAddress($address_id, $address_one, $address_two, $address_three, $state, $post_code, $country = 'Malaysia')
+function updateAddress($address_id, $address_name, $address_one, $address_two, $address_three, $state, $post_code, $country = 'Malaysia')
 {
     global $_db;
     $stmt = $_db->prepare("
         UPDATE address 
-        SET address_one = ?, address_two = ?, address_three = ?, state = ?, post_code = ?, country = ? 
+        SET address_name = ?, address_one = ?, address_two = ?, address_three = ?, state = ?, post_code = ?, country = ? 
         WHERE address_id = ?
     ");
-    return $stmt->execute([$address_one, $address_two, $address_three, $state, $post_code, $country, $address_id]);
+    return $stmt->execute([$address_name, $address_one, $address_two, $address_three, $state, $post_code, $country, $address_id]);
 }
 
 //make sure only 3 address at most per user
