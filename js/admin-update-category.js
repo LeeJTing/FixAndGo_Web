@@ -34,15 +34,13 @@ $(document).ready(function () {
     const hasCurrentImage = $("#currentImgBox").length > 0;
     const hasNewImage = $("#categoryImageInput")[0].files.length > 0;
 
-    if (status === "1") {
+    if (status === "active") {
       if (!hasNewImage) {
-        $("select[name='status']").val(0);
         clearError();
         showError("#categoryImageInput", "Please upload a new image.");
       }
     }
-    if (status === "1" && !hasCurrentImage && !hasNewImage) {
-      $("select[name='status']").val(0);
+    if (status === "active" && !hasCurrentImage && !hasNewImage) {
       isValid = false;
     }
 
@@ -87,7 +85,7 @@ $(document).ready(function () {
                 clearError();
                 showError("#categoryImageInput", "Please upload a new image.");
 
-                $("select[name='status']").val(0);
+                $("select[name='status']").val("inactive");
               } else {
                 showMessage(".admin-layout", "Failed to delete image.");
               }

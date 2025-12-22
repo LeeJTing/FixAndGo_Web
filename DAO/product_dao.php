@@ -3,14 +3,19 @@
 /**
  * Get all products with category name
  */
-function getAllProductFilterDao($category, $sort, $price)
+function getAllProductFilterDao($category, $sort, $price, $limit, $offset)
 {
     global $_db;
+
     $sql = "SELECT p.*, c.category_name, pvm.file_path, pvm.alt
             FROM product p
-            JOIN category c ON p.category_code = c.category_code AND c.is_deleted = 0
-            LEFT JOIN productvisualmedia pvm ON pvm.product_id = p.product_id AND pvm.is_show = 1
-            WHERE 1=1 AND p.isdeleted = 0 AND p.status = 'active'";
+            JOIN category c 
+                ON p.category_code = c.category_code AND c.is_deleted = 0
+            LEFT JOIN productvisualmedia pvm 
+                ON pvm.product_id = p.product_id AND pvm.is_show = 1
+            WHERE p.isdeleted = 0 
+              AND p.status = 'active'";
+
     $param = [];
 
     if (!empty($category)) {
@@ -18,25 +23,71 @@ function getAllProductFilterDao($category, $sort, $price)
         $param[] = $category;
     }
 
-    if ($price != "") {
+    if ($price !== "" && $price !== null) {
         $sql .= " AND p.unit_price <= ?";
         $param[] = $price;
     }
 
-    if ($sort == "LowtoHigh") {
-        $sql .= " ORDER BY p.unit_price ASC";
-    } else if ($sort == "HightoLow") {
-        $sql .= " ORDER BY p.unit_price DESC";
-    } else if ($sort == "newest") {
-        $sql .= " AND p.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-              ORDER BY p.created_at DESC";
-    } else {
-        $sql .= " ORDER BY p.product_id ASC";
+    // Sorting
+    switch ($sort) {
+        case "LowtoHigh":
+            $sql .= " ORDER BY p.unit_price ASC";
+            break;
+        case "HightoLow":
+            $sql .= " ORDER BY p.unit_price DESC";
+            break;
+        case "newest":
+            $sql .= " ORDER BY p.created_at DESC";
+            break;
+        default:
+            $sql .= " ORDER BY p.product_id ASC";
+    }
+
+    // Pagination
+    $sql .= " LIMIT ? OFFSET ?";
+
+    $stmt = $_db->prepare($sql);
+
+    // Bind normal params
+    $i = 1;
+    foreach ($param as $p) {
+        $stmt->bindValue($i++, $p);
+    }
+
+    // Bind limit & offset (IMPORTANT: must be INT)
+    $stmt->bindValue($i++, (int)$limit, PDO::PARAM_INT);
+    $stmt->bindValue($i++, (int)$offset, PDO::PARAM_INT);
+
+    $stmt->execute();
+    return $stmt->fetchAll();
+}
+
+function getAllProductFilterCountDao($category, $price)
+{
+    global $_db;
+
+    $sql = "SELECT COUNT(*) 
+            FROM product p
+            JOIN category c 
+                ON p.category_code = c.category_code AND c.is_deleted = 0
+            WHERE p.isdeleted = 0 
+              AND p.status = 'active'";
+
+    $param = [];
+
+    if (!empty($category)) {
+        $sql .= " AND p.category_code = ?";
+        $param[] = $category;
+    }
+
+    if ($price !== "" && $price !== null) {
+        $sql .= " AND p.unit_price <= ?";
+        $param[] = $price;
     }
 
     $stmt = $_db->prepare($sql);
     $stmt->execute($param);
-    return $stmt->fetchAll();
+    return (int)$stmt->fetchColumn();
 }
 
 function getAllProductFilterAdminDao($category, $sort, $price)
@@ -281,7 +332,6 @@ function deleteCategory(int $code): bool
     }
 }
 
-
 function updateProductById(
     $id,
     $name,
@@ -292,7 +342,8 @@ function updateProductById(
     $short_desc,
     $desc,
     $status,
-    $lowstock
+    $lowstock,
+    $sold_number
 ) {
     global $_db;
 
@@ -305,7 +356,8 @@ function updateProductById(
                 status = :status,
                 product_point = :point,
                 description = :description,
-                low_stock_threshold = :lowStock
+                low_stock_threshold = :lowStock,
+                sold_number = :sold
             WHERE product_id = :id";
 
     try {
@@ -320,6 +372,7 @@ function updateProductById(
             ':point' => $points,
             ':description' => $desc,
             ':lowStock' => $lowstock,
+            ':sold' => $sold_number,
             ':id' => $id
         ]);
     } catch (PDOException $e) {

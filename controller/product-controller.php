@@ -4,14 +4,34 @@ require __DIR__ . '/../DAO/product_dao.php';
 
 $function = $_GET['function'] ?? null;;
 
-if ($function == 'allProduct') {
+if ($function === 'allProduct') {
 
-    $category_code = $_GET['category'] ?? "";;
-    $sortBy = $_GET['sort'] ?? "";;
-    $priceValue = $_GET['price'] ?? "";
+    $category_code = $_GET['category'] ?? "";
+    $sortBy        = $_GET['sort'] ?? "";
+    $priceValue    = $_GET['price'] ?? "";
 
-    $result = getAllProductFilterDao($category_code, $sortBy, $priceValue);
-    echo json_encode($result);
+    $page  = max(1, (int)($_GET['page'] ?? 1));
+    $limit = (int)($_GET['limit'] ?? 8);
+
+    $offset = ($page - 1) * $limit;
+
+    $products = getAllProductFilterDao(
+        $category_code,
+        $sortBy,
+        $priceValue,
+        $limit,
+        $offset
+    );
+
+    $totalRows = getAllProductFilterCountDao(
+        $category_code,
+        $priceValue
+    );
+
+    echo json_encode([
+        'data' => $products,
+        'totalPages' => ceil($totalRows / $limit)
+    ]);
     exit;
 } else if ($function == 'Search') {
 

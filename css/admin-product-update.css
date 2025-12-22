@@ -64,8 +64,6 @@ body[data-theme="light"] {
   --shadow-input-focus: 0 0 0 5px rgba(245, 158, 11, 0.2);
   --shadow-btn-primary: 0 10px 30px rgba(245, 158, 11, 0.25);
 }
-
-
 /* ============== ADMIN ADD PRODUCT – DARK THEME USING :root ============== */
 .admin-container {
   max-width: 1200px;

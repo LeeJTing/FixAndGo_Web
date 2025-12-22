@@ -150,6 +150,7 @@ if ($function === 'Search') {
         $status     = trim(post('status') ?? '');
         $desc       = trim(post('description') ?? '');
         $lowStock   = (int) post('low_stock');
+        $sold_number = (int) post('sold_number');
 
         $updateProduct = updateProductById(
             $id,
@@ -161,7 +162,8 @@ if ($function === 'Search') {
             $short_desc,
             $desc,
             $status,
-            $lowStock
+            $lowStock,
+            $sold_number
         );
 
         if (!$updateProduct) {
@@ -265,7 +267,8 @@ function getSpecificProductImage($id)
 function sendEmailLowStock()
 {
     try {
-        $emailAdmin = getUserById("A0011");
+        $user_id = temp('USER_ID');
+        $emailAdmin = getUserById($user_id);
         $lowStockProducts = getLowStockProduct();
 
         if (empty($lowStockProducts)) {

@@ -9,15 +9,18 @@ $id = get('id') ?? null;
 
 $orderItems = getAllProductByOrderId($id);
 $address = getOrderWithSelectedAddress($id);
-$order = getOrderById($id);
+$order   = getOrderById($id);
 $payment = getPaymentRecord($id);
 
-// --- 1. LOGIC: CHECK IF ORDER IS LOCKED ---
 $current_status = strtolower($order->status ?? '');
-// Define statuses that prevent editing
+
 $locked_statuses = ['shipping', 'delivered', 'completed', 'cancelled'];
-// Boolean: True if order is editable
-$is_editable = !in_array($current_status, $locked_statuses);
+
+$is_editable =
+    !empty($order) &&
+    !in_array($current_status, $locked_statuses, true) &&
+    !empty($address);
+
 displayFlashMessage();
 ?>
 <link rel="stylesheet" href="../../css/msg.css">

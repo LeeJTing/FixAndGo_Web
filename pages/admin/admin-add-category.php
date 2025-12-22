@@ -7,6 +7,7 @@ include 'adminHeader.php';
 $category = getAllCategoryDao() ?? [];
 ?>
 <link rel="stylesheet" href="../../css/admin-add-category.css">
+<link rel="stylesheet" href="../../css/msg.css">
 <?php displayFlashMessage(); ?>
 
 <div class="admin-container">
@@ -24,6 +25,7 @@ $category = getAllCategoryDao() ?? [];
                     <input type="text"
                         name="category_name"
                         id="category_name"
+                        required
                         placeholder="e.g., Power Tools, Fasteners, Storage">
                 </div>
 

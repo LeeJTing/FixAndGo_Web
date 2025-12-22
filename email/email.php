@@ -5,8 +5,6 @@ require __DIR__ . '/../library/SMTP.php';
 
 function get_mail()
 {
-
-
     $m = new PHPMailer(true);
     $m->isSMTP();
     $m->SMTPAuth = true;

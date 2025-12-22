@@ -116,7 +116,7 @@ $images = getSpecificProductImage($id) ?? null;
 
                 <!-- Buttons -->
                 <div class="btn-group">
-                    <button type="button" class="btn btn-cancel" onclick="history.back()">Cancel</button>
+                    <a type="button" class="btn btn-cancel" href="../admin/admin-product.php">Cancel</a>
                     <button type="submit" class="btn btn-save">
                         <i class="fa-solid fa-save"></i> Save Changes
                     </button>

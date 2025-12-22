@@ -69,6 +69,42 @@ body[data-theme="light"] {
   --text-secondary: #6b7280;
 }
 
+/* Full-screen overlay */
+#loadingOverlay {
+  display: none; /* hidden by default */
+  position: fixed;
+  inset: 0; /* top:0; bottom:0; left:0; right:0 */
+  background: rgba(0, 0, 0, 0.5); /* semi-transparent background */
+  z-index: 9999; /* above everything */ /* flex for centering */
+  align-items: center; /* vertical center */
+  justify-content: center; /* horizontal center */
+}
+
+/* Box inside overlay */
+.loading-box {
+  margin-top: 50px;
+  text-align: center;
+  color: #fff;
+  font-size: 18px;
+}
+
+/* Spinner */
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #ccc;
+  border-top: 5px solid #fff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 10px auto;
+}
+
+/* Spin animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 * {
   margin: 0;
