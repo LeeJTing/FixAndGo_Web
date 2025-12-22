@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 21, 2025 at 10:10 PM
+-- Generation Time: Dec 22, 2025 at 06:53 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -54,8 +54,6 @@ INSERT INTO `address` (`address_id`, `address_name`, `user_id`, `address_one`, `
 (6, 'Home', 'M006', '77 Jalan Tun Ahmad Zaidi', 'Lorong 2', NULL, 'Sarawak', '93050', 'Malaysia'),
 (7, 'Home', 'M007', '35 Jalan Mawar 2A', 'Taman Sri Mawar', NULL, 'Negeri Sembilan', '71000', 'Malaysia'),
 (8, 'Home', 'M008', '14 Jalan Sri Hartamas 1', NULL, NULL, 'Kuala Lumpur', '50480', 'Malaysia'),
-(9, 'Home', 'M009', '68 Jalan Wong Ah Fook', 'Block B', 'Unit 12-03', 'Johor', '80000', 'Malaysia'),
-(10, 'Home', 'M010', '5 Jalan Cenderawasih', 'Taman Desa Cemerlang', NULL, 'Johor', '81750', 'Malaysia'),
 (11, 'Home', 'A001', '100 Jalan Persiaran Surian', 'Damansara Utama', NULL, 'Selangor', '47800', 'Malaysia'),
 (12, 'Home', 'A002', '33 Jalan Bayu 4', 'Bandar Puteri', NULL, 'Selangor', '47100', 'Malaysia'),
 (13, 'Home', 'A003', '9 Lorong Jelutong', NULL, NULL, 'Penang', '10250', 'Malaysia'),
@@ -90,9 +88,7 @@ INSERT INTO `cart` (`cart_id`, `user_id`) VALUES
 (5, 'M005'),
 (6, 'M006'),
 (7, 'M007'),
-(8, 'M008'),
-(9, 'M009'),
-(10, 'M010');
+(8, 'M008');
 
 -- --------------------------------------------------------
 
@@ -175,8 +171,7 @@ INSERT INTO `loyaltypoint` (`user_id`, `get_at`, `royalty_point`, `expired_at`) 
 ('M004', '2025-01-13 14:40:00', 60, '2026-01-01 00:00:00'),
 ('M005', '2025-11-14 16:05:00', 200, '2026-11-01 00:00:00'),
 ('M006', '2025-05-15 13:22:00', 95, '2026-05-01 00:00:00'),
-('M008', '2025-03-17 17:18:00', 180, '2026-03-01 00:00:00'),
-('M010', '2025-01-19 12:55:00', 140, '2026-01-01 00:00:00');
+('M008', '2025-03-17 17:18:00', 180, '2026-03-01 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -330,8 +325,8 @@ INSERT INTO `orders` (`order_id`, `user_id`, `order_at`, `deliver_at`, `payment_
 (2, 'M002', '2025-10-20 14:35:45', '2025-10-25', 'Paid', 'Delivered', 285.70, 1, 2),
 (3, 'M004', '2025-11-01 11:10:22', '2025-11-06', 'Paid', 'Delivered', 689.70, 0, 4),
 (4, 'M007', '2025-11-05 19:45:30', '2025-11-10', 'Paid', 'Shipping', 149.80, 0, 7),
-(5, 'M009', '2025-11-12 09:18:55', '2025-11-17', 'Paid', 'Processing', 469.80, 1, 9),
-(6, 'M010', '2025-11-18 16:27:13', '2025-11-23', 'Paid', 'Delivered', 89.90, 0, 10),
+(5, NULL, '2025-11-12 09:18:55', '2025-11-17', 'Paid', 'Processing', 469.80, 1, 9),
+(6, NULL, '2025-11-18 16:27:13', '2025-11-23', 'Paid', 'Delivered', 89.90, 0, 10),
 (7, 'M003', '2025-11-25 10:45:33', '2025-11-30', 'Paid', 'Processing', 479.60, 0, 3),
 (8, 'M005', '2025-11-28 15:20:18', '2025-12-03', 'Paid', 'Shipping', 189.60, 1, 5),
 (9, 'M008', '2025-12-02 09:10:45', '2025-12-07', 'Paid', 'Delivered', 329.70, 0, 8),
@@ -339,9 +334,9 @@ INSERT INTO `orders` (`order_id`, `user_id`, `order_at`, `deliver_at`, `payment_
 (11, 'M002', '2025-12-07 11:18:42', '2025-12-12', 'Paid', 'Shipping', 589.50, 1, 18),
 (12, 'M001', '2025-12-09 16:45:19', '2025-12-14', 'Paid', 'Processing', 119.70, 0, 1),
 (13, 'M004', '2025-12-11 09:22:55', '2025-12-16', 'Paid', 'Delivered', 899.50, 0, 4),
-(14, 'M010', '2025-12-13 20:15:30', '2025-12-18', 'Paid', 'Shipping', 179.80, 0, 10),
+(14, NULL, '2025-12-13 20:15:30', '2025-12-18', 'Paid', 'Shipping', 179.80, 0, 10),
 (15, 'M007', '2025-12-15 13:08:12', '2025-12-20', 'Paid', 'Processing', 349.70, 1, 7),
-(16, 'M009', '2025-12-18 10:55:44', '2025-12-23', 'Paid', 'Processing', 529.60, 0, 9),
+(16, NULL, '2025-12-18 10:55:44', '2025-12-23', 'Paid', 'Processing', 529.60, 0, 9),
 (17, 'M003', '2025-12-20 18:30:22', '2025-12-25', 'Paid', 'Shipping', 99.80, 0, 19),
 (18, 'M005', '2025-12-22 12:05:47', '2025-12-27', 'Paid', 'Processing', 259.60, 1, 5),
 (19, 'M008', '2025-12-24 08:55:33', '2025-12-29', 'Paid', 'Processing', 679.50, 0, 8),
@@ -349,7 +344,7 @@ INSERT INTO `orders` (`order_id`, `user_id`, `order_at`, `deliver_at`, `payment_
 (21, 'M004', '2025-12-27 14:30:18', '2026-01-02', 'Paid', 'Shipping', 439.60, 1, 20),
 (22, 'M006', '2025-12-28 11:45:33', '2026-01-03', 'Paid', 'Processing', 299.50, 0, 6),
 (23, 'M008', '2025-12-29 16:20:55', '2026-01-04', 'Paid', 'Processing', 79.80, 0, 8),
-(24, 'M010', '2025-12-30 10:10:10', '2026-01-05', 'Paid', 'Shipping', 519.60, 0, 10),
+(24, NULL, '2025-12-30 10:10:10', '2026-01-05', 'Paid', 'Shipping', 519.60, 0, 10),
 (25, 'M001', '2025-12-31 13:25:47', '2026-01-06', 'Paid', 'Delivered', 159.60, 1, 16),
 (26, 'M003', '2026-01-02 08:40:22', '2026-01-07', 'Paid', 'Processing', 699.40, 0, 3);
 
@@ -699,12 +694,9 @@ INSERT INTO `review` (`review_id`, `user_id`, `product_id`, `reviewed_at`, `comm
 (2, 'M007', 1, '2025-11-10 14:30:11', 'Very sturdy, used it for framing work – no issues', 1, 5.0),
 (3, 'M001', 4, '2025-10-16 12:44:55', 'The magnetic nail starter is a game changer! One-hand nailing FTW', 1, 5.0),
 (4, 'M001', 10, '2025-10-17 09:20:33', 'Battery lasts long, LED light is super useful in dark corners', 1, 4.9),
-(5, 'M009', 10, '2025-11-14 16:55:10', 'Worth every sen. Assembled 3 IKEA cabinets non-stop', 1, 5.0),
 (6, 'M004', 14, '2025-11-03 18:12:44', 'Moved 200kg of tiles easily. Folds flat – perfect for my van', 1, 5.0),
 (7, 'M004', 21, '2025-11-04 11:30:00', 'Best purchase this year. My garage finally organized!', 1, 5.0),
 (8, 'M002', 29, '2025-10-22 13:25:18', 'Fast inflation, digital gauge is accurate. Love the LED light', 1, 4.7),
-(9, 'M010', 6, '2025-11-19 10:40:22', 'Sharp out of the box, wooden handles feel premium', 1, 4.8),
-(10, 'M009', 33, '2025-11-13 20:11:33', 'Complete set, good quality chrome vanadium. Case is solid', 1, 4.9),
 (11, 'M005', 8, '2025-11-15 15:22:10', 'Fixed my laptop and PS5 controller with this. Must-have!', 1, 5.0),
 (12, 'M008', 8, '2025-11-20 09:18:44', 'Magnetic tips are strong – no more dropped tiny screws', 1, 5.0),
 (13, 'M006', 19, '2025-11-08 17:33:21', 'Looks elegant, no rust after 2 weeks in humid bathroom', 1, 4.8),
@@ -713,11 +705,9 @@ INSERT INTO `review` (`review_id`, `user_id`, `product_id`, `reviewed_at`, `comm
 (16, 'M002', 25, '2025-10-23 08:30:00', 'No scratches, absorbs water like crazy. My car shines!', 1, 5.0),
 (17, 'M008', 37, '2025-11-21 14:22:33', 'Thick paper, no bleed-through with fountain pen', 1, 4.9),
 (18, 'M007', 39, '2025-11-06 10:10:10', 'Bright colors, stick really well. Bought 5 packs already', 1, 5.0),
-(19, 'M010', 24, '2025-11-20 12:55:30', 'Smooth ratchet action, extension is very useful', 1, 4.8),
 (20, 'M005', 16, '2025-11-17 16:40:22', 'Best electronics screwdriver set I ever owned', 1, 5.0),
 (21, 'M001', 27, '2025-10-19 09:11:44', 'Silicon spray works great on rubber seals', 1, 4.6),
 (22, 'M003', 32, '2025-11-18 13:20:15', '39 drawers = all my screws finally organized!', 1, 5.0),
-(23, 'M009', 28, '2025-11-15 18:33:21', 'Super sharp scissors, cuts through anything', 1, 4.9),
 (24, 'M006', 18, '2025-11-09 20:45:10', 'Nice cyan color, waterproof as advertised', 1, 4.7),
 (25, 'M007', 11, '2025-11-07 11:11:11', 'VDE certified = peace of mind for electrical work', 1, 5.0);
 
@@ -761,9 +751,7 @@ INSERT INTO `userprofile` (`user_id`, `dob`, `contact_num`, `gender`) VALUES
 ('M005', NULL, NULL, 'Male'),
 ('M006', '2003-05-13', NULL, 'Female'),
 ('M007', NULL, '+6012309089', NULL),
-('M008', '2001-08-19', '+60233456789', 'Female'),
-('M009', '2000-04-09', '+60123462789', 'Male'),
-('M010', '1998-06-25', NULL, 'Female');
+('M008', '2001-08-19', '+60233456789', 'Female');
 
 -- --------------------------------------------------------
 
@@ -798,7 +786,7 @@ INSERT INTO `users` (`user_id`, `user_name`, `user_role`, `email`, `hash_passwor
 ('M005', 'Ava Mitchell', 'Member', 'ava.mitchell@example.com', '$2y$10$sSvpjs.GEX62hCz/HCNOJ.9wLx1NUYygXPue4cMYB6ghM5xt166x.', 'Unblock'),
 ('M006', 'Mason Rivera', 'Member', 'mason.rivera@example.com', '$2y$10$0TceV9uxxbuHyoElrFkMOeQHnDgh6Nz0cqyfXVnGug3vU16e6jTG.', 'Unblock'),
 ('M007', 'Sophia Turner', 'Member', 'sophia.turner@example.com', '$2y$10$4UQwzHDOHjrMT8KnLDn.8OYlXRZZAoZ.XojzemA.1QV68bI6o3Bme', 'Unblock'),
-('M008', 'James Parker', 'Member', 'james.parker@example.com', '$2y$10$BS7JfHTSvWEO29zFLARTueIUkqxWyJrZSXEQVd/h7FIqePo9JQ7jG', 'Unblock'),
+('M008', 'James Parker', 'Member', 'james.parker@example.com', '$2y$10$BS7JfHTSvWEO29zFLARTueIUkqxWyJrZSXEQVd/h7FIqePo9JQ7jG', 'Unblock');
 ('M009', 'Isabella Flores', 'Member', 'isabella.flores@example.com', '$2y$10$GuSL8oAuK/iGXAglOTVgtOCzfoain7q7x01TAIo5MEtNn3OdlNs82', 'Unblock'),
 ('M010', 'Benjamin Hayes', 'Member', 'benjamin.hayes@example.com', '$2y$10$Gc6xNqwxRwookAjwqrRHjuqPbeW2TRFnfPqNPK/XFhH/WPhppaZNa', 'Unblock');
 
@@ -999,7 +987,7 @@ ALTER TABLE `cart`
 -- Constraints for table `cartitem`
 --
 ALTER TABLE `cartitem`
-  ADD CONSTRAINT `cartitem_ibfk_1` FOREIGN KEY (`cart_id`) REFERENCES `cart` (`cart_id`),
+  ADD CONSTRAINT `cartitem_ibfk_1` FOREIGN KEY (`cart_id`) REFERENCES `cart` (`cart_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `cartitem_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`);
 
 --
@@ -1019,7 +1007,7 @@ ALTER TABLE `orderitem`
 -- Constraints for table `orders`
 --
 ALTER TABLE `orders`
-  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `otp`
