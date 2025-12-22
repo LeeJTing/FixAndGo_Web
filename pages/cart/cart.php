@@ -195,8 +195,8 @@ foreach ($cart_items as $item) {
                                             data-address-id="<?= $address->address_id ?>"
                                             data-address-name="<?= htmlspecialchars($address->address_name) ?? 'Home' ?>"
                                             data-address-one="<?= htmlspecialchars($address->address_one) ?>"
-                                            data-address-two="<?= htmlspecialchars($address->address_two) ?? '' ?>"
-                                            data-address-three="<?= htmlspecialchars($address->address_three) ?? '' ?>"
+                                            data-address-two="<?= htmlspecialchars($address->address_two ?? '') ?? '' ?>"
+                                            data-address-three="<?= htmlspecialchars($address->address_three ?? '') ?? '' ?>"
                                             data-state="<?= htmlspecialchars($address->state) ?>"
                                             data-post-code="<?= htmlspecialchars($address->post_code) ?>"
                                             data-country="<?= htmlspecialchars($address->country) ?>">
