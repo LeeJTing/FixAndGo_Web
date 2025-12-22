@@ -32,7 +32,7 @@ include_once "../../_head.php";
             <div class="form-group">
                 <label for="password">Password</label>
                 <input class="form-input" type="password" id="password" name="password" placeholder="Enter your password" required>
-                <div class="error" id="passwordError">Please enter your password</div>
+                <div class="error" id="passwordError">Please enter valid password</div>
             </div>
 
             <div class="remember-me">

@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
-    id = email = password = null;
-    id_valid = email_valid = password_valid = false;
+    let id = null, email = null, password = null;
+    let id_valid = false, email_valid = false, password_valid = false;
 
     $('#identify').on('input', function () {
         input = $(this).val();
@@ -30,22 +30,23 @@ $(document).ready(function () {
     }
 });
 
+    // listen on the password input (the input itself has id="password")
     $('#password').on('input', function () {
         password = $(this).val();
         if (!passwordFormat(password)) {
-            password_valid = true;
+            password_valid = false;
             $('#password + .error').css('display', 'inline');
         } else {
-            password_valid = false;
+            password_valid = true;
             $('#password + .error').css('display', 'none');
         }
     });
 
     $('input').on('input', function () {
         if ((id_valid || email_valid) && password_valid) {
-            $('#loginBtn').prop('disabled', true);
-        }else{
             $('#loginBtn').prop('disabled', false);
+        } else {
+            $('#loginBtn').prop('disabled', true);
         }
     });
 });

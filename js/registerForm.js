@@ -38,6 +38,7 @@ $(document).ready(function() {
     $('#password').on('input', e => {
         password = $(e.target).val();
         password_valid = passwordFormat(password);
+        checkConfirm();
         if(password_valid){
             $('#password ~ .error').css('display', 'none');
         }else{
@@ -91,8 +92,12 @@ $(document).ready(function() {
     });
 
     $('#confirmPassword').on('input', function() {
+        checkConfirm();
+    });
+
+    function checkConfirm(){
         password = $('#password').val();
-        confirmPassword = $(this).val();
+        confirmPassword = $('#confirmPassword').val();
         confirmPassword_valid = password === confirmPassword && confirmPassword.length > 0;
 
         if(confirmPassword_valid){
@@ -101,9 +106,9 @@ $(document).ready(function() {
         }
         else{
             $('#passwordMatch').css('display', 'none');
-            $('#confirmPassword ~ .error').css('display', 'inline');;
+            $('#confirmPassword ~ .error').css('display', 'inline');
         }
-    });
+    }
 
     $('input').on('input', function() {
         if(id_valid && name_valid && password_valid && confirmPassword_valid && email_valid){ 

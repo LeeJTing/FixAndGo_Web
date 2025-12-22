@@ -217,6 +217,7 @@ $addresses = getAddressesByUserId($user_id);
                                 <i class="fas fa-credit-card"></i>
                                 <span>Payment Methods</span>
                             </button> -->
+                            <?php if(temp('USER_ROLE') == 'Member') : ?>
                             <a href="<?= $rootDir ?>/pages/order/member-order-history.php" class="action-card" style="text-decoration: none;">
                                 <i class="fas fa-history"></i>
                                 <span>Order History</span>
@@ -229,6 +230,7 @@ $addresses = getAddressesByUserId($user_id);
                                 <i class="fas fa-user-slash"></i>
                                 <span>Request Delete Account</span>
                             </a>
+                            <?php endif ?>
                         </div>
                     </div>
                 </div>
