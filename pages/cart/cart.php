@@ -217,7 +217,7 @@ foreach ($cart_items as $item) {
 
                     <form id="newAddressForm" class="address-form hidden">
                         <input type="hidden" id="address_id" name="address_id" value="">
-                        <h4>Add New Delivery Address</h4>
+                        <h4>Delivery Address</h4>
 
                         <div class="form-group">
                             <label for="address_name">Label (optional)</label>
