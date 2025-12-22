@@ -205,10 +205,10 @@ $addresses = getAddressesByUserId($user_id);
                     </div>
                     <div class="card-body">
                         <div class="action-grid">
-                            <button id="openChangePassword" class="action-card">
+                            <a id="openChangePassword" class="action-card" style="text-decoration: none;">
                                 <i class="fas fa-lock"></i>
                                 <span>Change Password</span>
-                            </button>
+                            </a>
                             <!-- <button class="action-card">
                                 <i class="fas fa-bell"></i>
                                 <span>Notifications</span>
@@ -225,10 +225,10 @@ $addresses = getAddressesByUserId($user_id);
                                 <i class="fas fa-heart"></i>
                                 <span>Wishlist</span>
                             </button> -->
-                            <button class="action-card danger">
+                            <a href="<?= $rootDir ?>/pages/guest/contactUs.php#request-form" class="action-card danger" style="text-decoration: none;">
                                 <i class="fas fa-user-slash"></i>
-                                <span>Delete Account</span>
-                            </button>
+                                <span>Request Delete Account</span>
+                            </a>
                         </div>
                     </div>
                 </div>

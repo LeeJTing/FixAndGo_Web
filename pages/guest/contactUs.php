@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../../_base.php';
+$_title = "Fix & Go | Contact Us";
 include_once __DIR__ . '/../../_head.php';
 ?>
 
@@ -574,7 +575,7 @@ textarea.form-control {
     </div>
 
     <!-- Main Contact Container -->
-    <div class="contact-container">
+    <div class="contact-container" id="request-form">
         <!-- Contact Information -->
         <div class="contact-info">
             <h2>Contact Information</h2>
@@ -612,11 +613,11 @@ textarea.form-control {
             
             <!-- Social Media Links -->
             <div class="social-links">
-                <a href="#" class="social-link" title="Facebook">f</a>
-                <a href="#" class="social-link" title="Twitter">𝕏</a>
-                <a href="#" class="social-link" title="Instagram">📷</a>
-                <a href="#" class="social-link" title="LinkedIn">in</a>
-                <a href="#" class="social-link" title="WhatsApp">✆</a>
+                <a href="https://www.facebook.com/" target="_blank" class="social-link" title="Facebook">f</a>
+                <a href="https://x.com/?lang=en-my" target="_blank" class="social-link" title="Twitter">𝕏</a>
+                <a href="https://www.instagram.com/" target="_blank" class="social-link" title="Instagram">📷</a>
+                <a href="https://www.linkedin.com/" target="_blank" class="social-link" title="LinkedIn">in</a>
+                <a href="https://web.whatsapp.com/" target="_blank" class="social-link" title="WhatsApp">✆</a>
             </div>
         </div>
 

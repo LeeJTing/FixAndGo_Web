@@ -19,9 +19,8 @@
             <div class="footer-col">
                 <h4>Company</h4>
                 <ul>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Contact</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="<?= $rootDir ?>/pages/guest/aboutUs.php">About Us</a></li>
+                    <li><a href="<?= $rootDir ?>/pages/guest/contactUs.php">Contact</a></li>
                 </ul>
             </div>
             <div class="footer-col">
