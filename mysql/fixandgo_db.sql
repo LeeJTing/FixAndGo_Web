@@ -786,7 +786,7 @@ INSERT INTO `users` (`user_id`, `user_name`, `user_role`, `email`, `hash_passwor
 ('M005', 'Ava Mitchell', 'Member', 'ava.mitchell@example.com', '$2y$10$sSvpjs.GEX62hCz/HCNOJ.9wLx1NUYygXPue4cMYB6ghM5xt166x.', 'Unblock'),
 ('M006', 'Mason Rivera', 'Member', 'mason.rivera@example.com', '$2y$10$0TceV9uxxbuHyoElrFkMOeQHnDgh6Nz0cqyfXVnGug3vU16e6jTG.', 'Unblock'),
 ('M007', 'Sophia Turner', 'Member', 'sophia.turner@example.com', '$2y$10$4UQwzHDOHjrMT8KnLDn.8OYlXRZZAoZ.XojzemA.1QV68bI6o3Bme', 'Unblock'),
-('M008', 'James Parker', 'Member', 'james.parker@example.com', '$2y$10$BS7JfHTSvWEO29zFLARTueIUkqxWyJrZSXEQVd/h7FIqePo9JQ7jG', 'Unblock');
+('M008', 'James Parker', 'Member', 'james.parker@example.com', '$2y$10$BS7JfHTSvWEO29zFLARTueIUkqxWyJrZSXEQVd/h7FIqePo9JQ7jG', 'Unblock'),
 ('M009', 'Isabella Flores', 'Member', 'isabella.flores@example.com', '$2y$10$GuSL8oAuK/iGXAglOTVgtOCzfoain7q7x01TAIo5MEtNn3OdlNs82', 'Unblock'),
 ('M010', 'Benjamin Hayes', 'Member', 'benjamin.hayes@example.com', '$2y$10$Gc6xNqwxRwookAjwqrRHjuqPbeW2TRFnfPqNPK/XFhH/WPhppaZNa', 'Unblock');
 
