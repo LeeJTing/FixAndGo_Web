@@ -1050,7 +1050,7 @@ main {
     max-width: 600px;
     min-width: 300px;
     animation: modelSlideIn 0.3s ease;
-    overflow: hidden;
+    overflow: scroll;
     max-height: 90vh;
     transition: var(--transition);
 }
