@@ -29,11 +29,35 @@ $used_points = (int)round($discount_cents / 10);
 $discount_rm = $discount_cents / 100;
 
 if ($payRow) {
-    if ($payRow->payment_method === 'Bank Transfer') $selectedMethod = 'Online Banking';
-    else if ($payRow->payment_method === 'Credit Card' || $payRow->payment_method === 'Debit Card') $selectedMethod = 'Credit/Debit Card';
-    else $selectedMethod = 'Cash on Delivery';
+    if ($payRow->payment_method === 'Bank Transfer') {
+        $selectedMethod = 'Online Banking';
+    } elseif ($payRow->payment_method === 'Credit Card' || $payRow->payment_method === 'Debit Card') {
+        $selectedMethod = 'Credit/Debit Card';
+    } elseif ($payRow->payment_method === 'Loyalty Points') {
+        $selectedMethod = 'Loyalty Points';
+    } elseif ($payRow->payment_method === 'Cash') {
+        $selectedMethod = 'Cash on Delivery';
+    } else {
+        $selectedMethod = 'Cash on Delivery';
+    }
 } else {
-    $selectedMethod = $_SESSION['order_payment_method'][$order_id] ?? 'Cash on Delivery';
+    $sessionMethod = $_SESSION['order_payment_method'][$order_id] ?? '';
+    if ($sessionMethod === 'Online Banking' || $sessionMethod === 'Credit/Debit Card' || $sessionMethod === 'Loyalty Points') {
+        $selectedMethod = $sessionMethod;
+    } elseif ($sessionMethod === 'Cash') {
+        $selectedMethod = 'Cash on Delivery';
+    } else {
+        // Fallback: if points were used and total is 0, treat as Loyalty Points.
+        $selectedMethod = (((int)($order->utilize_point ?? 0) === 1) && ((int)round(((float)$order->total_price) * 100) === 0))
+            ? 'Loyalty Points'
+            : 'Cash on Delivery';
+    }
+}
+
+// Final guard: if loyalty points fully covered the total, show Loyalty Points.
+// Use the computed discount/points too, so older orders still display correctly.
+if (((int)round(((float)$order->total_price) * 100) === 0) && ($used_points > 0 || (int)($order->utilize_point ?? 0) === 1)) {
+    $selectedMethod = 'Loyalty Points';
 }
 
 ?>
@@ -166,7 +190,7 @@ if ($payRow) {
             </div>
 
             <div class="actions">
-                <a class="btn" href="<?= $rootDir ?>/pages/order/order_list.php">Back to Orders</a>
+                <a class="btn" href="<?= $rootDir ?>/pages/cart/cart.php">Back to Cart</a>
 
                 <div style="display:flex; gap:10px; flex-wrap:wrap;">
                     <?php if (strtolower($order->payment_status) !== 'paid' && $selectedMethod !== 'Cash on Delivery'): ?>

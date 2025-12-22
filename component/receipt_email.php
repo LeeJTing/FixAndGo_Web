@@ -42,6 +42,18 @@ function sendReceiptEmailForOrder(int $order_id, array $overrides = []): bool
     $paymentRow = getPaymentRowByOrderIdDao($order_id);
     $paymentMethod = $paymentRow->payment_method ?? '';
 
+    // Match the labels used in the HTML receipt page.
+    $paymentMethodLabel = (string)$paymentMethod;
+    if ($paymentMethodLabel === 'Bank Transfer') {
+        $paymentMethodLabel = 'Online Banking';
+    } elseif ($paymentMethodLabel === 'Credit Card' || $paymentMethodLabel === 'Debit Card') {
+        $paymentMethodLabel = 'Credit/Debit Card';
+    } elseif ($paymentMethodLabel === 'Cash') {
+        $paymentMethodLabel = 'Cash on Delivery';
+    } elseif ($paymentMethodLabel === 'Loyalty Points') {
+        $paymentMethodLabel = 'Loyalty Points';
+    }
+
     $shippingFee = 10.00;
     $itemsTotal = 0.0;
     foreach ($items as $it) {
@@ -54,7 +66,7 @@ function sendReceiptEmailForOrder(int $order_id, array $overrides = []): bool
     $discount_rm = (float)($computed['discount_rm'] ?? 0.0);
 
     $statusLabel = (string)($overrides['status'] ?? ($order->status ?? ''));
-    $paymentLabel = (string)($overrides['payment_method'] ?? ($paymentMethod ?: ''));
+    $paymentLabel = (string)($overrides['payment_method'] ?? ($paymentMethodLabel ?: ''));
     if ($statusLabel === '') $statusLabel = 'Processing';
     if ($paymentLabel === '') $paymentLabel = 'Unknown';
 

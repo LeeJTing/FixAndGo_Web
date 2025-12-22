@@ -12,7 +12,6 @@ if (!$user_id) {
 }
 
 $payment_method = $_POST['payment_method'] ?? 'Cash';
-$is_cod = ($payment_method === 'Cash');
 $use_loyalty_points = (int)($_POST['use_loyalty_points'] ?? 0) === 1;
 $address_id = (int)($_POST['address_id'] ?? 0);
 if ($address_id <= 0) die("Please select a delivery address.");
@@ -62,6 +61,11 @@ try {
 
     $is_fully_paid_by_points = ($use_loyalty_points && $used_points > 0 && (int)round(((float)$total) * 100) === 0);
 
+    // Determine the effective payment method AFTER applying loyalty points.
+    // If points fully cover the total, it is NOT Cash on Delivery.
+    $effective_payment_method = $is_fully_paid_by_points ? 'Loyalty Points' : $payment_method;
+    $is_cod = ($effective_payment_method === 'Cash');
+
     $order_payment_status = ($is_cod || $is_fully_paid_by_points) ? 'Paid' : 'Pending';
     $order_status = $is_cod ? 'Delivered' : (($is_fully_paid_by_points) ? 'Processing' : 'Pending');
     $utilize_point_flag = ($used_points > 0) ? 1 : 0;
@@ -80,7 +84,7 @@ try {
             throw new Exception('Failed to create payment record.');
         }
     } else {
-        if (!createPaymentPendingDao($order_id, $payment_method)) {
+        if (!createPaymentPendingDao($order_id, $effective_payment_method)) {
             throw new Exception('Failed to create payment record.');
         }
 
@@ -102,7 +106,7 @@ try {
     }
 
     if (!isset($_SESSION['order_payment_method'])) $_SESSION['order_payment_method'] = [];
-    $_SESSION['order_payment_method'][$order_id] = $payment_method;
+    $_SESSION['order_payment_method'][$order_id] = $effective_payment_method;
 
     // Clear checked items from cart
     clearCheckedCartItems($cart->cart_id);
@@ -116,6 +120,11 @@ try {
                 $overrides = [
                     'payment_method' => 'Cash on Delivery',
                     'status' => 'Delivered'
+                ];
+            } elseif ($is_fully_paid_by_points) {
+                $overrides = [
+                    'payment_method' => 'Loyalty Points',
+                    'status' => 'Processing'
                 ];
             }
             sendReceiptEmailForOrder((int)$order_id, $overrides);

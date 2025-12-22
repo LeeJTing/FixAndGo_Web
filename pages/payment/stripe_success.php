@@ -4,6 +4,7 @@ require "../../vendor/autoload.php";
 require "../../DAO/order-dao.php";
 require "../../DAO/loyaltypoint_dao.php";
 require "../../component/receipt_email.php";
+require_once __DIR__ . '/../../config/stripe.php';
 
 $user_id = temp('USER_ID');
 if (!$user_id) {
@@ -39,20 +40,8 @@ if ($session_id === '') {
     exit;
 }
 
-$defaultStripeSecretKey = 'sk_test_51SeFjZJ0NvBCcCJetZZw02Tf4Hjz1ZUMyT9S1hMPiENlEBR5ZBT7F3b9l6ylskvJ2lED5qpp9nPVxXVeqOwwhZvV00IxMEImWN';
-$envStripeSecretKey = getenv('STRIPE_SECRET_KEY');
-
-$stripeSecretKey = $defaultStripeSecretKey;
-if (
-    is_string($envStripeSecretKey)
-    && $envStripeSecretKey !== ''
-    && str_starts_with($envStripeSecretKey, 'sk_')
-    && !str_starts_with($envStripeSecretKey, 'PASTE_')
-) {
-    $stripeSecretKey = $envStripeSecretKey;
-}
-
-\Stripe\Stripe::setApiKey($stripeSecretKey);
+$stripeCfg = stripe_config();
+\Stripe\Stripe::setApiKey($stripeCfg['secret_key']);
 
 try {
     $session = \Stripe\Checkout\Session::retrieve($session_id, []);

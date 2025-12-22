@@ -4,11 +4,12 @@ require "../../vendor/autoload.php";
 require "../../DAO/order-dao.php";
 require "../../DAO/loyaltypoint_dao.php";
 require "../../component/receipt_email.php";
+require_once __DIR__ . '/../../config/stripe.php';
 
 $payload = @file_get_contents('php://input');
 $sigHeader = $_SERVER['HTTP_STRIPE_SIGNATURE'] ?? '';
 
-$webhookSecret = getenv('STRIPE_WEBHOOK_SECRET') ?: '';
+$webhookSecret = stripe_webhook_secret();
 if ($webhookSecret === '') {
     http_response_code(500);
     echo 'Webhook secret not configured.';
@@ -31,7 +32,7 @@ if ($event->type === 'checkout.session.completed') {
         try {
             $order = getOrderByIdDao($order_id);
             if ($order && strtolower((string)$order->payment_status) !== 'paid') {
-            $shouldSendReceipt = false;
+                $shouldSendReceipt = false;
                 $_db->beginTransaction();
 
                 if (!paymentExistsForOrderDao($order_id)) {

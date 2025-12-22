@@ -2,6 +2,7 @@
 require "../../_base.php";
 require "../../vendor/autoload.php";
 require "../../DAO/order-dao.php";
+require_once __DIR__ . '/../../config/stripe.php';
 
 $user_id = temp('USER_ID');
 if (!$user_id) {
@@ -22,19 +23,8 @@ if ($order->payment_status === 'Paid') {
 $selectedMethod = $_SESSION['order_payment_method'][$order_id] ?? 'Cash';
 if ($selectedMethod === 'Cash') die("This order is Cash on Delivery.");
 
-$defaultStripeSecretKey = 'sk_test_51SeFjZJ0NvBCcCJetZZw02Tf4Hjz1ZUMyT9S1hMPiENlEBR5ZBT7F3b9l6ylskvJ2lED5qpp9nPVxXVeqOwwhZvV00IxMEImWN';
-$envStripeSecretKey = getenv('STRIPE_SECRET_KEY');
-$stripeSecretKey = $defaultStripeSecretKey;
-if (
-  is_string($envStripeSecretKey)
-  && $envStripeSecretKey !== ''
-  && str_starts_with($envStripeSecretKey, 'sk_')
-  && !str_starts_with($envStripeSecretKey, 'PASTE_')
-) {
-  $stripeSecretKey = $envStripeSecretKey;
-}
-
-\Stripe\Stripe::setApiKey($stripeSecretKey);
+$stripeCfg = stripe_config();
+\Stripe\Stripe::setApiKey($stripeCfg['secret_key']);
 
 $payment_method_types = ($selectedMethod === 'Online Banking') ? ['fpx'] : ['card'];
 
@@ -54,7 +44,7 @@ $session = \Stripe\Checkout\Session::create([
   ],
   'success_url' => $rootDir . "/pages/payment/stripe_success.php?order_id={$order_id}&session_id={CHECKOUT_SESSION_ID}",
   'cancel_url'  => $rootDir . "/pages/order/order_detail.php?order_id={$order_id}",
-]); 
+]);
 
 try {
   if (!paymentExistsForOrderDao($order_id)) {

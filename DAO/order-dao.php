@@ -395,8 +395,10 @@ function createPaymentPendingDao($order_id, $payment_method)
     // We'll map your UI values into DB values
     $map = [
         'Cash' => 'Cash',
+        'Cash on Delivery' => 'Cash', // Accept 'Cash on Delivery' safely
         'Credit/Debit Card' => 'Credit Card',
         'Online Banking' => 'Bank Transfer',
+        'Loyalty Points' => 'Loyalty Points', // Ensure Loyalty Points can be stored
     ];
     $pm = $map[$payment_method] ?? 'Cash';
 
