@@ -325,32 +325,22 @@ function updateProductById(
 
     try {
         $stmt = $_db->prepare($sql);
-        $stmt->execute([
-            ':name'         => $name,
-            ':short_desc'   => $short_desc,
+        return $stmt->execute([
+            ':name' => $name,
+            ':short_desc' => $short_desc,
             ':category_code' => $category,
-            ':price'        => $price,
-            ':stock'        => $qty,
-            ':status'       => $status,
-            ':point'        => $points,
-            ':description'  => $desc,
-            ':lowStock'     => $lowstock,
-            ':id'           => $id
+            ':price' => $price,
+            ':stock' => $qty,
+            ':status' => $status,
+            ':point' => $points,
+            ':description' => $desc,
+            ':lowStock' => $lowstock,
+            ':id' => $id
         ]);
-
-        $_SESSION['flash_message'] = [
-            'type' => 'success',
-            'text' => 'Product updated successfully.'
-        ];
     } catch (PDOException $e) {
-        $_SESSION['flash_message'] = [
-            'type' => 'error',
-            'text' => 'Database Error: ' . $e->getMessage()
-        ];
+        error_log("Update Product Error: " . $e->getMessage());
+        return false;
     }
-
-    header('Location: ../pages/admin/admin-product-update.php?id=' . $id);
-    exit;
 }
 
 function getProductBySearchDao($keyword)
@@ -556,25 +546,20 @@ function addNewProduct($product_name, $short_desc, $category_id, $price, $stock,
     }
 }
 
-function getProductName($product_id = null)
+function getProductNamesExceptId($product_id)
 {
     global $_db;
-    try {
-        if ($product_id === null) {
-            // If no ID provided, return all product names
-            $stmt = $_db->prepare("SELECT product_name FROM product");
-        } else {
-            // Exclude the product with given ID
-            $sql = "SELECT product_name FROM product WHERE product_id != ?";
-            $stmt = $_db->prepare($sql);
-            $stmt->execute([$product_id]);
-        }
 
-        $products = $stmt->fetchAll(PDO::FETCH_COLUMN);
-        return $products;
+    try {
+        $stmt = $_db->prepare(
+            "SELECT product_name FROM product WHERE product_id != ?"
+        );
+        $stmt->execute([$product_id]);
+
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
     } catch (PDOException $e) {
         error_log("Get Product Names Error: " . $e->getMessage());
-        return false;
+        return [];
     }
 }
 

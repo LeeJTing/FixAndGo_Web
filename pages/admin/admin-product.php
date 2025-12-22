@@ -27,7 +27,7 @@ displayFlashMessage();
                 <div class="search-filter-bar">
                     <div class="search-wrapper">
                         <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                        <input type="text" id="searchInput" placeholder="Search products, SKU, code..." autocomplete="off">
+                        <input type="text" id="searchInput" placeholder="Search products, Category, Price..." autocomplete="off">
                     </div>
 
                     <select id="categoryFilter" class="filter-select">

@@ -78,7 +78,7 @@ displayFlashMessage();
                         <div class="search-wrapper">
                             <div>
                                 <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                                <input type="text" id="searchInput" placeholder="Search products, SKU, code..." autocomplete="off">
+                                <input type="text" id="searchInput" placeholder="Search products, Category, Price..." autocomplete="off">
                             </div>
                             <span class="results-count"><?= $items ?> items</span>
                         </div>

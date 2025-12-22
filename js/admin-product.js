@@ -33,6 +33,7 @@ $(document).ready(function () {
     }
   });
 });
+
 function loadProduct(category, sortType, currentValue) {
   $.ajax({
     url: "../../controller/admin-controller.php?function=allProduct",

@@ -10,9 +10,9 @@ include_once "../../_head.php";
 <script src="<?= $rootDir ?>/js/validation.js"></script>
 <script src="<?= $rootDir ?>/js/login.js"></script>
 <?php if ($error): ?>
-<script>
-    alert("<?= htmlspecialchars($error) ?>");
-</script>
+    <script>
+        alert("<?= htmlspecialchars($error) ?>");
+    </script>
 <?php endif; ?>
 <main>
     <div class="login-form-container">
@@ -21,31 +21,31 @@ include_once "../../_head.php";
             Fix & Go
         </div>
         <h1>Welcome Back</h1>
-        
+
         <form id="loginForm" method="POST">
             <div class="form-group">
                 <label for="identify">User ID / Email</label>
                 <input class="form-input" type="text" id="identify" name="identify" placeholder="Enter your User ID / Email Address" required>
                 <div class="error" id="identifyError">Please enter your User ID / Email</div>
             </div>
-            
+
             <div class="form-group">
                 <label for="password">Password</label>
                 <input class="form-input" type="password" id="password" name="password" placeholder="Enter your password" required>
                 <div class="error" id="passwordError">Please enter your password</div>
             </div>
-            
+
             <div class="remember-me">
                 <input type="checkbox" id="rememberMe" name="rememberMe" value="false">
                 <label for="rememberMe">Remember me</label>
             </div>
-            
+
             <div class="forgot-password">
                 <a href="forgot_password.php">Forgot Password?</a>
             </div>
-            
+
             <button type="submit" id="loginBtn" disabled>Login</button>
-            
+
             <div class="register-link">
                 Don't have an account? <a href="register.php">Register</a>
             </div>

@@ -1,14 +1,14 @@
 $(document).ready(function () {
-  $("select[name='status']").on("change", function () {
-    if ($(this).val() === "inactive") {
-      $("select[name='category_code']").val(5);
-    }
-  });
+  // $("select[name='status']").on("change", function () {
+  //   if ($(this).val() === "inactive") {
+  //     $("select[name='category_code']").val(5);
+  //   }
+  // });
 
   $("#updateProductForm").on("submit", async function (e) {
     e.preventDefault();
     const form = this;
-    let product_id = $("#productId").val();
+    let product_id = Number($("#productId").val()) | 0;
     let productNameValue = $("input[name=product_name]")
       .val()
       .trim()
@@ -23,14 +23,18 @@ $(document).ready(function () {
     let existingProductNames = await fetchExistingProductNames(product_id);
     let mainImgSrc = $("#mainImg").first().attr("src") || "";
 
-    if (existingProductNames.includes(productNameValue.toLowerCase())) {
+    existingProductNames = existingProductNames.map((name) =>
+      name.toLowerCase().trim()
+    );
+    let currentName = productNameValue.toLowerCase().trim();
+    if (existingProductNames.includes(currentName)) {
       showError(
         $("input[name=product_name]"),
         "This product name already exists."
       );
-      return; // Stop here
-    }
 
+      return;
+    }
     isValidProductName = validateField("product_name", {
       required: true,
       min: 10,
@@ -81,6 +85,12 @@ $(document).ready(function () {
           positive: true,
         }) && isValid;
       isValid =
+        validateField("sold_number", {
+          required: true,
+          number: true,
+          positive: true,
+        }) && isValid;
+      isValid =
         validateField("product_point", {
           required: true,
           number: true,
@@ -96,15 +106,22 @@ $(document).ready(function () {
           number: true,
           Mimstock: true,
         }) && isValid;
-      isValid =
-        validateFileInput("#newImagesInput", {
-          types: ["image/jpeg", "image/png", "image/gif"],
-          maxSize: 2 * 1024 * 1024,
-        }) && isValid;
 
       if (!isValid) {
         return; // Stop here if validation fails
       }
+      const statusSelect = $("select[name=status]").val();
+      const categorySelect = $("select[name=category_code]");
+      if (statusSelect != "inactive") {
+        if (categorySelect.val() === "5") {
+          showError(
+            categorySelect,
+            "Please select a valid category for the product."
+          );
+          return false;
+        }
+      }
+
       if (point > price) {
         showError(
           $("input[name=product_point]"),
@@ -120,34 +137,23 @@ $(document).ready(function () {
         return false; // stop further processing
       }
 
-      const statusSelect = $("select[name=status]");
-      const categorySelect = $("select[name=category_code]");
-      if (statusSelect.val() === "inactive") {
-        statusSelect.val("active"); // force active
+      if (statusSelect === "active") {
+        if (!hasValidProductImage()) {
+          $("select[name='status']").val("inactive");
+          $("select[name='category_code']").val(5);
 
-        if (categorySelect.val() === "5") {
-          showError(
-            categorySelect,
-            "Please select a valid category for the product."
-          );
-          return false; 
-        }
-      }
-      if (!hasValidProductImage()) {
-        $("select[name='status']").val("inactive");
-        $("select[name='category_code']").val(5);
-
-        showConfirm(
-          "No product image detected. The product will be set to Inactive. Continue?",
-          function (result) {
-            if (result) {
-              form.submit();
-            } else {
-              $("#newImagesInput").focus();
+          showConfirm(
+            "No product image detected. The product will be set to Inactive. Continue?",
+            function (result) {
+              if (result) {
+                form.submit();
+              } else {
+                $("#newImagesInput").focus();
+              }
             }
-          }
-        );
-        return;
+          );
+          return;
+        }
       }
 
       form.submit();
@@ -155,7 +161,7 @@ $(document).ready(function () {
   });
 });
 
-let newFiles = []; 
+let newFiles = [];
 $(document).ready(function () {
   var productId = $("#productId").val();
 
@@ -238,11 +244,11 @@ function fetchExistingProductNames(id) {
   return $.getJSON(
     "../../controller/admin-controller.php?function=getProductName&id=" + id
   )
-    .then(function (data) {
-      if (data.status === "success") {
-        return data.products.map((name) => name.toLowerCase());
+    .then(function (response) {
+      if (response.status === "success") {
+        return response.data; // ✅ array of names
       } else {
-        console.error("Failed to fetch product names:", data.message);
+        console.error("Failed:", response.message);
         return [];
       }
     })
@@ -251,6 +257,7 @@ function fetchExistingProductNames(id) {
       return [];
     });
 }
+
 function hasValidProductImage() {
   // 1️⃣ Existing preview image
   let mainImg = $("#mainImg");

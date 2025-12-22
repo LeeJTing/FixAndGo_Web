@@ -4,7 +4,7 @@ require_once  __DIR__ . '/../_base.php';
 require __DIR__ . '/../DAO/product_dao.php';
 require __DIR__ . '/../component/files.php';
 require __DIR__ . '/../component/msg.php';
-require __DIR__ . '/../DAO/UserDAO.php';
+require __DIR__ . '/../DAO/security_dao.php';
 
 $function = $_GET['function'] ?? null;   // <-- FIX (no warning)
 
@@ -34,21 +34,13 @@ if ($function === 'Search') {
     header('Location: ../pages/admin/admin-product.php');
     exit;
 } else if ($function === 'getProductName') {
-    $updateId = get('id') ?? null;
-    $productNames = getProductName($updateId);
+    $product_id = intval($_GET['id'] ?? 0);
 
-    if ($productNames !== false) {
-        echo json_encode([
-            'status' => 'success',
-            'products' => $productNames
-        ]);
-    } else {
-        echo json_encode([
-            'status' => 'error',
-            'message' => 'Failed to fetch product names'
-        ]);
-    }
-
+    $names = getProductNamesExceptId($product_id);
+    echo json_encode([
+        "status" => "success",
+        "data" => $names
+    ]);
     exit;
 } else if ($function === 'allProduct') {
     $category_code = $_GET['category'] ?? "";;
@@ -82,9 +74,11 @@ if ($function === 'Search') {
         $lowStock      = post('lowstock');
 
         if ($status === 'inactive') {
-
-
+            if ($category_id === '') {
+                $category_id = 5;
+            }
             $isAddProduct = addNewProduct($product_name, $short_desc, $category_id, $price, $stock, $status, $point, $description);
+
             if ($isAddProduct) {
                 $_SESSION['flash_message'] = [
                     'type' => 'success',
@@ -156,33 +150,58 @@ if ($function === 'Search') {
         $status     = trim(post('status') ?? '');
         $desc       = trim(post('description') ?? '');
         $lowStock   = (int) post('low_stock');
-        if (!empty($_FILES['new_images']['name'][0])) {
 
-            // Upload files
+        $updateProduct = updateProductById(
+            $id,
+            $name,
+            $category,
+            $price,
+            $qty,
+            $points,
+            $short_desc,
+            $desc,
+            $status,
+            $lowStock
+        );
+
+        if (!$updateProduct) {
+            $_SESSION['flash_message'] = [
+                'type' => 'error',
+                'text' => 'Product update failed.'
+            ];
+            header('Location: ../pages/admin/admin-product-update.php?id=' . $id);
+            exit;
+        }
+
+        if (!empty($_FILES['new_images']['name'][0])) {
             $uploadedFiles = uploadFiles('new_images', "../images/product/", "images/product/");
-            // Insert uploaded images
+
             foreach ($uploadedFiles as $file) {
-                $countAppearProduct_update = count(getProductImagesDao($id));
-                if ($countAppearProduct_update === 0) {
-                    $result = addNewImage($file, $id, $name, $countAppearProduct_update, 1);
-                } else {
-                    // $file should be a string like "images/product/xxxx.png"
-                    $result = addNewImage($file, $id, $name, $countAppearProduct_update, 0);
-                }
+                $count = count(getProductImagesDao($id));
+                $result = addNewImage($file, $id, $name, $count, $count === 0 ? 1 : 0);
 
                 if ($result !== true) {
-                    echo "❌ Error adding image: ";
-                    print_r($result); // If it's still an array, debug what it contains
-                } else {
-                    echo "✔️ Image added successfully!\n";
+                    $_SESSION['flash_message'] = [
+                        'type' => 'error',
+                        'text' => 'Product updated but image upload failed.'
+                    ];
+                    header('Location: ../pages/admin/admin-product-update.php?id=' . $id);
+                    exit;
                 }
             }
-            sendEmailLowStock();
-            updateProductById($id, $name, $category, $price, $qty, $points, $short_desc, $desc, $status, $lowStock);
-        } else {
-            sendEmailLowStock();
-            updateProductById($id, $name, $category, $price, $qty, $points, $short_desc, $desc, $status, $lowStock);
         }
+
+        sendEmailLowStock();
+
+        $_SESSION['flash_message'] = [
+            'type' => 'success',
+            'text' => $status === 'active'
+                ? 'Product updated successfully.'
+                : 'Temporary product updated successfully.'
+        ];
+
+        header('Location: ../pages/admin/admin-product-update.php?id=' . $id);
+        exit;
     } else if ($post_function === 'file_delete') {
         header('Content-Type: application/json');
 

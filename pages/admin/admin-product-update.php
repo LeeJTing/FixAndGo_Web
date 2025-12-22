@@ -64,7 +64,7 @@ $images = getSpecificProductImage($id) ?? null;
                     </div>
                     <div class="form-group">
                         <label>Sold Number</label>
-                        <input type="number"  value="<?= $product->sold_number ?? 0 ?>"disabled>
+                        <input type="number" name="sold_number" value="<?= $product->sold_number ?? 0 ?>"disabled>
                     </div>
                 </div>
 
