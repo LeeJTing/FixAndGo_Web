@@ -228,20 +228,21 @@
 }
 
 .pagination-btn {
-    background: #1e293b;
-    border: none;
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border);
     padding: 6px 12px;
     border-radius: 6px;
-    color: white;
+    color: var(--color-text-primary);
     text-decoration: none;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s ease;
     font-size: 14px;
     display: inline-block;
 }
 
 .pagination-btn:hover:not(.active):not(.disabled) {
-    background: #334155;
+    background: var(--color-bg-body);
+    border-color: var(--color-text-muted);
 }
 
 /* 选中状态 */
