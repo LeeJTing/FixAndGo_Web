@@ -43,9 +43,9 @@ displayFlashMessage();
                 <div class="filter-group">
                     <label>Price Range</label>
                     <div class="price-range">
-                        <input type="range" min="0" max="500" value="50" id="priceRange">
+                        <input type="range" min="0" max="500" id="priceRange">
                         <div class="price-values">
-                            <span>RM 0</span> - <span id="priceValue">RM 50</span>
+                            <span>RM 0</span> - <span id="priceValue">--</span>
                         </div>
                     </div>
                 </div>
@@ -85,8 +85,13 @@ displayFlashMessage();
                     </div>
                 </div>
 
-                <div class="products-grid">
+                <div class="products-grid"></div>
+                <div class="pagination-wrapper">
+                    <button class="page-btn prev">‹</button>
+                    <div class="pagination" id="pagination"></div>
+                    <button class="page-btn next">›</button>
                 </div>
+
             </section>
         </div>
     </main>

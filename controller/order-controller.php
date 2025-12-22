@@ -67,12 +67,12 @@ if ($action === 'getAddress') {
                 $deleted = cancelOrder((int)$orderId);
                 $order_userId = getOrderByIdDao((int)$orderId);
                 $user = getUserById($order_userId->user_id);
-                if ($deleted) {
+                $adminCancelOrder = sendOrderCancelEmail($orderId, $user->email, $user->username);
+                if ($deleted && $adminCancelOrder) {
                     $_SESSION['flash_message'] = [
                         'type' => 'success',
-                        'text' => "Order {$orderId} has been cancelled and deleted successfully."
+                        'text' => "Order {$orderId} has been cancelled successfully."
                     ];
-                    notifyCustomerCancellation($orderId, $user->email, $user->user_name);
                 } else {
                     $_SESSION['flash_message'] = [
                         'type' => 'error',
@@ -171,10 +171,12 @@ if ($action === 'getAddress') {
     } else if ($action === 'cancelOrder') {
         $orderId = (int)post('order_id');
         $userId = post('userId');
+        $user = getUserById($userId);
         $result = cancelCustomerOrder($orderId, $userId);
+        $sendSuccess = notifyCustomerCancellation($orderId, $user->email, $user->user_name);
         header('Content-Type: application/json');
 
-        if ($result) {
+        if ($result && $sendSuccess) {
             echo json_encode([
                 'success' => true,
                 'message' => 'Order cancelled successfully.'

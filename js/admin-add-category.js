@@ -24,13 +24,17 @@ $(document).ready(function () {
 
   // Form submission validation
   $("#addCategoryForm").on("submit", function (e) {
+    e.preventDefault(); // always prevent default first
     let isValid = true;
 
     clearError();
-    // Validate category_name
+
+    // Validate category name
     if (!validateField("category_name", { required: true, min: 3, max: 30 })) {
       isValid = false;
     }
+
+    // Validate description (optional but min length if filled)
     if (
       !validateField("description", { required: false, min: 20, max: 1500 })
     ) {
@@ -38,21 +42,26 @@ $(document).ready(function () {
     }
 
     if ($("select[name='status']").val() === "active") {
-      // Validate image upload
       if (!validateFileInput("#categoryImageInput", { required: true })) {
         isValid = false;
       }
     } else {
-      isValid = validateFileInput("#categoryImageInput", {
-        types: ["image/jpeg", "image/png", "image/gif", "image/webp"],
-        maxSize: 2 * 1024 * 1024,
-        required: false,
-      });
+      if (
+        !validateFileInput("#categoryImageInput", {
+          types: ["image/jpeg", "image/png", "image/gif", "image/webp"],
+          maxSize: 2 * 1024 * 1024,
+          required: false,
+        })
+      ) {
+        isValid = false;
+      }
     }
 
     if (!isValid) {
       $(".input-error:first").focus();
-      e.preventDefault();
+      return;
     }
+
+    this.submit();
   });
 });

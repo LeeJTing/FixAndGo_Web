@@ -1,3 +1,7 @@
+let currentPage = 1;
+let totalPages = 1;
+const limit = 8; // products per page
+
 $(document).ready(function () {
   let currentCategory = $("#category_filter").val() || "";
   let currentSort = "";
@@ -7,7 +11,27 @@ $(document).ready(function () {
     $("#category_filter").val(currentCategory);
   }
 
-  loadProduct(currentCategory, currentSort, currentValue);
+  currentPage = 1;
+  loadProduct(currentCategory, currentSort, currentValue, currentPage);
+
+  $(document).on("click", ".page-btn[data-page]", function () {
+    currentPage = $(this).data("page");
+    loadProduct(currentCategory, currentSort, currentValue, currentPage);
+  });
+
+  $(document).on("click", ".page-btn.prev", function () {
+    if (currentPage > 1) {
+      currentPage--;
+      loadProduct(currentCategory, currentSort, currentValue, currentPage);
+    }
+  });
+
+  $(document).on("click", ".page-btn.next", function () {
+    if (currentPage < totalPages) {
+      currentPage++;
+      loadProduct(currentCategory, currentSort, currentValue, currentPage);
+    }
+  });
 
   $("#searchInput").on("input", function () {
     getSearchData($(this).val());
@@ -23,78 +47,115 @@ $(document).ready(function () {
     loadProduct(currentCategory, currentSort, currentValue);
   });
 
+  let hasTouchedPrice = false;
+
   $("#priceRange").on("input", function () {
     let value = $(this).val();
-    currentValue = $(this).val();
-    $("#priceValue").text("RM" + value);
-    loadProduct(currentCategory, currentSort, currentValue);
+    hasTouchedPrice = true;
+
+    $("#priceValue").text("RM " + value);
+    loadProduct(currentCategory, currentSort, value);
   });
 
   $(document).on("click", ".favorite-btn", function () {
     $(this).find("i").toggleClass("changeColor");
   });
 
-  $(document).on("click", ".clear-filters", function () {
-    $("#category_filter").prop("selectedIndex", 0);
-    $("#sortSelect").prop("selectedIndex", 0);
-    $("#priceRange").val(50);
-    $("#priceValue").text("RM" + 50);
+  $(".clear-filters").on("click", function () {
     currentCategory = "";
     currentSort = "";
-    currentValue = 50;
-    loadProduct("", "", 50);
+    currentValue = 500;
+    currentPage = 1;
+
+    $("#category_filter").prop("selectedIndex", 0);
+    $("#sortSelect").prop("selectedIndex", 0);
+    $("#priceRange").val(500);
+    $("#priceValue").text("--");
+
+    loadProduct("", "", currentValue, currentPage);
   });
 });
 
-function loadProduct(category, sortType, currentValue) {
+function loadProduct(category, sortType, price, page = 1) {
   $.ajax({
     url: "../../controller/product-controller.php?function=allProduct",
     type: "GET",
-    data: { category: category, sort: sortType, price: currentValue },
+    data: {
+      category: category,
+      sort: sortType,
+      price: price,
+      page: page,
+      limit: limit,
+    },
     dataType: "json",
-    cache: false,
     beforeSend: function () {
       $(".products-grid").html("<p>Loading...</p>");
     },
-    success: function (data) {
+    success: function (res) {
       $(".products-grid").empty();
-      if (data.length > 1) {
-        data.forEach(function (p) {
-          $(".products-grid").append(`
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="../../${
-                      p.file_path
-                    }" alt="${p.alt_text}" loading="lazy" width="200">
-                </div>
-                <div class="product-info">
-                    <div class="product-category">${p.category_name}</div>
-                    <h3 class="product-title">${p.product_name}</h3>
-                    <div class="product-price">RM ${parseFloat(
-                      p.unit_price
-                    ).toFixed(2)}</div>
-                    <div class="product-actions">
-                        <a href="product-detail.php?id=${
-                          p.product_id
-                        }" class="btn-view">View</a>
-                        <button class="btn-cart add-to-cart" 
-                            data-id="${p.product_id}" 
-                            data-name="${p.product_name}" 
-                            data-price="${p.unit_price}" 
-                            data-image="../../${p.file_path}">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `);
-        });
-      } else {
+      $("#pagination").empty();
+
+      if (res.data.length === 0) {
         $(".products-grid").html("<p>No products found.</p>");
+        return;
       }
+
+      // render products
+      res.data.forEach((p) => {
+        $(".products-grid").append(`
+          <div class="product-card">
+            <div class="product-image">
+              <img src="../../${p.file_path}" alt="${
+          p.alt_text
+        }" loading="lazy">
+            </div>
+            <div class="product-info">
+              <div class="product-category">${p.category_name}</div>
+              <h3 class="product-title">${p.product_name}</h3>
+              <div class="product-price">RM ${parseFloat(p.unit_price).toFixed(
+                2
+              )}</div>
+              <div class="product-actions">
+                              <a href="product-detail.php?id=${
+                                p.product_id
+                              }" class="btn-view">View</a>
+                              <button class="btn-cart add-to-cart" 
+                                  data-id="${p.product_id}" 
+                                  data-name="${p.product_name}" 
+                                  data-price="${p.unit_price}" 
+                                  data-image="../../${p.file_path}">
+                                  <i class="fa-solid fa-cart-shopping"></i>
+                              </button>
+                          </div>
+            </div>
+          </div>
+        `);
+      });
+
+      renderPagination(res.totalPages, page);
     },
   });
 }
+
+function renderPagination(pages, current) {
+  totalPages = pages;
+
+  $("#pagination").empty();
+
+  for (let i = 1; i <= pages; i++) {
+    $("#pagination").append(`
+      <button class="page-btn ${i === current ? "active" : ""}" 
+              data-page="${i}">
+        ${i}
+      </button>
+    `);
+  }
+
+  // Enable / Disable prev & next
+  $(".prev").prop("disabled", current === 1);
+  $(".next").prop("disabled", current === pages);
+}
+
 function getSearchData(value) {
   $.ajax({
     url: "../../controller/product-controller.php?function=Search",

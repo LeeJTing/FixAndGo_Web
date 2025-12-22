@@ -3,7 +3,7 @@
 
 class CustomerDAO {
     
-    // 获取所有用户（支持搜索、筛选、排序, 增加分页参数）
+    // Obtain all users (supporting search, filtering, sorting, and adding pagination parameters)
     public static function getAllCustomers($search = '', $status = '', $sortBy = 'user_id', $role = 'Member', $limit = null, $offset = 0) {
         global $_db;
         
@@ -31,22 +31,22 @@ class CustomerDAO {
             $params[] = $status;
         }
         
-        // 防止 SQL 注入 - 白名单验证排序字段
+        // Prevent SQL injection - Whitelist validates sorted fields
         $allowedSort = ['user_id', 'user_name', 'account_status', 'email'];
         if (!in_array($sortBy, $allowedSort)) {
             $sortBy = 'user_id';
         }
         
-        // 根据字段决定排序方向
+        // Determine the sorting direction based on the fields
         if ($sortBy == 'user_name' || $sortBy == 'email' || $sortBy == 'user_id') {
-            // 名字和邮箱用升序 (A-Z)
+            // Names , id and email addresses should be in ascending order (A-Z).
             $query .= " ORDER BY u.$sortBy ASC";
         } else {
-            // ID 和状态用降序 (最新的在前面)
+            // ID and status use descending order (latest first)
             $query .= " ORDER BY u.$sortBy DESC";
         }
         
-        // 【新增分页逻辑】: 只有当 limit 不为空且大于 0 时，才添加 LIMIT 和 OFFSET
+        // 【 New Paging Logic 】: Only when limit is not empty and greater than 0 will LIMIT and OFFSET be added
         if (is_numeric($limit) && $limit > 0) {
             $query .= " LIMIT ? OFFSET ?";
             $params[] = (int)$limit;
@@ -58,7 +58,7 @@ class CustomerDAO {
         return $stmt->fetchAll();
     }
     
-    // 根据 ID 获取单个用户
+    // Obtain a single user based on the ID
     public static function getCustomerById($id) {
         global $_db;
         
@@ -70,32 +70,32 @@ class CustomerDAO {
         return $stmt->fetch();
     }
     
-    // 创建新用户
+    // Create a new user
     public static function createCustomer($data) {
         global $_db;
         
         try {
             $_db->beginTransaction();
             
-            // 生成新的 user_id
+            // Generate a new user_id
             if (!empty($data['custom_user_id'])) {
                 $userId = trim($data['custom_user_id']);
 
-                // ✅ 格式校验：4–12，不能有 @ 和空格，只允许字母数字 _ -
+                // Format check: 4-12. No @ and Spaces are allowed. Only alphanumeric _ - is permitted
                 if (!preg_match('/^[A-Za-z0-9_-]{4,12}$/', $userId)) {
                     throw new Exception(
                         "User ID must be 4–12 characters long and can only contain letters, numbers, '_' or '-'."
                     );
                 }
 
-                // 只做一件事：检查是否已存在
+                // Just do one thing: Check if it already exists
                 $stmt = $_db->prepare("SELECT COUNT(*) FROM users WHERE user_id = ?");
                 $stmt->execute([$userId]);
                 if ($stmt->fetchColumn() > 0) {
                     throw new Exception("User ID already exists.");
                 }
             } else {
-                // 自动生成 User ID
+                // Automatically generate the User ID
                 $prefix = ($data['user_role'] === 'Admin') ? 'A' : 'M';
 
                 $stmt = $_db->prepare("
@@ -110,7 +110,7 @@ class CustomerDAO {
                 $userId = $prefix . str_pad($nextNum, 3, '0', STR_PAD_LEFT);
             }
 
-            // ✅ 如果有输入新密码才校验
+            // Verification will only be conducted if a new password is entered
             if (!empty($data['password'])) {
                 if (!preg_match('/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,12}$/', $data['password'])) {
                     throw new Exception(
@@ -135,7 +135,7 @@ class CustomerDAO {
                 );
             }
             
-            // 插入 users 表
+            // Insert the users table
             $query = "INSERT INTO users (user_id, user_name, user_role, email, hash_password, account_status) 
                     VALUES (?, ?, ?, ?, ?, ?)";
             $stmt = $_db->prepare($query);
@@ -154,13 +154,13 @@ class CustomerDAO {
                 $data['account_status']
             ]);
             
-            // 插入 userprofile 表（如果有电话号码）
+            // Insert the userprofile table (if there is a phone number)
             if (!empty($data['contact_num'])) {
                 $stmt = $_db->prepare("INSERT INTO userprofile (user_id, contact_num, gender) VALUES (?, ?, ?)");
                 $stmt->execute([$userId, $data['contact_num'], $data['gender'] ?? null]);
             }
-            
-            // 如果是 Member，创建购物车
+
+            // If it's a Member, create a shopping cart
             if ($data['user_role'] == 'Member') {
                 $stmt = $_db->prepare("INSERT INTO cart (user_id) VALUES (?)");
                 $stmt->execute([$userId]);
@@ -174,14 +174,14 @@ class CustomerDAO {
         }
     }
     
-    // 更新用户
+    // Update user
     public static function updateCustomer($id, $data) {
         global $_db;
         
         try {
             $_db->beginTransaction();
 
-            // ✅ User Name 校验（更新时）
+            // User Name verification (when updated)
             $userName = trim($data['user_name']);
 
             if (!preg_match('/^[A-Za-z ]{4,50}$/', $userName)) {
@@ -190,7 +190,7 @@ class CustomerDAO {
                 );
             }
 
-            //2️⃣ Password 校验（⭐重点）
+            // password verifying
             if (!empty($data['password'])) {
                 if (!preg_match('/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,12}$/', $data['password'])) {
                     throw new Exception(
@@ -207,7 +207,7 @@ class CustomerDAO {
                 }
             }
             
-            // 1. 构建动态 SQL 查询
+            // Build dynamic SQL queries
             $query = "UPDATE users SET user_name = ?, email = ?, account_status = ?";
             $params = [
                 $userName,
@@ -215,30 +215,30 @@ class CustomerDAO {
                 $data['account_status']
             ];
 
-            // ✅ 核心逻辑：只有当密码不为空时，才更新密码字段
+            // Core logic: Only update the password field if a new password is provided
             if (!empty($data['password'])) {
                 $query .= ", hash_password = ?";
-                // 必须进行哈希加密
+                // Must be hashed
                 $params[] = password_hash($data['password'], PASSWORD_DEFAULT);
             }
 
             $query .= " WHERE user_id = ?";
             $params[] = $id;
 
-            // 执行 users 表更新
+            // Execute users table update
             $stmt = $_db->prepare($query);
             $stmt->execute($params);
             
-            // 2. 更新或插入 userprofile (这部分保持不变)
+            // 2. Update or insert userprofile (this part remains unchanged)
             $stmt = $_db->prepare("SELECT user_id FROM userprofile WHERE user_id = ?");
             $stmt->execute([$id]);
             
             if ($stmt->fetch()) {
-                // 更新
+                // Update
                 $stmt = $_db->prepare("UPDATE userprofile SET contact_num = ?, gender = ? WHERE user_id = ?");
                 $stmt->execute([$data['contact_num'], $data['gender'] ?? null, $id]);
             } else {
-                // 插入
+                // Insert
                 $stmt = $_db->prepare("INSERT INTO userprofile (user_id, contact_num, gender) VALUES (?, ?, ?)");
                 $stmt->execute([$id, $data['contact_num'], $data['gender'] ?? null]);
             }
@@ -251,7 +251,7 @@ class CustomerDAO {
         }
     }
     
-    // 删除用户
+    // Delete User
     public static function deleteCustomer($id) {
         global $_db;
 
@@ -267,7 +267,7 @@ class CustomerDAO {
         }
     }
     
-    // 获取总数（用于分页）
+    // Get the total (for pagination)
     public static function getTotalCount($search = '', $status = '', $role = 'Member') {
         global $_db;
 

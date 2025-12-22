@@ -278,9 +278,7 @@ if (is_post()) {
         if ($updated) {
             $_SESSION['flash_message'] = [
                 'type' => 'success',
-                'text' => $status === false
-                    ? 'Category updated and deactivated successfully.'
-                    : 'Category updated successfully.'
+                'text' => 'Category updated successfully.'
             ];
         } else {
             $_SESSION['flash_message'] = [

@@ -135,7 +135,7 @@ function getOrderByIdDao($id)
                     COUNT(DISTINCT oi.product_id) AS total_items,
                     SUM(oi.qty) AS total_quantity
                 FROM orders o
-                INNER JOIN users u ON o.user_id = u.user_id
+                LEFT JOIN users u ON o.user_id = u.user_id
                 LEFT JOIN orderitem oi ON o.order_id = oi.order_id
                 WHERE o.order_id = ?
                 GROUP BY o.order_id

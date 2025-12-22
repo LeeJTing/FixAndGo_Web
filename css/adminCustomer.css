@@ -96,7 +96,7 @@
 .search-box input {
     background: transparent;
     border: none;
-    color: #e2e8f0;
+    color: var(--color-text-main);
     width: 100%;
 }
 
@@ -228,25 +228,27 @@
 }
 
 .pagination-btn {
-    background: #1e293b;
-    border: none;
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border);
     padding: 6px 12px;
     border-radius: 6px;
-    color: white;
+    color: var(--color-text-primary);
     text-decoration: none;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s ease;
     font-size: 14px;
     display: inline-block;
 }
 
 .pagination-btn:hover:not(.active):not(.disabled) {
-    background: #334155;
+    background: var(--color-bg-body);
+    border-color: var(--color-text-muted);
 }
 
 /* 选中状态 */
 .pagination-btn.active {
     background: #3b82f6;
+    color: #ffffff;
     font-weight: bold;
     pointer-events: none;
 }
@@ -284,7 +286,7 @@
 .profile-upload .avatar {
     width: 90px;
     height: 90px;
-    background: #334155;
+    background: var(--color-border);
     margin: 0 auto 10px auto;
     border-radius: 50%;
     position: relative;
@@ -345,7 +347,7 @@
     display: block;
     margin-top: 15px;
     margin-bottom: 5px;
-    color: #cbd5e1;
+    color: var(--color-text-main);
 }
 
 .edit-panel input,

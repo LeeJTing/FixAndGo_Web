@@ -13,3 +13,4 @@ include 'pages/homepage.php'
 
 <?php
 include '_foot.php';
+// End of file

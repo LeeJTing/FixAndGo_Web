@@ -4,8 +4,8 @@ include "../../_head.php";
 $_title = 'Fix & Go | Member Order Detail';
 require '../../controller/order-controller.php';
 require '../../component/msg.php';
+
 $user_id = temp('USER_ID');
-$_title = "Fix & Go | Member - Order Detail";
 $order_id = (int)get('id');
 $order = getOrderById($order_id);
 $items = getOrderItem($order_id);
@@ -164,7 +164,7 @@ displayFlashMessage();
                 <input type="hidden" name="order_id" value="<?= $order_id ?>">
                 <input type="hidden" name="user_id" value="<?= $user_id ?>">
                 <div class="actions">
-                    <?php if ($order->order_status === 'Processing'): ?>
+                    <?php if ($order->order_status === 'Processing' || 'Pending'): ?>
                         <button type="submit" class="btn btn-danger">Cancel Order</button>
                     <?php endif; ?>
                 </div>
