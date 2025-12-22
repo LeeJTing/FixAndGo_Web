@@ -532,7 +532,3 @@ $addresses = getAddressesByUserId($user_id);
 
 </main>
 <script src="<?= $rootDir ?>/js/profile.js"></script>
-<script>
-    // Force the Customer page to use the light mode
-    document.body.setAttribute('data-theme', 'light');
-</script>
