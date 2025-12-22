@@ -20,6 +20,6 @@ function getIDBytoken($token, $used_for)
                            AND used_for = ?");
     $stmt->execute([$token, $used_for]);
 
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    return $row ? $row['user_id'] : false;
+    $row = $stmt->fetch();
+    return $row->user_id;
 }

@@ -1,7 +1,4 @@
 <?php
-session_start();
-session_unset();
-session_destroy();
 
 require '_base.php';
 $_title = 'Fix & Go';

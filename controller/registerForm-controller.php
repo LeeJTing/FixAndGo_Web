@@ -48,6 +48,7 @@ if (is_post()) {
         // generate token and store in token table (valid 10 minutes)
         $token = bin2hex(random_bytes(16));
         $expiredAt = date('Y-m-d H:i:s', strtotime('+10 minutes'));
+
         addToken($userID, $token, 'Register', $expiredAt);
 
         require_once __DIR__ . "/../email/email.php";
@@ -85,20 +86,21 @@ if (is_get() && get('token')) {
     global $_db;
 
     // resolve user id from token (token must be valid and not expired)
-    $userId = getIDBytoken($getToken, 'Register')->user_id;
+    $userId = getIDBytoken($getToken, 'Register');
+    printf($userId);
     if (!$userId) {
         // invalid or expired token
         $url = $rootDir . "/pages/guest/register.php";
     }
 
-    if ($action === 'yes') {
+    if ($action == 'yes') {
         // activate the user account
         $stmt = $_db->prepare("UPDATE users SET account_status = ? WHERE user_id = ?");
         $stmt->execute(['Unblock', $userId]);
 
         // remove the used token
-        $del = $_db->prepare("DELETE FROM token WHERE token = ? AND used_for = ?");
-        $del->execute([$getToken, 'Register']);
+        // $del = $_db->prepare("DELETE FROM token WHERE token = ? AND used_for = ?");
+        // $del->execute([$getToken, 'Register']);
 
         $user = getUserById($userId);
         temp('USER_ID', $user->user_id);
@@ -110,7 +112,7 @@ if (is_get() && get('token')) {
         $url = homePageURL();
     }
 
-    if ($action === 'no') {
+    if ($action == 'no') {
         // user declined: remove user, cart and tokens
         $delCart = $_db->prepare("DELETE FROM cart WHERE user_id = ?");
         $delCart->execute([$userId]);

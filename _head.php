@@ -39,7 +39,7 @@
                     <li><a href="<?= homePageURL() ?>">Home</a></li>
                     <li><a href="<?= $rootDir ?>/pages/product/product-list.php">Products</a></li>
                     <li><a href="<?= $rootDir ?>/pages/guest/aboutUs.php">About</a></li>
-                    <li><a href="<?= $rootDir ?>">Contact</a></li>
+                    <li><a href="<?= $rootDir ?>/pages/guest/contactUs.php">Contact</a></li>
                 </ul>
             </nav>
 
