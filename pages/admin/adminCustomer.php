@@ -134,7 +134,7 @@ include 'adminHeader.php';
                 <select name="status" class="filter-select" onchange="this.form.submit()">
                     <option value="All" <?= $status == 'All' ? 'selected' : '' ?>>Status: All</option>
                     <option value="Unblock" <?= $status == 'Unblock' ? 'selected' : '' ?>>Unblock</option>
-                    <option value="Unverified" <?= $status == 'Unverified' ? 'selected' : '' ?>>Unverified</option>
+                    <option value="Unverify" <?= $status == 'Unverify' ? 'selected' : '' ?>>Unverify</option>
                     <option value="Blocked" <?= $status == 'Blocked' ? 'selected' : '' ?>>Blocked</option>
                 </select>
 
@@ -199,9 +199,9 @@ include 'adminHeader.php';
                                     style="cursor: pointer;">
                                     <?php
                                     $statusClass = strtolower($customer->account_status);
-                                    if ($statusClass == 'unblocked') $statusClass = 'active';
+                                    if ($statusClass == 'unblock') $statusClass = 'active';
                                     if ($statusClass == 'blocked') $statusClass = 'suspended';
-                                    if ($statusClass == 'unverified') $statusClass = 'new';
+                                    if ($statusClass == 'unverify') $statusClass = 'new';
                                     ?>
                                     <span class="status <?= $statusClass ?>">
                                         <?= htmlspecialchars($customer->account_status) ?>
@@ -311,7 +311,7 @@ include 'adminHeader.php';
                 <label>Status</label>
                 <select name="account_status">
                     <option value="Unblock" <?= $selectedCustomer->account_status == 'Unblock' ? 'selected' : '' ?>>Unblock</option>
-                    <option value="Unverified" <?= $selectedCustomer->account_status == 'Unverified' ? 'selected' : '' ?>>Unverified</option>
+                    <option value="Unverify" <?= $selectedCustomer->account_status == 'Unverify' ? 'selected' : '' ?>>Unverified</option>
                     <option value="Blocked" <?= $selectedCustomer->account_status == 'Blocked' ? 'selected' : '' ?>>Blocked</option>
                 </select>
 
@@ -363,7 +363,7 @@ include 'adminHeader.php';
             <label>Status</label>
             <select name="account_status">
                 <option value="Verified">Verified</option>
-                <option value="Unverified">Unverified</option>
+                <option value="Unverify">Unverify</option>
             </select>
 
             <div class="edit-panel-buttons">

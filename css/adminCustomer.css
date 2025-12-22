@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    color: #e2e8f0;
+    color: var(--color-text-main);
 }
 
 .customers-header {
@@ -13,17 +13,17 @@
     font-size: 28px;
     font-weight: 700;
     margin-bottom: 8px;
-    color: #f8fafc;
+    color: var(--color-text-main);
 }
 
 .customers-header p {
     font-size: 14px;
-    color: #94a3b8;
+    color: var(--color-text-muted);
     margin-bottom: 15px;
 }
 
 .add-btn {
-    background: #1d4ed8;
+    background: var(--color-accent);
     padding: 10px 20px;
     border: none;
     color: white;
@@ -82,7 +82,7 @@
 }
 
 .search-box {
-    background: #000000;
+    background: var(--color-surface);
     padding: 10px 14px;
     border-radius: 8px;
     display: flex;
@@ -106,8 +106,8 @@
 
 .filter-select,
 .sort-select {
-    background: #1e293b;
-    color: #e2e8f0;
+    background: var(--color-profile-bg);
+    color: var(--color-text-light);
     border-radius: 8px;
     border: none;
     padding: 10px 14px;
@@ -115,7 +115,7 @@
 
 /* ===== Table ===== */
 .customer-table-container {
-    background: #000000;
+    background: var(--color-surface);
     padding: 20px;
     border-radius: 12px;
     flex: 3;
@@ -179,23 +179,39 @@
 
 /* Status Badges */
 .status {
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 13px;
-    color: white;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 88px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    border: 1px solid transparent;
 }
 
+/* Unblock */
 .status.active {
-    background: #22c55e;
+    background: rgba(34, 197, 94, 0.15);
+    color: #4ade80;
+    border-color: rgba(34, 197, 94, 0.35);
 }
 
+/* Blocked */
 .status.suspended {
-    background: #ef4444;
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border-color: rgba(239, 68, 68, 0.35);
 }
 
+/* Unverified */
 .status.new {
-    background: #0ea5e9;
+    background: rgba(14, 165, 233, 0.15);
+    color: #38bdf8;
+    border-color: rgba(14, 165, 233, 0.35);
 }
+
 
 /* Footer */
 .table-footer {
@@ -243,7 +259,7 @@
 
 /* ===== Right Panel ===== */
 .edit-panel {
-    background: #000000;
+    background: var(--color-surface);
     padding: 20px;
     border-radius: 12px;
     width: 320px;
@@ -348,17 +364,17 @@
 }
 
 .cancel {
-    background: #1e293b;
+    background: var(--color-profile-bg);
     border: none;
     padding: 8px 14px;
     border-radius: 6px;
-    color: white;
+    color: var(--color-text-light);
     text-decoration: none;
     cursor: pointer;
 }
 
 .cancel:hover {
-    background: #334155;
+    background: var(--color-border);
 }
 
 .save {
@@ -366,7 +382,7 @@
     border: none;
     padding: 8px 14px;
     border-radius: 6px;
-    color: white;
+    color: var(--color-text-light);
     cursor: pointer;
 }
 
