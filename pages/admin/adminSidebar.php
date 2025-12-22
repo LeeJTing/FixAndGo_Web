@@ -65,9 +65,8 @@ $userProfilePic = $currentUser->user_id ? getUserProfilePicture($currentUser->us
     const themeToggle = document.getElementById('themeToggle');
     const body = document.body;
 
-<<<<<<< HEAD
     // Check for saved theme preference or default to 'dark'
-    const currentTheme = localStorage.getItem('theme') || 'dark';
+    const currentTheme = localStorage.getItem('adminTheme') || 'dark';
     body.setAttribute('data-theme', currentTheme);
 
     themeToggle.addEventListener('click', () => {
@@ -75,19 +74,6 @@ $userProfilePic = $currentUser->user_id ? getUserProfilePicture($currentUser->us
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
 
         body.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
+        localStorage.setItem('adminTheme', newTheme);
     });
-=======
-// Check for saved theme preference or default to 'dark'
-const currentTheme = localStorage.getItem('adminTheme') || 'dark';
-body.setAttribute('data-theme', currentTheme);
-
-themeToggle.addEventListener('click', () => {
-    const currentTheme = body.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    
-    body.setAttribute('data-theme', newTheme);
-    localStorage.setItem('adminTheme', newTheme);
-});
->>>>>>> df3affb8b1a94085391db39f0927ce7f283b9902
 </script>
