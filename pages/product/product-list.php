@@ -4,6 +4,7 @@
 require '../../_base.php';
 $_title = "Fix & Go | Product List";
 include '../../_head.php';
+require_once '../../component/msg.php';
 require '../../controller/product-controller.php';
 $products = getProductList();
 $items = getCountAllProduct();

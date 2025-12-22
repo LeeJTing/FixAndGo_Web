@@ -73,7 +73,7 @@
                       </div>
 
                       <div class="product-actions">
-                          <a href="product-detail.php?id=<?= $item->product_id ?>" class="btn-view">
+                          <a href="<?= $rootDir ?>/pages/product/product-detail.php?id=<?= $item->product_id ?>" class="btn-view">
                               View Details
                           </a>
                           <button class="btn-cart add-to-cart"
