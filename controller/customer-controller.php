@@ -82,7 +82,7 @@ class CustomerController {
                     'contact_num' => post('contact_num'),
                     'gender' => post('gender'),
                     'user_role' => post('user_role', 'Member'),
-                    'account_status' => post('account_status', 'Verified')
+                    'account_status' => post('account_status', 'Unblock')
                 ];
 
                 // Email 唯一性检查（保留）
@@ -116,7 +116,7 @@ class CustomerController {
                     'email'          => post('email'),
                     'contact_num'    => post('contact_num'),
                     'gender'         => post('gender'),
-                    'account_status' => post('account_status'),
+                    'account_status' => post('account_status', 'Unblock'),
                     'password'       => post('password') // 可能为空
                 ];
 
