@@ -4,7 +4,7 @@ require_once  __DIR__ . '/../_base.php';
 require __DIR__ . '/../DAO/product_dao.php';
 require __DIR__ . '/../component/files.php';
 require __DIR__ . '/../component/msg.php';
-require __DIR__ . '/../DAO/security_dao.php';
+require_once __DIR__ . '/../DAO/security_dao.php';
 
 $function = $_GET['function'] ?? null;   // <-- FIX (no warning)
 
