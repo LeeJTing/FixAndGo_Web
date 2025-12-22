@@ -286,34 +286,51 @@ include 'adminHeader.php';
                 </div>
 
                 <label>User ID</label>
-                <input type="text" value="<?= htmlspecialchars($selectedCustomer->user_id) ?>" readonly 
-                    style="background: #0f172a; color: #94a3b8; cursor: not-allowed;">
+                <input type="text"
+                    class="form-input readonly"
+                    value="<?= htmlspecialchars($selectedCustomer->user_id) ?>"
+                    readonly>
 
                 <label>Full Name</label>
-                <input type="text" name="user_name" value="<?= htmlspecialchars($selectedCustomer->user_name) ?>" required>
+                <input type="text"
+                    class="form-input"
+                    name="user_name"
+                    value="<?= htmlspecialchars($selectedCustomer->user_name) ?>"
+                    required>
 
                 <label>Email Address</label>
-                <input type="email" name="email" value="<?= htmlspecialchars($selectedCustomer->email) ?>" required>
+                <input type="email"
+                    class="form-input"
+                    name="email"
+                    value="<?= htmlspecialchars($selectedCustomer->email) ?>"
+                    required>
 
                 <label>Phone Number</label>
-                <input type="text" name="contact_num" value="<?= htmlspecialchars($selectedCustomer->contact_num ?? '') ?>">
-                    
+                <input type="text"
+                    class="form-input"
+                    name="contact_num"
+                    value="<?= htmlspecialchars($selectedCustomer->contact_num ?? '') ?>">
+
                 <label>New Password</label>
-                <input type="password" name="password" placeholder="Leave empty to keep current password">
+                <input type="password"
+                    class="form-input"
+                    name="password"
+                    placeholder="Leave empty to keep current password">
 
                 <label>Gender</label>
-                <select name="gender">
+                <select name="gender" class="form-select">
                     <option value="">Not Specified</option>
-                    <option value="Male" <?= ($selectedCustomer->gender == 'Male') ? 'selected' : '' ?>>Male</option>
-                    <option value="Female" <?= ($selectedCustomer->gender == 'Female') ? 'selected' : '' ?>>Female</option>
+                    <option value="Male" <?= ($selectedCustomer->gender === 'Male') ? 'selected' : '' ?>>Male</option>
+                    <option value="Female" <?= ($selectedCustomer->gender === 'Female') ? 'selected' : '' ?>>Female</option>
                 </select>
 
                 <label>Status</label>
-                <select name="account_status">
-                    <option value="Unblock" <?= $selectedCustomer->account_status == 'Unblock' ? 'selected' : '' ?>>Unblock</option>
-                    <option value="Unverify" <?= $selectedCustomer->account_status == 'Unverify' ? 'selected' : '' ?>>Unverified</option>
-                    <option value="Blocked" <?= $selectedCustomer->account_status == 'Blocked' ? 'selected' : '' ?>>Blocked</option>
+                <select name="account_status" class="form-select">
+                    <option value="Unblock" <?= $selectedCustomer->account_status === 'Unblock' ? 'selected' : '' ?>>Unblock</option>
+                    <option value="Unverify" <?= $selectedCustomer->account_status === 'Unverify' ? 'selected' : '' ?>>Unverified</option>
+                    <option value="Blocked" <?= $selectedCustomer->account_status === 'Blocked' ? 'selected' : '' ?>>Blocked</option>
                 </select>
+
 
                 <div class="edit-panel-buttons">
                     <a href="adminCustomer.php?<?= $queryParams ?>" class="cancel">Cancel</a>
