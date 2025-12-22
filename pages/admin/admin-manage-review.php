@@ -12,7 +12,7 @@ include_once 'adminHeader.php';
 <script src="<?= $rootDir ?>/js/admin-review.js"></script>
 <?php
 
-$products = getProductListAdminDao();
+$products = getProductListDao();
 
 ?>
 

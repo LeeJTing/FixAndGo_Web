@@ -23,7 +23,7 @@ $userProfilePic = $currentUser->user_id ? getUserProfilePicture($currentUser->us
         <li><a href="admin-order.php" class="<?= basename($_SERVER['PHP_SELF']) == 'admin-order.php' ? 'active' : '' ?>">Orders</a></li>
         <li><a href="admin-product.php" class="<?= basename($_SERVER['PHP_SELF']) == 'admin-product.php' ? 'active' : '' ?>">Products</a></li>
         <li><a href="adminCustomer.php" class="<?= basename($_SERVER['PHP_SELF']) == 'adminCustomer.php' ? 'active' : '' ?>">Customer</a></li>
-        <li><a href="admin-category.php" class="<?= basename($_SERVER['PHP_SELF']) == 'admin-add-category.php' ? 'active' : '' ?>">Category</a></li>
+        <li><a href="admin-category.php" class="<?= basename($_SERVER['PHP_SELF']) == 'admin-category.php' ? 'active' : '' ?>">Category</a></li>
         <li><a href="admin-manage-review.php" class="<?= basename($_SERVER['PHP_SELF']) == 'admin-manage-review.php' ? 'active' : '' ?>">Product Review</a></li>
     </ul>
 
@@ -38,7 +38,7 @@ $userProfilePic = $currentUser->user_id ? getUserProfilePicture($currentUser->us
                 <?= htmlspecialchars($currentUser->user_name) ?><br>
                 <span><?= htmlspecialchars($currentUser->user_role) ?></span>
             </p>
-            
+
             <!-- Theme Toggle Button -->
             <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
                 <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -61,19 +61,19 @@ $userProfilePic = $currentUser->user_id ? getUserProfilePicture($currentUser->us
 </div>
 
 <script>
-// Theme toggle functionality
-const themeToggle = document.getElementById('themeToggle');
-const body = document.body;
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
 
-// Check for saved theme preference or default to 'dark'
-const currentTheme = localStorage.getItem('theme') || 'dark';
-body.setAttribute('data-theme', currentTheme);
+    // Check for saved theme preference or default to 'dark'
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+    body.setAttribute('data-theme', currentTheme);
 
-themeToggle.addEventListener('click', () => {
-    const currentTheme = body.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    
-    body.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-});
+    themeToggle.addEventListener('click', () => {
+        const currentTheme = body.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+        body.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+    });
 </script>

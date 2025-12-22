@@ -120,22 +120,7 @@ function getProductListDao()
 function getProductListAdminDao()
 {
     global $_db;
-    $sql = "SELECT DISTINCT
-                p.product_id,
-                p.product_name,
-                p.unit_price,
-                p.stock_quantity,
-                p.product_point,
-                p.description,
-                c.category_name,
-                c.category_code,
-                COALESCE(pvm.file_path, 'images/no-image.jpg') AS file_path,
-                pvm.alt AS alt_text
-            FROM product p
-            JOIN category c ON p.category_code = c.category_code
-            LEFT JOIN productvisualmedia pvm ON pvm.product_id = p.product_id 
-                AND pvm.is_show = 1 AND p.isdeleted = 0  AND c.is_deleted = 0
-            ORDER BY p.product_id ASC;";
+    $sql = "SELECT DISTINCT p.product_id, p.product_name, p.unit_price, p.stock_quantity, p.product_point, p.description, p.isdeleted, c.category_name, c.category_code, COALESCE(pvm.file_path, 'images/no-image.jpg') AS file_path, pvm.alt AS alt_text FROM product p JOIN category c ON p.category_code = c.category_code LEFT JOIN productvisualmedia pvm ON pvm.product_id = p.product_id AND pvm.is_show = 1 WHERE p.isdeleted = 0 AND c.is_deleted = 0 ORDER BY p.product_id ASC";
 
     $stmt = $_db->prepare($sql);
     $stmt->execute();
