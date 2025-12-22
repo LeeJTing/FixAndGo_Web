@@ -33,6 +33,39 @@
   --shadow-btn-primary: 0 10px 30px rgba(245, 158, 11, 0.4);
 }
 
+body[data-theme="light"] {
+  /* Backgrounds */
+  --color-bg-body: #f8fafc;
+  --color-card-bg: #ffffff;
+  --color-input-bg: #ffffff;
+  --color-upload-bg: #f1f5f9;
+
+  /* Text */
+  --color-text-primary: #0f172a;
+  --color-text-heading: #020617;
+  --color-text-label: #334155;
+  --color-text-muted: #64748b;
+  --color-text-placeholder: #94a3b8;
+
+  /* Borders */
+  --color-border: #e2e8f0;
+  --color-border-dashed: #cbd5e1;
+  --color-border-focus: #f59e0b;
+
+  /* Accents（保持品牌一致） */
+  --color-primary: #f59e0b;
+  --color-primary-hover: #d97706;
+  --color-focus: #2563eb;
+  --color-danger: #ef4444;
+  --color-required: #dc2626;
+
+  /* Shadows（变轻） */
+  --shadow-card: 0 20px 50px rgba(15, 23, 42, 0.12);
+  --shadow-input-focus: 0 0 0 5px rgba(245, 158, 11, 0.2);
+  --shadow-btn-primary: 0 10px 30px rgba(245, 158, 11, 0.25);
+}
+
+
 /* ============== ADMIN ADD PRODUCT – DARK THEME USING :root ============== */
 .admin-container {
   max-width: 1200px;

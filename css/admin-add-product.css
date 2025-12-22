@@ -1,10 +1,60 @@
+:root {
+  --bg-page: #0f172a;
+  --bg-card: #1e293b;
+  --bg-section: #0f172a;
+  --bg-input: #1e293b;
+
+  --text-main: #e2e8f0;
+  --text-title: #f8fafc;
+  --text-label: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-placeholder: #64748b;
+
+  --border-main: #334155;
+  --border-dashed: #475569;
+  --border-focus: #60a5fa;
+
+  --primary: #f59e0b;
+  --primary-hover: #d97706;
+
+  --danger: #ef4444;
+
+  --shadow-card: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+body[data-theme="light"] {
+  --bg-page: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-section: #f1f5f9;
+  --bg-input: #ffffff;
+
+  --text-main: #0f172a;
+  --text-title: #020617;
+  --text-label: #334155;
+  --text-muted: #64748b;
+  --text-placeholder: #94a3b8;
+
+  --border-main: #cbd5e1;
+  --border-dashed: #94a3b8;
+  --border-focus: #2563eb;
+
+  --primary: #f59e0b;
+  --primary-hover: #d97706;
+
+  --danger: #dc2626;
+
+  --shadow-card: 0 20px 40px rgba(15,23,42,0.1);
+}
+
+
 /* DARK ADMIN THEME – ADD PRODUCT */
 .admin-add-product {
-  background: #0f172a;
-  color: #e2e8f0;
+  background: var(--bg-page);
+  color: var(--text-main);
   padding: 2rem;
   min-height: 100vh;
 }
+
 .page-header {
   margin-bottom: 2.5rem;
   display: flex;
@@ -14,29 +64,29 @@
   gap: 1rem;
 }
 .page-title {
-  color: #f8fafc;
+  color: var(--text-title);
   font-size: 2.4rem;
   font-weight: 800;
 }
 .btn-back {
-  background: #1e293b;
-  color: #cbd5e1;
-  border: 1px solid #334155;
+  background: var(--bg-card);
+  color: var(--text-label);
+  border: 1px solid var(--border-main);
   transition: all 0.3s;
 }
 .btn-back:hover {
-  background: #334155;
+  background: var(--border-main);
   color: white;
 }
 
 .add-product-form {
   max-width: 1200px;
   margin: 0 auto;
-  background: #1e293b;
+  background: var(--bg-card);
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-  border: 1px solid #334155;
+  box-shadow: 0 20px 50px var(--shadow-card);
+  border: 1px solid var(--border-main);
 }
 
 .form-grid {
@@ -49,23 +99,23 @@
   position: relative;
   width: 100%;
   height: 380px;
-  border: 3px dashed #475569;
+  border: 3px dashed var(--border-dashed);
   border-radius: 20px;
   overflow: hidden;
-  background: #1e293b;
+  background: var(--bg-card);
   cursor: pointer;
   transition: all 0.3s;
 }
 
 .main-image-preview:hover {
-  border-color: #60a5fa;
+  border-color: var(--border-focus);
 }
 
 #mainImg {
   width: 100%;
   height: 80%;
   object-fit: contain; /* This is the KEY – keeps ratio + no stretch */
-  background: #0f172a;
+  background: var(--bg-page);
   padding: 20px; /* Optional: adds breathing room */
   box-sizing: border-box;
 }
@@ -85,14 +135,14 @@
   height: 90px;
   border-radius: 16px;
   overflow: hidden;
-  border: 2px solid #334155;
-  background: #1e293b;
+  border: 2px solid var(--border-main);
+  background: var(--bg-card);
   transition: all 0.3s;
   cursor: pointer;
 }
 
 .thumbnail-item:hover {
-  border-color: #60a5fa;
+  border-color: var(--border-focus);
   transform: translateY(-4px);
 }
 
@@ -107,9 +157,9 @@
 .thumbnail-item.add-more {
   display: grid;
   place-items: center;
-  background: #1e293b;
-  border: 2px dashed #475569;
-  color: #94a3b8;
+  background: var(--bg-input);
+  border: 2px dashed var(--border-dashed);
+  color: var(--text-muted);
   font-size: 0.9rem;
 }
 .thumbnail-item.add-more i {
@@ -118,8 +168,8 @@
 }
 .thumbnail-item.add-more:hover {
   background: #312e81;
-  border-color: #60a5fa;
-  color: #60a5fa;
+  border-color: var(--border-focus);
+  color: var(--border-focus);
 }
 
 /* Remove Button */
@@ -144,16 +194,16 @@
 
 .product-details-section {
   padding: 2.2rem;
-  background: #0f172a;
+  background: var(--bg-page);
 }
 
 .section-title {
-  color: #e0e7ff;
+  color: var(--text-main);
   font-size: 1.6rem;
   font-weight: 700;
   margin-bottom: 2.5rem;
   padding-bottom: 1rem;
-  border-bottom: 3px solid #60a5fa;
+  border-bottom: 3px solid var(--border-focus);
   display: inline-block;
 }
 
@@ -174,7 +224,7 @@
 /* LABELS */
 .form-label {
   display: block;
-  color: #cbd5e1;
+  color: var(--text-label);
   font-weight: 600;
   margin-bottom: 0.7rem;
   font-size: 1rem;
@@ -188,21 +238,21 @@
 .form-input {
   width: 100%;
   padding: 1rem 1.2rem;
-  background: #1e293b;
-  border: 2px solid #334155;
+  background: var(--bg-card);
+  border: 2px solid var(--border-main);
   border-radius: 16px;
-  color: #e2e8f0;
+  color: var(--text-main);
   font-size: 1rem;
   transition: all 0.35s ease;
 }
 .form-input::placeholder {
-  color: #64748b;
+  color: var(--text-placeholder);
 }
 .form-input:focus {
   outline: none;
-  border-color: #60a5fa;
+  border-color: var(--border-focus);
   box-shadow: 0 0 0 5px rgba(96, 165, 250, 0.2);
-  background: #1e293b;
+  background: var(--bg-card);
 }
 .textarea {
   resize: vertical;
@@ -216,11 +266,11 @@
   gap: 1.2rem;
   margin-top: 3rem;
   padding-top: 2rem;
-  border-top: 1px solid #334155;
+  border-top: 1px solid var(--border-main);
 }
 .btn-save {
   flex: 1;
-  background: #f59e0b;
+  background: var(--primary);
   color: white;
   border: none;
   padding: 1.1rem;
@@ -232,24 +282,24 @@
   transition: all 0.4s ease;
 }
 .btn-save:hover {
-  background: #d97706;
+  background: var(--primary-hover);
   transform: translateY(-4px);
   box-shadow: 0 16px 40px rgba(245, 158, 11, 0.5);
 }
 .btn-cancel {
   padding: 1.1rem 2rem;
   background: transparent;
-  border: 2px solid #475569;
-  color: #94a3b8;
+  border: 2px solid var(--border-dashed);
+  color: var(--text-muted);
   border-radius: 18px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s;
 }
 .btn-cancel:hover {
-  border-color: #64748b;
-  color: #cbd5e1;
-  background: #1e293b;
+  border-color: var(--text-placeholder);
+  color: var(--text-main);
+  background: var(--bg-card);
 }
 
 /* RESPONSIVE */

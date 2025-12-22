@@ -1,47 +1,85 @@
-/* Profile Page Styles */
+/* Profile Page Styles with Theme Support */
+
+/* ==================== THEME VARIABLES ==================== */
 :root {
+    /* Colors */
     --primary-color: #f59e0b;
     --primary-hover: #d97706;
-    --primary-dark: #000a2e;
-    --bg-dark: #111827;
-    --bg-card: #f3f4f6;
-    --text-light: #f9fafb;
-    --text-color: #1f2937;
-    --text-muted: #6b7280;
-    --border-color: #ddd;
+    --primary-dark: #1e40af;
     --error-color: #e74c3c;
     --success-color: #2ecc71;
-    --spacing-unit: 1rem;
-    --container-width: 1500px;
-    --header-height: 80px;
     --warning-color: #f39c12;
     --info-color: #3498db;
     --verified-color: #2ecc71;
     --unverified-color: #f39c12;
-    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    
+    /* Dark Theme (Default) */
+    --bg-dark: #010716;
+    --bg-card: #0f172a;
+    --bg-gradient-start: #1e293b;
+    --bg-gradient-end: #0f172a;
+    --text-light: #f9fafb;
+    --text-color: #f8fafc;
+    --text-muted: #94a3b8;
+    --border-color: #334155;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --surface-bg: #1e293b;
+    --hover-bg: rgba(59, 130, 246, 0.1);
+    --modal-bg: #0f172a;
+    --input-bg: #1e293b;
+    --header-gradient-start: var(--primary-color);
+    --header-gradient-end: #1e40af;
+    
+    /* Layout */
+    --spacing-unit: 1rem;
+    --container-width: 1500px;
+    --header-height: 80px;
     --transition: all 0.3s ease;
 }
 
+/* Light Theme */
+body[data-theme="light"] {
+    --bg-dark: #f1f5f9;
+    --bg-card: #ffffff;
+    --bg-gradient-start: #f5f7fa;
+    --bg-gradient-end: #c3cfe2;
+    --text-light: #1f2937;
+    --text-color: #0f172a;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --surface-bg: #f8fafc;
+    --hover-bg: rgba(59, 130, 246, 0.05);
+    --modal-bg: #ffffff;
+    --input-bg: #ffffff;
+    --header-gradient-start: var(--primary-color);
+    --header-gradient-end: var(--primary-dark);
+}
+
+/* ==================== MAIN LAYOUT ==================== */
 main {
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
     color: var(--text-color);
     min-height: 100vh;
     padding: 20px;
+    transition: var(--transition);
 }
 
 /* Profile Container */
 .profile-container {
     max-width: 1200px;
     margin: 0 auto;
-    background: white;
+    background: var(--bg-card);
     border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--card-shadow);
     overflow: hidden;
+    animation: fadeIn 0.5s ease-out;
+    transition: var(--transition);
 }
 
-/* Profile Header */
+/* ==================== PROFILE HEADER ==================== */
 .profile-header {
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    background: linear-gradient(135deg, var(--header-gradient-start), var(--header-gradient-end));
     padding: 40px;
     color: white;
     position: relative;
@@ -141,11 +179,11 @@ main {
     top: 100%;
     left: 0;
     margin-top: 10px;
-    background: white;
+    background: var(--modal-bg);
     color: var(--text-color);
     padding: 10px;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--card-shadow);
     font-size: 12px;
     width: 200px;
     opacity: 0;
@@ -153,6 +191,7 @@ main {
     transform: translateY(-10px);
     transition: var(--transition);
     z-index: 100;
+    border: 1px solid var(--border-color);
 }
 
 .account-status:hover .status-tooltip {
@@ -181,7 +220,7 @@ main {
     transform: translateY(-2px);
 }
 
-/* Profile Content */
+/* ==================== PROFILE CONTENT ==================== */
 .profile-content {
     display: grid;
     grid-template-columns: 1fr 1.5fr;
@@ -197,12 +236,13 @@ main {
 
 /* Info Cards */
 .info-card {
-    background: white;
+    background: var(--bg-card);
     border-radius: 15px;
     box-shadow: var(--card-shadow);
     margin-bottom: 30px;
     overflow: hidden;
     transition: var(--transition);
+    border: 1px solid var(--border-color);
 }
 
 .info-card:hover {
@@ -211,12 +251,13 @@ main {
 }
 
 .card-header {
-    background: linear-gradient(to right, #f8f9fa, #e9ecef);
+    background: var(--surface-bg);
     padding: 20px 25px;
     border-bottom: 1px solid var(--border-color);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: var(--transition);
 }
 
 .card-header h2 {
@@ -225,13 +266,14 @@ main {
     display: flex;
     align-items: center;
     gap: 10px;
+    transition: color 0.3s ease;
 }
 
 .device-count {
     font-size: 14px;
     color: var(--primary-color);
     font-weight: 600;
-    background: rgba(74, 109, 229, 0.1);
+    background: rgba(245, 158, 11, 0.1);
     padding: 6px 12px;
     border-radius: 15px;
 }
@@ -252,7 +294,7 @@ main {
 }
 
 .add-address-btn:hover {
-    background: var(--primary-dark);
+    background: var(--primary-hover);
 }
 
 .card-body {
@@ -274,11 +316,12 @@ main {
 
 .info-label {
     font-weight: 600;
-    color: #555;
+    color: var(--text-muted);
     display: flex;
     align-items: center;
     gap: 10px;
     min-width: 150px;
+    transition: color 0.3s ease;
 }
 
 .info-value {
@@ -287,6 +330,7 @@ main {
     display: flex;
     align-items: center;
     gap: 8px;
+    transition: color 0.3s ease;
 }
 
 /* Status Badges */
@@ -301,21 +345,21 @@ main {
 }
 
 .status-badge.verified {
-    background: #e8f6ef;
+    background: rgba(46, 204, 113, 0.15);
     color: var(--verified-color);
-    border: 1px solid #abebc6;
+    border: 1px solid rgba(46, 204, 113, 0.3);
 }
 
 .status-badge.unverified {
-    background: #fef9e7;
+    background: rgba(243, 156, 18, 0.15);
     color: var(--unverified-color);
-    border: 1px solid #f9e79f;
+    border: 1px solid rgba(243, 156, 18, 0.3);
 }
 
 .status-badge.pending {
-    background: #f4ecf7;
+    background: rgba(142, 68, 173, 0.15);
     color: #8e44ad;
-    border: 1px solid #d7bde2;
+    border: 1px solid rgba(142, 68, 173, 0.3);
 }
 
 .role-badge {
@@ -327,18 +371,21 @@ main {
 }
 
 .role-badge.customer {
-    background: #e3f2fd;
+    background: rgba(245, 158, 11, 0.15);
     color: var(--primary-color);
+    border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
 .role-badge.admin {
-    background: #fff3e0;
+    background: rgba(245, 124, 0, 0.15);
     color: #f57c00;
+    border: 1px solid rgba(245, 124, 0, 0.3);
 }
 
 .role-badge.staff {
-    background: #f3e5f5;
+    background: rgba(123, 31, 162, 0.15);
     color: #7b1fa2;
+    border: 1px solid rgba(123, 31, 162, 0.3);
 }
 
 /* Verification Status */
@@ -350,12 +397,12 @@ main {
 }
 
 .verification-status.yes {
-    background: #e8f6ef;
+    background: rgba(46, 204, 113, 0.15);
     color: var(--verified-color);
 }
 
 .verification-status.no {
-    background: #fdedec;
+    background: rgba(231, 76, 60, 0.15);
     color: var(--error-color);
 }
 
@@ -369,13 +416,14 @@ main {
 .stat-item {
     text-align: center;
     padding: 20px;
-    background: #f8f9fa;
+    background: var(--surface-bg);
     border-radius: 10px;
     transition: var(--transition);
+    border: 1px solid var(--border-color);
 }
 
 .stat-item:hover {
-    background: #e9ecef;
+    background: var(--hover-bg);
     transform: translateY(-3px);
 }
 
@@ -388,12 +436,13 @@ main {
 
 .stat-label {
     font-size: 14px;
-    color: #666;
+    color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 1px;
+    transition: color 0.3s ease;
 }
 
-/* Device Cards */
+/* ==================== DEVICE CARDS ==================== */
 .device-card {
     border: 1px solid var(--border-color);
     border-radius: 12px;
@@ -405,17 +454,18 @@ main {
     align-items: center;
     flex-wrap: wrap;
     gap: 15px;
+    background: var(--bg-card);
 }
 
 .device-card:hover {
     border-color: var(--primary-color);
-    box-shadow: 0 5px 15px rgba(74, 109, 229, 0.1);
+    box-shadow: 0 5px 15px rgba(245, 158, 11, 0.1);
 }
 
 .device-card.current {
     border-color: var(--primary-color);
     border-width: 2px;
-    background: #f0f4ff;
+    background: var(--hover-bg);
 }
 
 .device-info {
@@ -442,20 +492,23 @@ main {
     font-weight: 600;
     margin-bottom: 5px;
     color: var(--text-color);
+    transition: color 0.3s ease;
 }
 
 .device-type {
     font-size: 13px;
-    color: #666;
+    color: var(--text-muted);
     margin-bottom: 5px;
+    transition: color 0.3s ease;
 }
 
 .device-location {
     font-size: 12px;
-    color: #888;
+    color: var(--text-muted);
     display: flex;
     align-items: center;
     gap: 5px;
+    transition: color 0.3s ease;
 }
 
 .device-meta {
@@ -484,14 +537,15 @@ main {
 
 .device-time {
     font-size: 11px;
-    color: #888;
+    color: var(--text-muted);
     display: flex;
     align-items: center;
     gap: 5px;
+    transition: color 0.3s ease;
 }
 
 .device-action.remove {
-    background: #ffebee;
+    background: rgba(239, 68, 68, 0.15);
     color: var(--error-color);
     border: none;
     padding: 6px 12px;
@@ -506,10 +560,10 @@ main {
 }
 
 .device-action.remove:hover {
-    background: #ffcdd2;
+    background: rgba(239, 68, 68, 0.25);
 }
 
-/* Address Cards */
+/* ==================== ADDRESS CARDS ==================== */
 .address-card {
     border: 1px solid var(--border-color);
     border-radius: 12px;
@@ -517,17 +571,18 @@ main {
     margin-bottom: 20px;
     transition: var(--transition);
     position: relative;
+    background: var(--bg-card);
 }
 
 .address-card:hover {
     border-color: var(--primary-color);
-    box-shadow: 0 5px 15px rgba(74, 109, 229, 0.1);
+    box-shadow: 0 5px 15px rgba(245, 158, 11, 0.1);
 }
 
 .address-card.default {
     border-color: var(--primary-color);
     border-width: 2px;
-    background: #f0f4ff;
+    background: var(--hover-bg);
 }
 
 .address-header {
@@ -540,6 +595,7 @@ main {
 .address-header h3 {
     font-size: 18px;
     color: var(--text-color);
+    transition: color 0.3s ease;
 }
 
 .default-badge {
@@ -553,8 +609,9 @@ main {
 
 .address-content p {
     margin-bottom: 8px;
-    color: #555;
+    color: var(--text-muted);
     line-height: 1.5;
+    transition: color 0.3s ease;
 }
 
 .address-actions {
@@ -577,33 +634,36 @@ main {
 }
 
 .action-btn.edit {
-    background: #e3f2fd;
-    color: var(--primary-color);
+    background: rgba(255, 193, 7, 0.15);
+    color: #ffc107;
+    border: 1px solid rgba(255, 193, 7, 0.3);
 }
 
 .action-btn.edit:hover {
-    background: #bbdefb;
+    background: rgba(255, 193, 7, 0.25);
 }
 
 .action-btn.delete {
-    background: #ffebee;
+    background: rgba(239, 68, 68, 0.15);
     color: var(--error-color);
+    border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
 .action-btn.delete:hover {
-    background: #ffcdd2;
+    background: rgba(239, 68, 68, 0.25);
 }
 
 .action-btn.set-default {
-    background: #fff3e0;
+    background: rgba(245, 124, 0, 0.15);
     color: #f57c00;
+    border: 1px solid rgba(245, 124, 0, 0.3);
 }
 
 .action-btn.set-default:hover {
-    background: #ffe0b2;
+    background: rgba(245, 124, 0, 0.25);
 }
 
-/* Action Grid */
+/* ==================== ACTION GRID ==================== */
 .action-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -623,7 +683,7 @@ main {
 }
 
 .action-card {
-    background: #f8f9fa;
+    background: var(--surface-bg);
     border: 1px solid var(--border-color);
     border-radius: 10px;
     padding: 20px;
@@ -634,14 +694,13 @@ main {
     flex-direction: column;
     align-items: center;
     gap: 10px;
-    border: none;
 }
 
 .action-card:hover {
-    background: white;
+    background: var(--hover-bg);
     border-color: var(--primary-color);
     transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--card-shadow);
 }
 
 .action-card i {
@@ -652,11 +711,12 @@ main {
 .action-card span {
     font-weight: 600;
     color: var(--text-color);
+    transition: color 0.3s ease;
 }
 
 .action-card.danger {
-    background: #ffebee;
-    border-color: #ffcdd2;
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
 }
 
 .action-card.danger i {
@@ -664,19 +724,20 @@ main {
 }
 
 .action-card.danger:hover {
-    background: #ffcdd2;
+    background: rgba(239, 68, 68, 0.15);
 }
 
-/* Profile Footer */
+/* ==================== PROFILE FOOTER ==================== */
 .profile-footer {
     padding: 25px 40px;
     border-top: 1px solid var(--border-color);
-    background: #f8f9fa;
+    background: var(--surface-bg);
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
     gap: 20px;
+    transition: var(--transition);
 }
 
 .footer-info {
@@ -686,11 +747,12 @@ main {
 }
 
 .footer-info p {
-    color: #666;
+    color: var(--text-muted);
     font-size: 14px;
     display: flex;
     align-items: center;
     gap: 8px;
+    transition: color 0.3s ease;
 }
 
 .status-text {
@@ -701,12 +763,12 @@ main {
 }
 
 .status-text.verified {
-    background: #e8f6ef;
+    background: rgba(46, 204, 113, 0.15);
     color: var(--verified-color);
 }
 
 .status-text.unverified {
-    background: #fef9e7;
+    background: rgba(243, 156, 18, 0.15);
     color: var(--unverified-color);
 }
 
@@ -716,7 +778,7 @@ main {
 }
 
 .secondary-btn {
-    background: white;
+    background: var(--bg-card);
     color: var(--primary-color);
     border: 1px solid var(--primary-color);
     padding: 10px 20px;
@@ -735,13 +797,7 @@ main {
     color: white;
 }
 
-
-
-.profile-container {
-    animation: fadeIn 0.5s ease-out;
-}
-
-/* Edit Profile Modal Styles */
+/* ==================== MODAL STYLES ==================== */
 .modal {
     display: none;
     position: fixed;
@@ -755,15 +811,15 @@ main {
 }
 
 .modal-content {
-    background: white;
+    background: var(--modal-bg);
     margin: 20vh auto;
     width: 90%;
     max-width: 600px;
     border-radius: 15px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
     animation: modalSlideIn 0.3s ease-out;
+    transition: var(--transition);
 }
-
 
 .modal-header {
     display: flex;
@@ -771,8 +827,9 @@ main {
     align-items: center;
     padding: 25px 30px;
     border-bottom: 2px solid var(--border-color);
-    background: linear-gradient(to right, #f8f9fa, #e9ecef);
+    background: var(--surface-bg);
     border-radius: 15px 15px 0 0;
+    transition: var(--transition);
 }
 
 .modal-header h2 {
@@ -781,13 +838,14 @@ main {
     display: flex;
     align-items: center;
     gap: 10px;
+    transition: color 0.3s ease;
 }
 
 .close-btn {
     background: none;
     border: none;
     font-size: 28px;
-    color: #666;
+    color: var(--text-muted);
     cursor: pointer;
     transition: var(--transition);
     width: 40px;
@@ -799,11 +857,11 @@ main {
 }
 
 .close-btn:hover {
-    background: rgba(0, 0, 0, 0.1);
+    background: var(--hover-bg);
     color: var(--text-color);
 }
 
-.modal-form {
+.modal-form, .modal-body {
     padding: 30px;
 }
 
@@ -853,13 +911,12 @@ main {
 }
 
 .upload-btn:hover {
-    background: var(--primary-dark);
+    background: var(--primary-hover);
 }
 
-/* Reset Button */
 .reset-btn {
-    background: #f8f9fa;
-    color: #666;
+    background: var(--surface-bg);
+    color: var(--text-muted);
     border: 1px solid var(--border-color);
     padding: 10px 15px;
     border-radius: 8px;
@@ -873,7 +930,7 @@ main {
 }
 
 .reset-btn:hover {
-    background: #e9ecef;
+    background: var(--hover-bg);
     color: var(--warning-color);
     border-color: var(--warning-color);
 }
@@ -892,7 +949,8 @@ main {
     display: block;
     margin-bottom: 8px;
     font-weight: 600;
-    color: #555;
+    color: var(--text-muted);
+    transition: color 0.3s ease;
 }
 
 .form-input {
@@ -902,13 +960,14 @@ main {
     border-radius: 8px;
     font-size: 16px;
     transition: var(--transition);
-    background: white;
+    background: var(--input-bg);
+    color: var(--text-color);
 }
 
 .form-input:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(74, 109, 229, 0.2);
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
 }
 
 .error-message {
@@ -939,13 +998,13 @@ main {
 }
 
 .cancel-btn {
-    background: #f8f9fa;
-    color: #666;
+    background: var(--surface-bg);
+    color: var(--text-muted);
     border: 1px solid var(--border-color);
 }
 
 .cancel-btn:hover {
-    background: #e9ecef;
+    background: var(--hover-bg);
 }
 
 .save-btn {
@@ -958,7 +1017,7 @@ main {
 }
 
 .save-btn:hover:not(:disabled) {
-    background: var(--primary-dark);
+    background: var(--primary-hover);
     transform: translateY(-2px);
 }
 
@@ -968,7 +1027,7 @@ main {
     transform: none;
 }
 
-/* Add Address Modal Styles */
+/* ==================== ADDRESS MODAL ==================== */
 .address-modal-overlay {
     position: fixed;
     top: 0;
@@ -984,7 +1043,7 @@ main {
 }
 
 .address-modal-container {
-    background-color: white;
+    background-color: var(--modal-bg);
     border-radius: 12px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     width: 90%;
@@ -993,28 +1052,31 @@ main {
     animation: modelSlideIn 0.3s ease;
     overflow: hidden;
     max-height: 90vh;
+    transition: var(--transition);
 }
 
 .address-modal-header {
     padding: 20px 24px;
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #e9ecef;
+    background-color: var(--surface-bg);
+    border-bottom: 1px solid var(--border-color);
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: sticky;
     top: 0;
     z-index: 1;
+    transition: var(--transition);
 }
 
 .address-modal-title {
     margin: 0;
-    color: #1a1a1a;
+    color: var(--text-color);
     font-size: 1.25rem;
     font-weight: 600;
     display: flex;
     align-items: center;
     gap: 10px;
+    transition: color 0.3s ease;
 }
 
 .address-modal-close {
@@ -1023,7 +1085,7 @@ main {
     font-size: 28px;
     line-height: 1;
     cursor: pointer;
-    color: #6c757d;
+    color: var(--text-muted);
     padding: 0;
     width: 32px;
     height: 32px;
@@ -1035,11 +1097,11 @@ main {
 }
 
 .address-modal-close:hover {
-    background-color: #e9ecef;
-    color: #495057;
+    background-color: var(--hover-bg);
+    color: var(--text-color);
 }
 
-.address-modal-body, .modal-body {
+.address-modal-body {
     padding: 24px;
 }
 
@@ -1051,38 +1113,41 @@ main {
     display: block;
     margin-bottom: 8px;
     font-weight: 500;
-    color: #333;
+    color: var(--text-muted);
     font-size: 14px;
+    transition: color 0.3s ease;
 }
 
 .address-form-label.required::after {
     content: " *";
-    color: #dc3545;
+    color: var(--error-color);
 }
 
 .address-form-input {
     width: 100%;
     padding: 12px 16px;
-    border: 2px solid #e1e5e9;
+    border: 2px solid var(--border-color);
     border-radius: 8px;
     font-size: 15px;
     transition: all 0.2s;
     box-sizing: border-box;
     font-family: inherit;
+    background: var(--input-bg);
+    color: var(--text-color);
 }
 
 .address-form-input:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
 }
 
 .address-form-input.error {
-    border-color: #dc3545;
+    border-color: var(--error-color);
 }
 
 .address-form-error {
-    color: #dc3545;
+    color: var(--error-color);
     font-size: 13px;
     margin-top: 5px;
     display: none;
@@ -1095,15 +1160,16 @@ main {
     margin-bottom: 15px;
 }
 
-.address-form-footer, .form-actions {
+.address-form-footer {
     padding: 20px 24px;
-    background-color: #f8f9fa;
-    border-top: 1px solid #e9ecef;
+    background-color: var(--surface-bg);
+    border-top: 1px solid var(--border-color);
     display: flex;
     justify-content: flex-end;
     gap: 12px;
     position: sticky;
     bottom: 0;
+    transition: var(--transition);
 }
 
 .address-modal-btn {
@@ -1119,12 +1185,12 @@ main {
 }
 
 .address-modal-btn-primary {
-    background-color: #007bff;
+    background-color: var(--primary-color);
     color: white;
 }
 
 .address-modal-btn-primary:hover:not(:disabled) {
-    background-color: #0056b3;
+    background-color: var(--primary-hover);
     transform: translateY(-1px);
 }
 
@@ -1134,12 +1200,12 @@ main {
 }
 
 .address-modal-btn-secondary {
-    background-color: #6c757d;
+    background-color: var(--text-muted);
     color: white;
 }
 
 .address-modal-btn-secondary:hover {
-    background-color: #545b62;
+    background-color: #4a5568;
     transform: translateY(-1px);
 }
 
@@ -1160,8 +1226,8 @@ main {
 }
 
 .spinner {
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid #007bff;
+    border: 3px solid var(--border-color);
+    border-top: 3px solid var(--primary-color);
     border-radius: 50%;
     width: 40px;
     height: 40px;
@@ -1174,49 +1240,12 @@ main {
     100% { transform: rotate(360deg); }
 }
 
-/* Address Card Actions */
-.address-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-}
-
-.action-btn {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.action-btn.edit {
-    background-color: #ffc107;
-    color: #000;
-}
-
-.action-btn.edit:hover {
-    background-color: #e0a800;
-}
-
-.action-btn.delete {
-    background-color: #dc3545;
-    color: white;
-}
-
-.action-btn.delete:hover {
-    background-color: #c82333;
-}
-
 /* Change password */
 .password-strength {
     margin-top: 5px;
     height: 5px;
     border-radius: 5px;
-    background-color: #eee;
+    background-color: var(--border-color);
     overflow: hidden;
 }
 
@@ -1226,13 +1255,12 @@ main {
     transition: width 0.3s, background-color 0.3s;
 }
 
-/* Animation */
+/* ==================== ANIMATIONS ==================== */
 @keyframes fadeIn {
     from {
         opacity: 0;
         transform: translateY(20px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);

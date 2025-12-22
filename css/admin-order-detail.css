@@ -25,6 +25,39 @@
   --shadow-btn-primary: 0 10px 30px rgba(245, 158, 11, 0.4);
 }
 
+/* =========================
+   Light Theme Override
+========================= */
+body[data-theme="light"] {
+  /* Backgrounds */
+  --color-bg-body: #f1f5f9;
+  --color-card-bg: #ffffff;
+  --color-input-bg: #ffffff;
+  --color-upload-bg: #f8fafc;
+
+  /* Text */
+  --color-text-primary: #1e293b;
+  --color-text-heading: #0f172a;
+  --color-text-label: #475569;
+  --color-text-muted: #64748b;
+  --color-text-placeholder: #94a3b8;
+
+  /* Borders */
+  --color-border: #e2e8f0;
+  --color-border-dashed: #cbd5e1;
+  --color-border-focus: #3b82f6;
+
+  /* Accents */
+  --color-primary: #f59e0b;
+  --color-primary-hover: #d97706;
+  --color-focus: #3b82f6;
+
+  /* Shadows */
+  --shadow-card: 0 20px 50px rgba(0, 0, 0, 0.08);
+  --shadow-btn-primary: 0 10px 30px rgba(245, 158, 11, 0.3);
+}
+
+
 body {
   background-color: var(--color-bg-body);
   color: var(--color-text-primary);
@@ -372,7 +405,7 @@ body {
 
 .btn-back {
   background-color: #f8f9fa;
-  color: #333;
+  color: var(--color-text-primary);
   border: 1px solid #ddd;
 }
 .btn-back:hover {
@@ -485,8 +518,8 @@ body {
   max-height: 400px; /* Limits height if there are many addresses */
   overflow-y: auto; /* Enables scrolling */
   padding: 10px;
-  background-color: #f9fafb; /* Light gray background */
-  border: 1px solid #e5e7eb;
+  background-color: var(--color-bg-body);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   margin-bottom: 20px;
 }
@@ -498,8 +531,8 @@ body {
   gap: 15px;
   padding: 15px;
   margin-bottom: 10px;
-  background: white;
-  border: 1px solid #e5e7eb; /* Default light border */
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -534,12 +567,12 @@ body {
   flex: 1;
   font-size: 0.95rem;
   line-height: 1.5;
-  color: #4b5563; /* Grey text */
+  color: var(--color-text-primary); /* Grey text */
 }
 
 .address-details strong {
   display: block;
-  color: #111827; /* Darker black for name */
+  color: var(--color-text-heading); /* Darker black for name */
   font-size: 1rem;
   margin-bottom: 4px;
 }
@@ -575,7 +608,7 @@ body {
 
 /* The White Form Box */
 .centered-form-box {
-  background: white;
+  background: var(--color-card-bg);
   width: 500px;
   max-width: 90%;
   padding: 25px;
@@ -588,7 +621,7 @@ body {
 
 .centered-form-box h3 {
   margin: 0 0 10px 0;
-  color: #333;
+  color: var(--color-text-primary);
   border-bottom: 1px solid #eee;
   padding-bottom: 10px;
 }
@@ -631,7 +664,7 @@ body {
 }
 
 .btn-cancel {
-  background: white;
+  background: var(--color-card-bg);
   border: 1px solid #ddd;
   color: #555;
 }
@@ -646,7 +679,7 @@ body {
   gap: 15px;
   padding: 15px;
   margin-bottom: 10px;
-  background: white;
+  background: var(--color-card-bg);
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   cursor: pointer;
