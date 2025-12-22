@@ -214,5 +214,39 @@ class DashboardController {
         
         return ['labels' => $labels, 'values' => $values];
     }
+
+    public function getOrderCountChartData($period = 'month') {
+        $rawData = $this->orderDAO->getOrderCountByPeriod($period);
+
+        switch ($period) {
+            case 'month':
+                return $this->formatMonthlyData($rawData);
+            case 'week':
+                return $this->formatWeeklyData($rawData);
+            case 'day':
+                return $this->formatDailyData($rawData);
+            default:
+                return ['labels' => [], 'values' => []];
+        }
+    }
+
+    public function getOrderStatusPieData() {
+        $statusCounts = $this->orderDAO->getOrderStatusCounts();
+
+        $labels = [];
+        $values = [];
+
+        foreach ($statusCounts as $row) {
+            $labels[] = $row->status;
+            $values[] = intval($row->count);
+        }
+
+        return [
+            'labels' => $labels,
+            'values' => $values
+        ];
+    }
+
+
 }
 ?>

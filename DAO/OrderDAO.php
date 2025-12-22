@@ -268,5 +268,57 @@ class OrderDAO {
         );
         return $stmt->fetchAll();
     }
+
+    public function getOrderCountByPeriod($period) {
+        switch ($period) {
+            case 'month':
+                return $this->getOrderCountByMonth();
+            case 'week':
+                return $this->getOrderCountByWeek();
+            case 'day':
+                return $this->getOrderCountByDay();
+            default:
+                return [];
+        }
+    }
+
+    private function getOrderCountByMonth() {
+        return $this->db->query(
+            "SELECT 
+                DATE_FORMAT(order_at, '%b %Y') as label,
+                MONTH(order_at) as month,
+                YEAR(order_at) as year,
+                COUNT(*) as total
+            FROM orders
+            GROUP BY YEAR(order_at), MONTH(order_at)
+            ORDER BY year, month"
+        )->fetchAll();
+    }
+
+    private function getOrderCountByWeek() {
+        return $this->db->query(
+            "SELECT 
+                DATE(order_at) as date,
+                DATE_FORMAT(order_at, '%a') as label,
+                COUNT(*) as total
+            FROM orders
+            WHERE order_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+            GROUP BY DATE(order_at)
+            ORDER BY date"
+        )->fetchAll();
+    }
+
+    private function getOrderCountByDay() {
+        return $this->db->query(
+            "SELECT 
+                HOUR(order_at) as hour,
+                COUNT(*) as total
+            FROM orders
+            WHERE DATE(order_at) = CURDATE()
+            GROUP BY HOUR(order_at)
+            ORDER BY hour"
+        )->fetchAll();
+    }
+
 }
 ?>

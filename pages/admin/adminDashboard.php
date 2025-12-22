@@ -65,6 +65,12 @@ include 'adminHeader.php';
 
     <h1 class="page-title">Dashboard Overview</h1>
 
+    <div class="toggle-group chart-type">
+        <button class="toggle active" data-type="sales">Sales</button>
+        <button class="toggle" data-type="orders">Orders</button>
+        <button class="toggle" data-type="status">Status</button>
+    </div>
+
     <!-- Statistical card -->
     <div class="cards-grid">
         <div class="card">
@@ -160,8 +166,9 @@ include 'adminHeader.php';
                 <i class="fa-solid fa-user-gear"></i> Manage Users
             </button>
 
-            <button class="qa-btn" onclick="window.location.href='<?= $pathPrefix ?>/pages/admin/tickets.php'">
-                <i class="fa-solid fa-ticket"></i> Customer Tickets
+            <button class="qa-btn" 
+                onclick="window.location.href='admin-manage-review.php'">
+                <i class="fa-solid fa-star"></i> Product Reviews
             </button>
         </div>
 
@@ -227,158 +234,128 @@ include 'adminHeader.php';
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-// Admin Profile Dropdown Toggle
-document.addEventListener('DOMContentLoaded', function() {
-    const profileIcon = document.getElementById('adminProfileIcon');
-    const profileDropdown = document.getElementById('adminProfileDropdown');
-    const dropdownArrow = profileIcon?.querySelector('.dropdown-arrow');
-    
-    if (profileIcon && profileDropdown) {
-        profileIcon.addEventListener('click', function(e) {
-            e.stopPropagation();
-            profileDropdown.classList.toggle('active');
-            dropdownArrow?.classList.toggle('rotated');
-        });
-        
-        document.addEventListener('click', function(e) {
-            if (!profileIcon.contains(e.target) && !profileDropdown.contains(e.target)) {
-                profileDropdown.classList.remove('active');
-                dropdownArrow?.classList.remove('rotated');
-            }
-        });
-    }
-    
-    // Initialize chart
-    initSalesChart('month');
-    
-    // Toggle buttons for chart
-    document.querySelectorAll('.toggle').forEach(btn => {
-        btn.addEventListener('click', function() {
-            document.querySelectorAll('.toggle').forEach(b => b.classList.remove('active'));
+let salesChart = null;
+let currentType = 'sales';
+let currentPeriod = 'month';
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    // 初始化
+    initSalesChart();
+
+    /* ===========================
+       Chart TYPE toggle
+       =========================== */
+    document.querySelectorAll('.chart-type .toggle').forEach(btn => {
+        btn.addEventListener('click', function () {
+
+            document
+                .querySelectorAll('.chart-type .toggle')
+                .forEach(b => b.classList.remove('active'));
+
             this.classList.add('active');
-            initSalesChart(this.dataset.period);
+            currentType = this.dataset.type;
+
+            initSalesChart();
         });
     });
-    
-    // Search functionality
-    const searchBox = document.getElementById('searchBox');
-    searchBox.addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase();
-        const rows = document.querySelectorAll('#ordersTable tbody .order-row');
-        
-        rows.forEach(row => {
-            const text = row.textContent.toLowerCase();
-            row.style.display = text.includes(searchTerm) ? '' : 'none';
+
+    /* ===========================
+       PERIOD toggle
+       =========================== */
+    document.querySelectorAll('.panel-header .toggle-group .toggle').forEach(btn => {
+        btn.addEventListener('click', function () {
+
+            document
+                .querySelectorAll('.panel-header .toggle-group .toggle')
+                .forEach(b => b.classList.remove('active'));
+
+            this.classList.add('active');
+            currentPeriod = this.dataset.period;
+
+            initSalesChart();
         });
     });
+
 });
 
-// Sales Chart
-let salesChart = null;
-
-function initSalesChart(period) {
+/* ===========================
+   Chart Loader
+   =========================== */
+function initSalesChart() {
     const pathPrefix = '<?= $pathPrefix ?>';
-    
-    fetch(`${pathPrefix}/pages/admin/getDashboardData.php?period=${period}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
+
+    const title = document.querySelector('.panel-header h3');
+
+    if (currentType === 'sales') {
+        title.textContent = 'Sales Performance';
+    } else if (currentType === 'orders') {
+        title.textContent = 'Order Volume';
+    } else if (currentType === 'status') {
+        title.textContent = 'Order Status Distribution';
+    }
+
+    if (currentType === 'status') {
+        document.querySelectorAll('.panel-header .toggle')
+            .forEach(b => b.style.display = 'none');
+    } else {
+        document.querySelectorAll('.panel-header .toggle')
+            .forEach(b => b.style.display = 'inline-flex');
+    }
+
+    fetch(`${pathPrefix}/pages/admin/getDashboardData.php?period=${currentPeriod}&type=${currentType}`)
+        .then(res => res.json())
         .then(data => {
+
             const ctx = document.getElementById('salesChart').getContext('2d');
-            
-            if (salesChart) {
-                salesChart.destroy();
-            }
-            
+            if (salesChart) salesChart.destroy();
+
+            const chartType = currentType === 'status' ? 'pie' : 'bar';
+
+            const colors = chartType === 'pie'
+                ? ['#3b82f6', '#22c55e', '#f97316', '#ef4444']
+                : 'rgba(59, 130, 246, 0.8)';
+
             salesChart = new Chart(ctx, {
-                type: 'bar',
+                type: chartType,
                 data: {
                     labels: data.labels,
                     datasets: [{
-                        label: 'Sales (RM)',
+                        label:
+                            currentType === 'sales' ? 'Sales (RM)' :
+                            currentType === 'orders' ? 'Orders' :
+                            'Order Status',
                         data: data.values,
-                        backgroundColor: 'rgba(59, 130, 246, 0.8)',
-                        borderColor: 'rgba(59, 130, 246, 1)',
-                        borderWidth: 2,
-                        borderRadius: 8,
-                        hoverBackgroundColor: 'rgba(59, 130, 246, 1)'
+                        backgroundColor: colors,
+                        borderRadius: chartType === 'bar' ? 8 : 0
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+
+                    // 🔥 关键：Orders 横向
+                    indexAxis: currentType === 'orders' ? 'y' : 'x',
+
                     plugins: {
                         legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            padding: 12,
-                            titleColor: '#fff',
-                            bodyColor: '#fff',
-                            callbacks: {
-                                label: function(context) {
-                                    return 'RM ' + context.parsed.y.toFixed(2);
-                                }
-                            }
+                            display: chartType === 'pie'
                         }
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.1)'
-                            },
-                            ticks: {
-                                color: '#94a3b8',
-                                callback: function(value) {
-                                    return 'RM ' + value.toFixed(0);
-                                }
-                            }
-                        },
+
+                    scales: chartType === 'pie' ? {} : {
                         x: {
-                            grid: {
-                                display: false
-                            },
-                            ticks: {
-                                color: '#94a3b8'
-                            }
+                            beginAtZero: true
+                        },
+                        y: {
+                            beginAtZero: true
                         }
                     }
                 }
             });
+
         })
-        .catch(error => {
-            console.error('Error loading chart data:', error);
-            alert('Failed to load chart data. Please check the console for details.');
-        });
+        .catch(err => console.error(err));
 }
-
-document.addEventListener('DOMContentLoaded', function () {
-    const logoutBtn = document.querySelector('.logout-btn');
-
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', function (e) {
-            e.preventDefault();
-
-            if (confirm('Are you sure you want to logout?')) {
-                fetch('<?= $pathPrefix ?>/_logout.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: 'logout=true'
-                }).then(() => {
-                    window.location.href = '<?= $pathPrefix ?>/pages/guest/login.php';
-                });
-            }
-        });
-    }
-});
-
 </script>
-
 <?php include 'adminFooter.php'; ?>

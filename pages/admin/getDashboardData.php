@@ -27,6 +27,7 @@ if (!$currentUser || $currentUser->user_role !== 'Admin') {
 try {
     // Obtain the time period parameters
     $period = $_GET['period'] ?? 'month';
+    $type   = $_GET['type'] ?? 'sales';
     
     // Validate period parameter
     if (!in_array($period, ['month', 'week', 'day'])) {
@@ -36,11 +37,26 @@ try {
     // Initialize the controller
     $dashboardController = new DashboardController($_db);
     
-    // Obtain chart data
-    $chartData = $dashboardController->getSalesChartData($period);
-    
+    // Decide which chart data to return
+    switch ($type) {
+        case 'sales':
+            $data = $dashboardController->getSalesChartData($period);
+            break;
+
+        case 'orders':
+            $data = $dashboardController->getOrderCountChartData($period);
+            break;
+
+        case 'status':
+            $data = $dashboardController->getOrderStatusPieData();
+            break;
+
+        default:
+            $data = ['labels' => [], 'values' => []];
+    }
+
     // Return JSON data
-    echo json_encode($chartData);
+    echo json_encode($data);
     
 } catch (Exception $e) {
     // Error handling
