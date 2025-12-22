@@ -64,11 +64,6 @@ $userProfilePic = $currentUser->user_id ? getUserProfilePicture($currentUser->us
     // Theme toggle functionality
     const themeToggle = document.getElementById('themeToggle');
     const body = document.body;
-
-<<<<<<< HEAD
-=======
-    // Check for saved theme preference or default to 'dark'
->>>>>>> b5a961b3c401d4469d2e5491ed316411f7faca87
     const currentTheme = localStorage.getItem('adminTheme') || 'dark';
     body.setAttribute('data-theme', currentTheme);
 
