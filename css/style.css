@@ -142,8 +142,8 @@ p {
 
 /* Header */
 header {
-  background-color: var(--bg-dark);
-  color: var(--text-light);
+  background-color: #111827;
+  color: #f9fafb;
   height: var(--header-height);
   position: sticky;
   top: 0;
@@ -170,13 +170,13 @@ header .container {
   list-style: none;
 }
 .desktop-nav a {
-  color: var(--text-light);
+  color: #f9fafb;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.3s;
 }
 .desktop-nav a:hover {
-  color: var(--primary-color);
+  color: #f59e0b;
 }
 
 /* Mobile Toggle Button - hidden by default */
@@ -195,7 +195,7 @@ header .container {
   top: var(--header-height);
   left: 0;
   width: 100%;
-  background: var(--bg-dark);
+  background: #111827;
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.4s ease;
@@ -398,7 +398,7 @@ header .container {
 
 /* Footer */
 footer {
-  background-color: var(--bg-dark);
+  background-color: #111827;
   color: #9ca3af;
   padding: 4rem 0 2rem;
 }
@@ -409,7 +409,7 @@ footer {
   margin-bottom: 4rem;
 }
 .footer-col h4 {
-  color: var(--text-light);
+  color: #f9fafb;
   margin-bottom: 1.5rem;
 }
 .footer-col ul {
@@ -424,7 +424,7 @@ footer {
   transition: color 0.2s;
 }
 .footer-col a:hover {
-  color: var(--primary-color);
+  color: #f59e0b;
 }
 
 .newsletter-form {
@@ -437,7 +437,7 @@ footer {
   border-radius: 0.375rem;
   border: 1px solid #374151;
   background-color: #1f2937;
-  color: var(--text-light);
+  color: #f9fafb;
 }
 
 /* Cart Sidebar */

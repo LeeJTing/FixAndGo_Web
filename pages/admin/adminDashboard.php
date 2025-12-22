@@ -357,5 +357,9 @@ function initSalesChart() {
         })
         .catch(err => console.error(err));
 }
+
+const ROOT_DIR = '<?= $pathPrefix ?>';
+
 </script>
+<script src="<?= $pathPrefix ?>/js/logout.js"></script>
 <?php include 'adminFooter.php'; ?>
