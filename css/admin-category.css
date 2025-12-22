@@ -1,5 +1,7 @@
+
+/* ==================== THEME VARIABLES ==================== */
 :root {
-  /* Provided color scheme */
+  /* Dark Theme (Default) */
   --color-bg-body: #0f172a;
   --color-card-bg: #1e293b;
   --color-input-bg: #1e293b;
@@ -19,59 +21,102 @@
   --color-required: #f87171;
   --shadow-card: 0 20px 50px rgba(0, 0, 0, 0.5);
   --shadow-btn-primary: 0 10px 30px rgba(245, 158, 11, 0.4);
+  --shadow-input-focus: 0 0 0 5px rgba(96, 165, 250, 0.2);
+  
+  /* Additional colors */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-info: #3b82f6;
+  
+  /* Product page specific */
+  --color-product-bg: #f8fafc;
+  --color-product-card: #ffffff;
+  --color-hover-bg: rgba(245, 158, 11, 0.1);
 }
-/* Table container (card style) */
+
+/* Light Theme */
+body[data-theme="light"] {
+  --color-bg-body: #f1f5f9;
+  --color-card-bg: #ffffff;
+  --color-input-bg: #ffffff;
+  --color-upload-bg: #f8fafc;
+  --color-text-primary: #1e293b;
+  --color-text-heading: #0f172a;
+  --color-text-label: #475569;
+  --color-text-muted: #64748b;
+  --color-text-placeholder: #94a3b8;
+  --color-border: #e2e8f0;
+  --color-border-dashed: #cbd5e1;
+  --color-border-focus: #3b82f6;
+  --shadow-card: 0 20px 50px rgba(0, 0, 0, 0.08);
+  --shadow-btn-primary: 0 10px 30px rgba(245, 158, 11, 0.3);
+  --shadow-input-focus: 0 0 0 5px rgba(59, 130, 246, 0.15);
+  
+  /* Product page specific */
+  --color-product-bg: #ffffff;
+  --color-product-card: #ffffff;
+  --color-hover-bg: rgba(245, 158, 11, 0.05);
+}
+
+/* ==================== CATEGORY TABLE STYLES ==================== */
 .table-container {
-  background-color: var(--color-card-bg); /* dark card background */
+  background-color: var(--color-card-bg);
   padding: 28px;
   border-radius: 12px;
-  border: 1px solid #f8fafc;
+  border: 1px solid var(--color-border);
   box-shadow: var(--shadow-card);
   margin: 2rem auto;
+  transition: all 0.3s ease;
 }
+
 .category-table .col-category-name {
   text-align: center;
 }
+
 .category-table td:nth-child(2) {
   text-align: center;
 }
-/* Table heading */
+
 .table-title {
-  color: var(--color-text-heading); /* heading color from root */
-  margin-bottom: 0; /* Removed bottom margin since it's now inside flex header */
+  color: var(--color-text-heading);
+  margin-bottom: 0;
   font-size: 20px;
   font-weight: 600;
+  transition: color 0.3s ease;
 }
-/* Table itself */
+
 .category-table {
   width: 100%;
   border-collapse: collapse;
-  color: var(--color-text-primary); /* table text color */
+  color: var(--color-text-primary);
   font-size: 14px;
 }
-/* Table header */
+
 .category-table thead {
-  background-color: var(--color-card-bg); /* same as card bg */
+  background-color: var(--color-card-bg);
 }
+
 .category-table th {
-  color: var(--color-text-label); /* label color for headers */
+  color: var(--color-text-label);
   font-weight: 600;
   text-align: left;
   text-transform: uppercase;
   font-size: 13px;
   padding: 14px 16px;
   border-bottom: 1px solid var(--color-border);
+  transition: color 0.3s ease;
 }
-/* Table body cells */
+
 .category-table td {
   padding: 14px 16px;
   border-bottom: 1px solid var(--color-border-dashed);
+  transition: all 0.3s ease;
 }
-/* Hover effect for rows */
+
 .category-table tbody tr:hover {
-  background-color: var(--color-input-bg); /* slightly lighter bg on hover */
+  background-color: var(--color-hover-bg);
 }
-/* Category images */
+
 .category-img {
   width: 48px;
   height: 48px;
@@ -79,7 +124,7 @@
   border-radius: 8px;
   border: 1px solid var(--color-border-dashed);
 }
-/* Delete / Action buttons */
+
 .btn-delete {
   background-color: var(--color-danger);
   color: #ffffff;
@@ -92,25 +137,27 @@
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
 }
+
 .btn-delete:hover:not(:disabled) {
   background-color: #b91c1c;
   box-shadow: 0 6px 18px rgba(239, 68, 68, 0.5);
 }
+
 .btn-delete:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
-/* Optional: Status badges (if needed) */
+
 .status-yes {
   color: #22c55e;
   font-weight: 600;
 }
+
 .status-no {
   color: var(--color-danger);
   font-weight: 600;
 }
 
-/* Header section with title and button */
 .table-header {
   display: flex;
   justify-content: space-between;
@@ -118,7 +165,6 @@
   margin-bottom: 24px;
 }
 
-/* Add Category button */
 .btn-add-category {
   background-color: var(--color-primary);
   color: #ffffff;
@@ -138,6 +184,7 @@
   background-color: var(--color-primary-hover);
   box-shadow: 0 12px 36px rgba(245, 158, 11, 0.5);
 }
+
 .action-buttons {
   display: flex;
   gap: 12px;
@@ -145,7 +192,6 @@
   flex-wrap: wrap;
 }
 
-/* Modify Button Style */
 .btn-modify {
   background-color: var(--color-primary);
   color: #ffffff;
@@ -168,7 +214,6 @@
   box-shadow: 0 6px 18px rgba(245, 158, 11, 0.5);
 }
 
-/* Optional: Make icons consistent */
 .btn-modify i,
 .btn-delete i {
   font-size: 14px;
