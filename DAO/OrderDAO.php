@@ -23,6 +23,31 @@ class OrderDAO {
         );
         return $stmt->fetch()->total_revenue;
     }
+
+    public function getCurrentMonthRevenue() {
+        $stmt = $this->db->query(
+            "SELECT COALESCE(SUM(total_price), 0) as current_month_revenue
+            FROM orders
+            WHERE payment_status = 'Paid'
+            AND MONTH(order_at) = MONTH(CURDATE())
+            AND YEAR(order_at) = YEAR(CURDATE())"
+        );
+        return $stmt->fetch()->current_month_revenue;
+    }
+
+    public function getCurrentMonthAverageOrderValue() {
+        $stmt = $this->db->query(
+            "SELECT 
+                COALESCE(AVG(total_price), 0) AS current_month_avg
+            FROM orders
+            WHERE payment_status = 'Paid'
+            AND MONTH(order_at) = MONTH(CURDATE())
+            AND YEAR(order_at) = YEAR(CURDATE())"
+        );
+
+        return $stmt->fetch()->current_month_avg;
+    }
+
     
     /**
      * Obtain the revenue from last month

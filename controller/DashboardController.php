@@ -24,8 +24,9 @@ class DashboardController {
     public function getDashboardStats() {
         // income data
         $totalRevenue = $this->orderDAO->getTotalRevenue();
+        $currentMonthRevenue = $this->orderDAO->getCurrentMonthRevenue();
         $lastMonthRevenue = $this->orderDAO->getLastMonthRevenue();
-        $revenueChange = $this->calculatePercentageChange($lastMonthRevenue, $totalRevenue);
+        $revenueChange = $this->calculatePercentageChange($lastMonthRevenue, $currentMonthRevenue);
         
         // Order data
         $todayOrders = $this->orderDAO->getTodayOrderCount();
@@ -42,8 +43,9 @@ class DashboardController {
         
         // Average order value
         $avgOrder = $this->orderDAO->getAverageOrderValue();
+        $currentMonthAvg = $this->orderDAO->getCurrentMonthAverageOrderValue();
         $lastMonthAvg = $this->orderDAO->getLastMonthAverageOrderValue();
-        $avgOrderChange = $this->calculatePercentageChange($lastMonthAvg, $avgOrder);
+        $avgOrderChange = $this->calculatePercentageChange($lastMonthAvg, $currentMonthAvg);
         
         return [
             'revenue' => $totalRevenue,
