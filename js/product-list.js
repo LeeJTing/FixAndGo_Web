@@ -11,6 +11,34 @@ $(document).ready(function () {
   currentCategory = $("#category_filter").val() || "";
   currentValue = $("#priceRange").val();
 
+  // Wishlist toggle
+  $(document).on("click", ".favorite-btn", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const $btn = $(this);
+    const productId = parseInt($btn.data("product-id"), 10);
+    if (!productId) return;
+
+    $.post(
+      "../../AJAX/toggle_wishlist.php",
+      { toggle_wishlist: true, product_id: productId },
+      function (res) {
+        if (res && res.success) {
+          $btn.find("i").toggleClass("changeColor", !!res.in_wishlist);
+        } else if (res && res.error === "LOGIN_REQUIRED") {
+          alert(res.message || "Please login to use Wishlist.");
+          window.location.href = "../../pages/guest/login.php";
+        } else {
+          alert((res && res.error) || "Wishlist update failed.");
+        }
+      },
+      "json"
+    ).fail(function () {
+      alert("Network error. Please try again.");
+    });
+  });
+
   loadProduct(currentCategory, currentSort, currentValue, 1);
 
   // 🔁 Pagination buttons
@@ -149,6 +177,13 @@ function loadSearchData(keyword, page = 1) {
         $(".products-grid").append(`
           <div class="product-card">
             <div class="product-image">
+              <button class="favorite-btn" type="button" data-product-id="${
+                p.product_id
+              }" aria-label="Add to Wishlist">
+                <i class="fa-regular fa-heart ${
+                  p.is_wishlisted ? "changeColor" : ""
+                }"></i>
+              </button>
               <img src="../../${p.file_path}" 
                    alt="${p.alt || p.product_name}" 
                    loading="lazy">
@@ -184,6 +219,13 @@ function loadSearchData(keyword, page = 1) {
         $(".pagination-wrapper").show();
       }
     },
+    error: function (xhr, status, error) {
+      console.error("Search load failed:", { status, error, xhr });
+      $(".products-grid").html(
+        "<p>Failed to load products. Please refresh the page.</p>"
+      );
+      $(".pagination-wrapper").hide();
+    },
   });
 }
 function loadProduct(category, sortType, price, page = 1) {
@@ -218,6 +260,13 @@ function loadProduct(category, sortType, price, page = 1) {
         $(".products-grid").append(`
           <div class="product-card">
             <div class="product-image">
+              <button class="favorite-btn" type="button" data-product-id="${
+                p.product_id
+              }" aria-label="Add to Wishlist">
+                <i class="fa-regular fa-heart ${
+                  p.is_wishlisted ? "changeColor" : ""
+                }"></i>
+              </button>
               <img src="../../${p.file_path}" 
                    alt="${p.alt || p.product_name}" 
                    loading="lazy">
@@ -254,6 +303,13 @@ function loadProduct(category, sortType, price, page = 1) {
       } else {
         $(".pagination-wrapper").hide();
       }
+    },
+    error: function (xhr, status, error) {
+      console.error("Product list load failed:", { status, error, xhr });
+      $(".products-grid").html(
+        "<p>Failed to load products. Please refresh the page.</p>"
+      );
+      $(".pagination-wrapper").hide();
     },
   });
 }

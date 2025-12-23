@@ -6,6 +6,8 @@ $function = $_GET['function'] ?? null;;
 
 if ($function === 'allProduct') {
 
+    header('Content-Type: application/json');
+
     $category_code = $_GET['category'] ?? "";
     $sortBy        = $_GET['sort'] ?? "";
     $priceValue    = $_GET['price'] ?? "";
@@ -23,6 +25,36 @@ if ($function === 'allProduct') {
         $offset
     );
 
+    // Attach wishlist state for the current user (if logged in).
+    // Fail-safe: if wishlist table isn't created yet, don't break product listing.
+    $user_id = temp('USER_ID');
+    if (!empty($products)) {
+        foreach ($products as $p) {
+            $p->is_wishlisted = 0;
+        }
+    }
+
+    if ($user_id && $user_id !== 'Guest' && !empty($products)) {
+        try {
+            require_once __DIR__ . '/../DAO/wishlist_dao.php';
+
+            $productIds = [];
+            foreach ($products as $p) {
+                $productIds[] = (int)($p->product_id ?? 0);
+            }
+
+            $wishIds = getWishlistProductIdsForUserDao((string)$user_id, $productIds);
+            $wishSet = array_fill_keys($wishIds, true);
+
+            foreach ($products as $p) {
+                $pid = (int)($p->product_id ?? 0);
+                $p->is_wishlisted = isset($wishSet[$pid]) ? 1 : 0;
+            }
+        } catch (Exception $e) {
+            error_log('Wishlist lookup failed in allProduct: ' . $e->getMessage());
+        }
+    }
+
     $totalRows = getAllProductFilterCountDao(
         $category_code,
         $priceValue
@@ -36,10 +68,45 @@ if ($function === 'allProduct') {
 } else if ($function == 'Search') {
 
     $search_value = $_GET['search'] ?? '';  // prevent warning too
-    $result = getProductBySearchDao($search_value);
 
     header('Content-Type: application/json');
-    echo json_encode($result);
+
+    $result = getProductBySearchDao($search_value);
+
+    // Keep response shape consistent with allProduct (JS expects res.data)
+    // Add wishlist flag if logged in (fail-safe like above)
+    $user_id = temp('USER_ID');
+    if (!empty($result)) {
+        foreach ($result as $p) {
+            $p->is_wishlisted = 0;
+        }
+    }
+
+    if ($user_id && $user_id !== 'Guest' && !empty($result)) {
+        try {
+            require_once __DIR__ . '/../DAO/wishlist_dao.php';
+
+            $productIds = [];
+            foreach ($result as $p) {
+                $productIds[] = (int)($p->product_id ?? 0);
+            }
+
+            $wishIds = getWishlistProductIdsForUserDao((string)$user_id, $productIds);
+            $wishSet = array_fill_keys($wishIds, true);
+
+            foreach ($result as $p) {
+                $pid = (int)($p->product_id ?? 0);
+                $p->is_wishlisted = isset($wishSet[$pid]) ? 1 : 0;
+            }
+        } catch (Exception $e) {
+            error_log('Wishlist lookup failed in Search: ' . $e->getMessage());
+        }
+    }
+
+    echo json_encode([
+        'data' => $result,
+        'totalPages' => 1
+    ]);
     exit;
 } else if ($function === 'clickCategory') {
     $category = get('category'); // from GET parameter

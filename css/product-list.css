@@ -278,6 +278,39 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  position: relative;
+}
+
+.product-image .favorite-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+  background: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  display: grid;
+  place-items: center;
+  font-size: 1.2rem;
+  color: #94a3b8;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.product-image .favorite-btn:hover {
+  transform: scale(1.08);
+}
+
+.product-image .favorite-btn i {
+  color: #94a3b8;
+  transition: color 0.25s ease;
+}
+
+.changeColor {
+  color: #ef4444 !important;
 }
 
 .product-image img {

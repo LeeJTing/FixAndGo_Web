@@ -58,6 +58,32 @@ function removeFromCart($item_id)
     return $stmt->execute([$item_id]);
 }
 
+function removeFromCartItems($item_ids)
+{
+    global $_db;
+
+    if (!is_array($item_ids)) {
+        return 0;
+    }
+
+    $clean_ids = [];
+    foreach ($item_ids as $id) {
+        $id = (int)$id;
+        if ($id > 0) {
+            $clean_ids[] = $id;
+        }
+    }
+
+    if (empty($clean_ids)) {
+        return 0;
+    }
+
+    $placeholders = implode(',', array_fill(0, count($clean_ids), '?'));
+    $stmt = $_db->prepare("DELETE FROM cartitem WHERE item_id IN ($placeholders)");
+    $stmt->execute($clean_ids);
+    return $stmt->rowCount();
+}
+
 function getCartByUserId($user_id)
 {
     global $_db;

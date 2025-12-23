@@ -6,8 +6,30 @@ function changeMainImage(src, element) {
   element.classList.add("active");
 }
 
-$(document).on("click", ".favorite-btn", function () {
-  $(this).find("i").toggleClass("changeColor");
+$(document).on("click", ".favorite-btn", function (e) {
+  e.preventDefault();
+  e.stopPropagation();
+  const $btn = $(this);
+  const productId = parseInt($btn.data("product-id"), 10);
+  if (!productId) return;
+
+  $.post(
+    "../../AJAX/toggle_wishlist.php",
+    { toggle_wishlist: true, product_id: productId },
+    function (res) {
+      if (res && res.success) {
+        $btn.find("i").toggleClass("changeColor", !!res.in_wishlist);
+      } else if (res && res.error === "LOGIN_REQUIRED") {
+        alert(res.message || "Please login to use Wishlist.");
+        window.location.href = "../../pages/guest/login.php";
+      } else {
+        alert((res && res.error) || "Wishlist update failed.");
+      }
+    },
+    "json"
+  ).fail(function () {
+    alert("Network error. Please try again.");
+  });
 });
 
 function changeQty(change) {

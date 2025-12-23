@@ -33,7 +33,7 @@ function initCart() {
     updateQuantity(itemId, newQty, $item);
   });
 
-  $(document).on("click", ".delete-btn", function (e) {
+  $(document).on("click", ".delete-btn[data-item-id]", function (e) {
     e.preventDefault();
 
     const $btn = $(this);
@@ -43,9 +43,95 @@ function initCart() {
       removeItem(itemId, $btn.closest(".cart-item"));
     }
   });
+
+  $(document).on("click", "#delete-selected-btn", function (e) {
+    e.preventDefault();
+
+    const $checked = $(".is-take-checkbox:checked");
+    if ($checked.length === 0) {
+      alert("Please select at least one item to delete.");
+      return;
+    }
+
+    if (!confirm("Remove selected item(s) from cart?")) {
+      return;
+    }
+
+    const itemIds = $checked
+      .map(function () {
+        return $(this).data("item-id");
+      })
+      .get();
+
+    batchRemoveItems(itemIds);
+  });
+
   initImagePopup();
   initSelectAll();
   initAddressManagement();
+}
+
+function batchRemoveItems(itemIds) {
+  const ids = Array.isArray(itemIds)
+    ? itemIds
+        .map((v) => parseInt(v, 10))
+        .filter((v) => Number.isFinite(v) && v > 0)
+    : [];
+
+  if (ids.length === 0) {
+    alert("No valid items selected.");
+    return;
+  }
+
+  // Disable button while processing
+  const $btn = $("#delete-selected-btn");
+  $btn.prop("disabled", true).addClass("disabled");
+
+  // Mark affected items as updating
+  ids.forEach((id) => {
+    $(".cart-item[data-item-id='" + id + "']").addClass("updating");
+  });
+
+  $.post(
+    ROOT_DIR + "/AJAX/remove_items.php",
+    {
+      remove_items: true,
+      item_ids: ids,
+    },
+    function (response) {
+      if (response && response.success) {
+        ids.forEach((id) => {
+          const $item = $(".cart-item[data-item-id='" + id + "']");
+          $item.slideUp(250, function () {
+            $(this).remove();
+            updateCartTotals();
+            checkEmptyCart();
+          });
+        });
+
+        // If nothing left checked, also clear select-all
+        $("#select-all-checkbox").prop("checked", false);
+      } else {
+        ids.forEach((id) => {
+          $(".cart-item[data-item-id='" + id + "']").removeClass("updating");
+        });
+        alert(
+          "Error removing selected items: " +
+            ((response && response.error) || "Unknown error")
+        );
+      }
+    }
+  )
+    .fail(function (xhr, status, error) {
+      ids.forEach((id) => {
+        $(".cart-item[data-item-id='" + id + "']").removeClass("updating");
+      });
+      console.error("Batch remove error:", { status, error, xhr });
+      alert("Network error. Please try again.");
+    })
+    .always(function () {
+      $btn.prop("disabled", false).removeClass("disabled");
+    });
 }
 
 function updateIsTake(itemId, isTake, $checkbox, $item) {
@@ -283,6 +369,14 @@ function checkEmptyCart() {
             </div>
         `);
     $(".cart-footer").hide();
+
+    // These sections live outside .cart-items-container, so hide them too.
+    $(".cart-address-section").hide();
+    $(".payment-method-section").hide();
+    $(".guest-checkout-notice").hide();
+
+    // Disable checkout if button still exists.
+    $("#btnCheckout").prop("disabled", true).addClass("disabled");
   }
 }
 

@@ -3,6 +3,7 @@ $_title = 'Fix & Go | Product';
 require '../../_base.php';
 include '../../_head.php';
 require '../../controller/product-controller.php';
+$user_id = temp('USER_ID');
 $id = get('id') ?? 0;
 $product = getProductById($id);
 
@@ -10,8 +11,22 @@ if (!$product) {
     die("<h1>Product not found!</h1>");
 }
 $mainImage = getProductImages($id);
+
+$isWishlisted = false;
+if ($user_id && $user_id !== 'Guest') {
+    try {
+        require_once '../../DAO/wishlist_dao.php';
+        $isWishlisted = isProductInWishlistDao((string)$user_id, (int)$id);
+    } catch (Exception $e) {
+        $isWishlisted = false;
+    }
+}
+
 ?>
 <link rel="stylesheet" href="../../css/product-detail.css">
+<!-- <script>
+    const ROOT_DIR = '<?= $rootDir ?>';
+</script> -->
 <script src="../../js/product-detail.js"></script>
 
 <body>
@@ -40,6 +55,9 @@ $mainImage = getProductImages($id);
 
                 <!-- Main Image -->
                 <div class="gallery-main">
+                    <button class="favorite-btn" type="button" data-product-id="<?= (int)$product->product_id ?>" aria-label="Add to Wishlist">
+                        <i class="fa-regular fa-heart <?= $isWishlisted ? 'changeColor' : '' ?>"></i>
+                    </button>
                     <img src="../../<?= htmlspecialchars($mainImage[0]->file_path ?? 'placeholder') ?>"
                         alt="<?= htmlspecialchars($mainImage->alt ?? $product->product_name) ?>"
                         id="mainImg"
@@ -109,7 +127,8 @@ $mainImage = getProductImages($id);
             </div>
         </div>
         <!-- Reviews Section -->
-        <?php include_once __DIR__ . "/../../component/reviewSection.php" ?>    </div>
+        <?php include_once __DIR__ . "/../../component/reviewSection.php" ?>
+    </div>
 
     <?php include "../../_foot.php" ?>
 </body>

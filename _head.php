@@ -48,6 +48,9 @@ enforce_authorization();
                     <li><a href="<?= $rootDir ?>/pages/product/product-list.php">Products</a></li>
                     <li><a href="<?= $rootDir ?>/pages/guest/aboutUs.php">About</a></li>
                     <li><a href="<?= $rootDir ?>/pages/guest/contactUs.php">Contact</a></li>
+                    <?php if (temp('USER_ID') && temp('USER_ID') !== 'Guest' && temp('USER_ROLE') === 'Member'): ?>
+                        <li><a href="<?= $rootDir ?>/pages/member/wishlist.php">Wishlist</a></li>
+                    <?php endif; ?>
                 </ul>
             </nav>
 
@@ -112,6 +115,9 @@ enforce_authorization();
                         <li><a href="<?= $rootDir ?>/pages/product/product-list.php">Products</a></li>
                         <li><a href="<?= $rootDir ?>/pages/guest/aboutUs.php">About</a></li>
                         <li><a href="<?= $rootDir ?>">Contact</a></li>
+                        <?php if (temp('USER_ID') && temp('USER_ID') !== 'Guest' && temp('USER_ROLE') === 'Member'): ?>
+                            <li><a href="<?= $rootDir ?>/pages/member/wishlist.php">Wishlist</a></li>
+                        <?php endif; ?>
                     </ul>
                 </div>
 

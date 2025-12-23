@@ -66,6 +66,10 @@ foreach ($cart_items as $item) {
     </div>
 
     <div class="cart-items-container">
+        <div class="cart-batch-actions">
+            <a href="javascript:void(0)" id="delete-selected-btn" class="delete-btn">Delete Selected</a>
+        </div>
+
         <div class="cart-header flex align-center" style="background-color:black;">
             <span class="header-checkbox">
                 All

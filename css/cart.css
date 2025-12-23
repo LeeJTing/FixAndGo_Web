@@ -13,6 +13,20 @@
   padding: 10px;
 }
 
+/* Batch Actions (e.g. Delete Selected) */
+.cart-batch-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 0 10px 0;
+}
+
+.cart-batch-actions #delete-selected-btn.delete-btn {
+  width: auto;
+  padding: 8px 12px;
+  font-size: 0.85em;
+  margin: 0;
+}
+
 /* Header - Fixed alignment */
 .cart-header {
   display: flex;
