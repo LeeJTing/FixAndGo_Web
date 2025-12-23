@@ -8,16 +8,38 @@ $action = get('action');
 
 // remove individual
 if ($action == 'delete' && get('id')) {
+
+    // ❌ Prohibition of deleting oneself
+    if ($currentUser && get('id') === $currentUser->user_id) {
+        flash('error', 'You cannot delete your own account.');
+        redirect('adminCustomer.php');
+    }
+
     CustomerController::handleDelete(get('id'));
 }
 
 // Batch Remove
 if ($action == 'bulk_delete' && is_post()) {
     $selectedIds = post('selected_ids');
+    $currentUser = getCurrentUser();
+
     if (!empty($selectedIds) && is_array($selectedIds)) {
+
+        // ❌ If it includes oneself, remove it directly
+        if ($currentUser) {
+            $selectedIds = array_filter($selectedIds, function ($id) use ($currentUser) {
+                return $id !== $currentUser->user_id;
+            });
+        }
+
+        if (empty($selectedIds)) {
+            flash('error', 'You cannot delete your own account.');
+            redirect('adminCustomer.php');
+        }
+
         $successCount = 0;
         $failCount = 0;
-        
+
         foreach ($selectedIds as $id) {
             if (CustomerDAO::deleteCustomer($id)) {
                 $successCount++;
@@ -25,16 +47,18 @@ if ($action == 'bulk_delete' && is_post()) {
                 $failCount++;
             }
         }
-        
+
         if ($successCount > 0) {
             flash('success', "Successfully deleted $successCount user(s).");
         }
         if ($failCount > 0) {
             flash('error', "Failed to delete $failCount user(s).");
         }
+
         redirect('adminCustomer.php');
     }
 }
+
 
 if ($action == 'update' && is_post()) {
     CustomerController::handleUpdate();

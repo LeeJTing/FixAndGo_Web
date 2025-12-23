@@ -13,6 +13,16 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+// get current login user
+$currentUser = getCurrentUser();
+if (!$currentUser) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Unauthorized'
+    ]);
+    exit;
+}
+
 // read JSON
 $input = json_decode(file_get_contents('php://input'), true);
 
@@ -25,6 +35,15 @@ if (!isset($input['id'])) {
 }
 
 $userId = $input['id'];
+
+// ❌ 禁止删除自己
+if ($userId === $currentUser->user_id) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'You cannot delete your own account.'
+    ]);
+    exit;
+}
 
 // delete
 $result = CustomerDAO::deleteCustomer($userId);
