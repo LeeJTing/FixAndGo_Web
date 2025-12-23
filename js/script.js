@@ -42,8 +42,19 @@ $(document).ready(function () {
           if (typeof resp.cartCount !== "undefined") {
             $("#cartCount").text(resp.cartCount);
           }
-          $btn.html('<i class="fa-solid fa-check"></i>');
-          showCartToast("Added to cart.", "success");
+          if (resp.capped) {
+            $btn.html('<i class="fa-solid fa-xmark"></i>');
+          } else {
+            $btn.html('<i class="fa-solid fa-check"></i>');
+          }
+          if (resp.capped && typeof resp.stock !== "undefined") {
+            showCartToast(
+              "Only " + resp.stock + " left in stock. Quantity capped.",
+              "error"
+            );
+          } else {
+            showCartToast("Added to cart.", "success");
+          }
 
           //refresh cart content from DB
           if ($("#cartSidebar").hasClass("open")) {
@@ -62,10 +73,12 @@ $(document).ready(function () {
         } else {
           $btn.html(originalHtml);
           $btn.prop("disabled", false);
-          showCartToast(
-            (resp && resp.error) || "Failed to add to cart.",
-            "error"
-          );
+          const err = (resp && resp.error) || "Failed to add to cart.";
+          if (err === "OUT_OF_STOCK") {
+            showCartToast("Out of stock.", "error");
+          } else {
+            showCartToast(err, "error");
+          }
         }
       })
       .fail(function () {

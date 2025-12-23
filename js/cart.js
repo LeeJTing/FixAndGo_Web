@@ -18,6 +18,11 @@ function initCart() {
 
     const $btn = $(this);
     const $item = $btn.closest(".cart-item");
+    const isUnavailable = parseInt($item.data("unavailable"), 10) === 1;
+    if (isUnavailable) {
+      alert("This product is currently unavailable.");
+      return;
+    }
     const itemId = $item.data("item-id");
     const currentQty = parseInt($item.find(".product-quantity-display").text());
     let newQty = currentQty;
@@ -210,6 +215,11 @@ function updateIsTake(itemId, isTake, $checkbox, $item) {
 }
 
 function updateQuantity(itemId, newQty, $item) {
+  const isUnavailable = parseInt($item.data("unavailable"), 10) === 1;
+  if (isUnavailable) {
+    alert("This product is currently unavailable.");
+    return;
+  }
   $item.addClass("updating");
 
   $.post(
@@ -223,17 +233,34 @@ function updateQuantity(itemId, newQty, $item) {
       $item.removeClass("updating");
 
       if (response.success) {
-        $item.find(".product-quantity-display").text(newQty);
+        const appliedQty =
+          response && typeof response.quantity !== "undefined"
+            ? parseInt(response.quantity, 10)
+            : newQty;
+
+        $item.find(".product-quantity-display").text(appliedQty);
 
         const unitPrice = parseFloat($item.data("price"));
-        const itemTotal = unitPrice * newQty;
+        const itemTotal = unitPrice * appliedQty;
         $item.find(".product-total").text("RM " + itemTotal.toFixed(2));
 
         updateCartTotals();
 
-        updateQuantityButtons($item, newQty);
+        updateQuantityButtons($item, appliedQty);
+
+        if (
+          response &&
+          response.capped &&
+          typeof response.stock !== "undefined"
+        ) {
+          alert("Only " + response.stock + " left in stock.");
+        }
       } else {
-        alert("Error updating quantity: " + response.error);
+        if (response && response.error === "PRODUCT_UNAVAILABLE") {
+          alert("This product is currently unavailable.");
+        } else {
+          alert("Error updating quantity: " + response.error);
+        }
       }
     }
   ).fail(function (xhr, status, error) {
@@ -349,11 +376,19 @@ function refreshCartSummary() {
 
 function updateQuantityButtons($item, currentQty) {
   const $minusBtn = $item.find(".qty-btn.minus");
+  const $plusBtn = $item.find(".qty-btn.plus");
+  const stock = parseInt($item.data("stock"), 10);
 
   if (currentQty <= 1) {
     $minusBtn.addClass("disabled");
   } else {
     $minusBtn.removeClass("disabled");
+  }
+
+  if (Number.isFinite(stock) && stock > 0 && currentQty >= stock) {
+    $plusBtn.addClass("disabled");
+  } else {
+    $plusBtn.removeClass("disabled");
   }
 }
 

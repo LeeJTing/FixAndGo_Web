@@ -10,15 +10,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_quantity'])) {
     
     if ($item_id > 0 && $quantity > 0) {
         try {
-            $success = updateCartItem($item_id, $quantity);
-            
-            if ($success) {
-                echo json_encode(['success' => true, 'quantity' => $quantity]);
+            $res = updateCartItem($item_id, $quantity);
+            if (is_array($res) && !empty($res['success'])) {
+                echo json_encode([
+                    'success' => true,
+                    'quantity' => (int)($res['quantity'] ?? $quantity),
+                    'stock' => (int)($res['stock'] ?? 0),
+                    'capped' => !empty($res['capped']),
+                ]);
             } else {
-                echo json_encode(['success' => false, 'error' => 'Database update failed']);
+                $err = is_array($res) ? ($res['error'] ?? 'Database update failed') : 'Database update failed';
+                echo json_encode([
+                    'success' => false,
+                    'error' => $err,
+                    'quantity' => is_array($res) ? ($res['quantity'] ?? null) : null,
+                    'stock' => is_array($res) ? ($res['stock'] ?? null) : null,
+                ]);
             }
-        } catch (Exception $e) {
-            echo json_encode(['success' => false, 'error' => 'Server error: ' . $e->getMessage()]);
+        } catch (Throwable $e) {
+            error_log('update_quantity error: ' . $e->getMessage());
+            echo json_encode(['success' => false, 'error' => 'Server error']);
         }
     } else {
         echo json_encode(['success' => false, 'error' => 'Invalid item ID or quantity']);

@@ -802,63 +802,86 @@ function getTop5BestSellersDifferentCategories()
 {
     global $_db;
 
-    $sql = "WITH sales_by_product AS (
-                SELECT
-                    p.product_id,
-                    p.product_name,
-                    p.unit_price,
-                    p.short_desc,
-                    c.category_name,
-                    SUM(oi.qty) AS total_sold
-                FROM product p
-                JOIN category c ON c.category_code = p.category_code
-                JOIN orderitem oi ON oi.product_id = p.product_id
-                JOIN orders o ON o.order_id = oi.order_id
-                WHERE o.status NOT IN ('Pending', 'Cancelled')
-                AND c.is_deleted = FALSE
-                AND c.is_show = 1
-                GROUP BY p.product_id, p.product_name, p.unit_price, p.short_desc, c.category_name
-            ),
-            ranked_products AS (
-                SELECT
-                    sp.*,
-                    ROW_NUMBER() OVER (PARTITION BY sp.category_name ORDER BY sp.total_sold DESC) AS rank_in_category
-                FROM sales_by_product sp
-            ),
-            top_products AS (
-                SELECT
-                    rp.product_id,
-                    rp.product_name,
-                    rp.unit_price,
-                    rp.short_desc,
-                    rp.category_name,
-                    rp.total_sold
-                FROM ranked_products rp
-                WHERE rp.rank_in_category = 1
-                ORDER BY rp.total_sold DESC
-                LIMIT 5
-            ),
-            top_with_image AS (
-                SELECT
-                    tp.*,
-                    pvm.file_path,
-                    pvm.alt,
-                    ROW_NUMBER() OVER (PARTITION BY tp.product_id ORDER BY pvm.media_id ASC) AS image_rank
-                FROM top_products tp
-                LEFT JOIN productvisualmedia pvm ON pvm.product_id = tp.product_id
-            )
-            SELECT
-                product_id,
-                product_name,
-                unit_price,
-                short_desc,
-                category_name,
-                total_sold,
-                file_path,
-                alt
-            FROM top_with_image
-            WHERE image_rank = 1 OR file_path IS NULL
-            ORDER BY total_sold DESC";
+    $sql = "SELECT 
+                c.category_code,
+                c.category_name,
+                p.description,
+                c.description AS category_description,
+
+                COUNT(DISTINCT p.product_id) AS total_products_in_category,
+                SUM(oi.qty) AS category_total_sales,
+                ROUND(SUM(oi.qty * oi.unit_price), 2) AS category_total_revenue,
+
+                -- Best-selling product name
+                (
+                    SELECT p2.product_name
+                    FROM product p2
+                    JOIN orderitem oi2 ON p2.product_id = oi2.product_id
+                    WHERE p2.category_code = c.category_code
+                    AND p2.isdeleted = 0
+                    GROUP BY p2.product_id, p2.product_name
+                    ORDER BY SUM(oi2.qty) DESC
+                    LIMIT 1
+                ) AS best_selling_product,
+
+                -- Best-selling product unit price
+                (
+                    SELECT p3.unit_price
+                    FROM product p3
+                    JOIN orderitem oi3 ON p3.product_id = oi3.product_id
+                    WHERE p3.category_code = c.category_code
+                    AND p3.isdeleted = 0
+                    GROUP BY p3.product_id, p3.unit_price
+                    ORDER BY SUM(oi3.qty) DESC
+                    LIMIT 1
+                ) AS top_product_unit_price,
+
+                -- Best-selling product image
+                (
+                    SELECT vm.file_path
+                    FROM productvisualmedia vm
+                    JOIN product p4 ON vm.product_id = p4.product_id
+                    JOIN orderitem oi4 ON p4.product_id = oi4.product_id
+                    WHERE p4.category_code = c.category_code
+                    AND p4.isdeleted = 0
+                    AND vm.is_show = 1
+                    AND vm.type IN ('Image', 'Image URL')
+                    GROUP BY vm.product_id, vm.file_path
+                    ORDER BY SUM(oi4.qty) DESC
+                    LIMIT 1
+                ) AS top_product_image,
+
+                -- Image alt text
+                (
+                    SELECT vm.alt
+                    FROM productvisualmedia vm
+                    JOIN product p5 ON vm.product_id = p5.product_id
+                    JOIN orderitem oi5 ON p5.product_id = oi5.product_id
+                    WHERE p5.category_code = c.category_code
+                    AND p5.isdeleted = 0
+                    AND vm.is_show = 1
+                    AND vm.type IN ('Image', 'Image URL')
+                    GROUP BY vm.product_id, vm.alt
+                    ORDER BY SUM(oi5.qty) DESC
+                    LIMIT 1
+                ) AS top_product_alt
+
+            FROM category c
+            LEFT JOIN product p 
+                ON c.category_code = p.category_code 
+            AND p.isdeleted = 0
+            LEFT JOIN orderitem oi 
+                ON p.product_id = oi.product_id
+
+            WHERE c.is_show = 1
+            AND c.is_deleted = 0
+
+            GROUP BY 
+                c.category_code,
+                c.category_name,
+                c.description
+
+            ORDER BY category_total_revenue DESC";
 
     try {
         $stmt = $_db->prepare($sql);

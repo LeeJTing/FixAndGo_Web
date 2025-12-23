@@ -227,33 +227,31 @@ function getAllProductByOrderId($order_id)
     }
 }
 
-function getOrderWithSelectedAddress(int $orderId)
+function getOrderWithSelectedAddressDao(int $orderId)
 {
     global $_db;
 
-    $sql = "
-        SELECT
-            o.order_id,
-            o.order_at,
-            o.user_id,
-            u.user_name,
-            u.email,
-            o.total_price,
-            o.payment_status,
-            o.status,
-            o.utilize_point,
-            a.address_name,
-            a.address_one,
-            a.address_two,
-            a.address_three,
-            a.state,
-            a.post_code,
-            a.country
-        FROM orders o
-        INNER JOIN users u ON o.user_id = u.user_id
-        INNER JOIN address a ON o.address_id = a.address_id
-        WHERE o.order_id = ?
-    ";
+    $sql = "SELECT
+                o.order_id,
+                o.order_at,
+                o.user_id,
+                u.user_name,
+                u.email,
+                o.total_price,
+                o.payment_status,
+                o.status,
+                o.utilize_point,
+                COALESCE(a.address_name, 'Address not found') as address_name,
+                COALESCE(a.address_one, 'Address line 1 not found') as address_one,
+                a.address_two,
+                a.address_three,
+                COALESCE(a.state, 'N/A') as state,
+                COALESCE(a.post_code, 'N/A') as post_code,
+                COALESCE(a.country, 'N/A') as country
+            FROM orders o
+            INNER JOIN users u ON o.user_id = u.user_id
+            LEFT JOIN address a ON o.address_id = a.address_id
+            WHERE o.order_id = ?";
 
     $stmt = $_db->prepare($sql);
     $stmt->execute([$orderId]);
@@ -393,10 +391,10 @@ function createPaymentPendingDao($order_id, $payment_method)
     global $_db;
     $map = [
         'Cash' => 'Cash',
-        'Cash on Delivery' => 'Cash', 
+        'Cash on Delivery' => 'Cash',
         'Credit/Debit Card' => 'Credit Card',
         'Online Banking' => 'Bank Transfer',
-        'Loyalty Points' => 'Loyalty Points', 
+        'Loyalty Points' => 'Loyalty Points',
     ];
     $pm = $map[$payment_method] ?? 'Cash';
 

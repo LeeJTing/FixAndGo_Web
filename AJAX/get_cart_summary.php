@@ -33,7 +33,13 @@ try {
 
     $items = getCheckedCartItems($cart->cart_id);
     $selected_total = 0.0;
+    $has_unavailable_selected = false;
     foreach ($items as $it) {
+        $isUnavailable = ((int)($it->isdeleted ?? 0) === 1) || (strtolower(trim((string)($it->status ?? ''))) !== 'active');
+        if ($isUnavailable) {
+            $has_unavailable_selected = true;
+            continue;
+        }
         $selected_total += ((float)$it->unit_price * (int)$it->qty);
     }
 
@@ -64,6 +70,7 @@ try {
         'shipping_fee' => round($shipping_fee, 2),
         'discount' => round($discount, 2),
         'final_total' => round($final_total, 2),
+        'has_unavailable_selected' => $has_unavailable_selected,
         'loyalty_points' => (int)$available_points,
         'loyalty_points_rm' => round(((int)$available_points) * 0.10, 2),
         'used_points' => (int)$used_points,

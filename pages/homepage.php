@@ -53,20 +53,20 @@
           <?php foreach ($product as $item): ?>
               <article class="product-card">
                   <div class="product-image">
-                      <img src="<?= $path ?><?= htmlspecialchars($item->file_path) ?>"
-                          alt="<?= htmlspecialchars($item->alt_text ?? $item->product_name) ?>"
+                      <img src="<?= $path ?><?= htmlspecialchars($item->top_product_image) ?>"
+                          alt="<?= htmlspecialchars($item->alt_text ?? $item->best_selling_product) ?>"
                           class="product-img">
                   </div>
 
                   <div class="product-info">
                       <span class="product-category"><?= htmlspecialchars($item->category_name) ?></span>
-                      <h3 class="product-title"><?= htmlspecialchars($item->product_name) ?></h3>
+                      <h3 class="product-title"><?= htmlspecialchars($item->best_selling_product) ?></h3>
                       <p class="product-description">
                           <?= htmlspecialchars($item->short_desc ?? substr(strip_tags($item->description ?? ''), 0, 150) . '...') ?>
                       </p>
 
                       <div class="product-price">
-                          RM <?= number_format($item->unit_price, 2) ?>
+                          RM <?= number_format($item->top_product_unit_price, 2) ?>
                           <?php if (!empty($item->old_price)): ?>
                               <span class="old-price">RM <?= number_format($item->old_price, 2) ?></span>
                           <?php endif; ?>
