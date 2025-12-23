@@ -1,18 +1,5 @@
 $(document).ready(function () {
   // Image preview
-  // $("#categoryImageInput").on("change", function (e) {
-  //   const file = e.target.files[0];
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onload = function (e) {
-  //       $("#previewImg").attr("src", e.target.result);
-  //       $("#previewContainer").show();
-  //       $(".add-new").hide();
-  //       $("#image-error").text("");
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  // });
   const uploadContainer = document.getElementById("uploadContainer");
   const fileInput = document.getElementById("categoryImageInput");
   const previewImg = document.getElementById("previewImg");

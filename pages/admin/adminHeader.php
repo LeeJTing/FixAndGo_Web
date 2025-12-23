@@ -1,4 +1,5 @@
 <?php
+$_title = 'Fix & Go | Admin Header';
 require_once __DIR__ . '/../../_base.php';
 require_once __DIR__ . '/../../config/authorization.php';
 enforce_authorization();

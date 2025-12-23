@@ -539,7 +539,7 @@ function addNewImage($file_path, $id, $name, $position, $is_show)
         $stmt = $_db->prepare($sql);
         $stmt->execute([
             ':id'        => $id,
-            ':position'  => $position + 1,
+            ':position'  => $position,
             ':file_path' => $file_path,
             ':alt'       => $name,
             ':is_show'   => $is_show

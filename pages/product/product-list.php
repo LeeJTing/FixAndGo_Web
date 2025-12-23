@@ -1,8 +1,6 @@
-<link rel="stylesheet" href="../../css/product-list.css">
-<link rel="stylesheet" href="../../css/msg.css">
 <?php
-require '../../_base.php';
 $_title = "Fix & Go | Product List";
+require '../../_base.php';
 include '../../_head.php';
 require_once '../../component/msg.php';
 require '../../controller/product-controller.php';
@@ -12,6 +10,8 @@ $category = getAllCategory();
 $selected_category = $_SESSION['selected_category'] ?? '';
 displayFlashMessage();
 ?>
+<link rel="stylesheet" href="../../css/product-list.css">
+<link rel="stylesheet" href="../../css/msg.css">
 
 <body>
     <main class="main-container products-page">

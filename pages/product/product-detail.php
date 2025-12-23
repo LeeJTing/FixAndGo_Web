@@ -1,6 +1,6 @@
 <?php
-require '../../_base.php';
 $_title = 'Fix & Go | Product';
+require '../../_base.php';
 include '../../_head.php';
 require '../../controller/product-controller.php';
 $id = get('id') ?? 0;

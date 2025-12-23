@@ -131,20 +131,50 @@
   text-transform: uppercase;
 }
 
-/* Status colors */
+/* Pending */
+.status.pending {
+  background-color: #fde68a; /* soft yellow */
+  color: #92400e;
+}
+
+/* Processing */
+.status.processing {
+  background-color: #bfdbfe; /* light blue */
+  color: #1e3a8a;
+}
+
+/* Shipping */
+.status.shipping {
+  background-color: #c7d2fe; /* indigo */
+  color: #312e81;
+}
+
+/* Delivered */
 .status.delivered {
+  background-color: var(--success-color);
+  color: #ffffff;
+}
+
+/* Cancelled */
+.status.cancelled {
+  background-color: var(--error-color);
+  color: #ffffff;
+}
+
+/* Payment status */
+.status.paid {
   background: #dcfce7;
   color: #166534;
 }
 
-.status.pending {
-  background: #fef3c7;
-  color: #92400e;
-}
-
-.status.cancelled {
+.status.unpaid {
   background: #fee2e2;
   color: #991b1b;
+}
+
+.status.refunded {
+  background: #e0e7ff;
+  color: #3730a3;
 }
 
 /* Actions */

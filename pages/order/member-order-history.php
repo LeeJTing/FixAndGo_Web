@@ -1,6 +1,6 @@
 <?php
-require "../../_base.php";
 $_title = "Fix & Go | Member Order History";
+require "../../_base.php";
 include  "../../_head.php";
 require '../../controller/order-controller.php';
 $user_id = temp('USER_ID');

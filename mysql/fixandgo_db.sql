@@ -145,10 +145,10 @@ CREATE TABLE `category` (
 INSERT INTO `category` (`category_code`, `category_name`, `img_path`, `description`, `is_show`, `is_deleted`) VALUES
 (1, 'Storage', 'images/category/storage.jpg', 'Storage solutions, tool boxes, shelves and trolleys', 1, 0),
 (2, 'Stationery', 'images/category/stationary.png', 'Browse the widest range of stationery and office supplies all in one place! You will find everything from double sided tape and colored pencils, to filing folders and sticky notes. If you want the best deals available, you’re sure to find them here – highlighters, staplers, highlighters – we have it all', 1, 0),
-(3, 'Automotive', 'images/category/automotive.png', 'We here at Mr DIY know that spending time and money on your car is an important investment. That is why we have a range of automotive goods and car accessories in our store to make sure you are getting the best out of your ride! Whether it be car mats, sun shades, car covers, car polishes or even the newest tech gadgets, our website has everything you need to get more from your vehicle', 1, 0),
+(3, 'Automotive', 'images/category/automotive.png', 'We here at Fix&Go know that spending time and money on your car is an important investment. That is why we have a range of automotive goods and car accessories in our store to make sure you are getting the best out of your ride! Whether it be car mats, sun shades, car covers, car polishes or even the newest tech gadgets, our website has everything you need to get more from your vehicle', 1, 0),
 (4, 'Power & Hand Tools', 'images/category/hardware_tools.png', 'Cordless screwdrivers, drills, saws, chisels hammers and measuring tapes', 1, 0),
 (5, 'Uncategorized', 'images/no-image.jpg', 'Products that have not been assigned to a specific category', 0, 0),
-(6, 'Electrical', 'images/category/electrical.jpg', 'Mr DIY offers a wide range of electrical products, from batteries, rice cookers, and hair dryers to cables, adapters, chargers, lighting, and computer accessories.', 1, 0);
+(6, 'Electrical', 'images/category/electrical.jpg', 'Fix&Go offers a wide range of electrical products, from batteries, rice cookers, and hair dryers to cables, adapters, chargers, lighting, and computer accessories.', 1, 0);
 
 -- --------------------------------------------------------
 
