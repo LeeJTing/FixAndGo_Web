@@ -149,6 +149,7 @@
 }
 /* RIGHT CONTENT */
 .products-content {
+  min-height: 70vh;
   display: flex;
   flex-direction: column;
 }

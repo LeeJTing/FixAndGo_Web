@@ -350,7 +350,7 @@ include 'adminHeader.php';
                 </select>
 
                 <label>Status</label>
-                <select name="account_status" class="form-select">
+                <select name="account_status" class="form-select" <?= $currentUser->user_id == $selectedCustomer->user_id ? "disabled" : '' ?>>
                     <option value="Unblock" <?= $selectedCustomer->account_status === 'Unblock' ? 'selected' : '' ?>>Unblock</option>
                     <option value="Unverify" <?= $selectedCustomer->account_status === 'Unverify' ? 'selected' : '' ?>>Unverified</option>
                     <option value="Blocked" <?= $selectedCustomer->account_status === 'Blocked' ? 'selected' : '' ?>>Blocked</option>

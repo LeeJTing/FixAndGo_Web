@@ -38,6 +38,7 @@
 
 .new-arrivals {
   max-width: var(--container-width);
+  min-height: 70vh;
   margin: 3rem auto;
   padding: 0 1.5rem;
 }

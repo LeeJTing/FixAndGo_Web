@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . "/../dao/profile_dao.php";
 require_once __DIR__ . "/../controller/profile-controller.php";
+require_once __DIR__ . "/../dao/loyaltypoint_dao.php";
 
 $user_id = temp('USER_ID');
 $user_name = temp('USER_NAME');
@@ -9,6 +10,7 @@ $user_status = temp('ACCOUNT_STATUS');
 $user_email = temp('EMAIL');
 $user_profile = getUserProfileDetails($user_id);
 $addresses = getAddressesByUserId($user_id);
+$loyalty_points = getAvailableLoyaltyPointsDao($user_id);
 ?>
 
 <link rel="stylesheet" href="<?= $rootDir ?>/css/profile.css">
@@ -85,6 +87,17 @@ $addresses = getAddressesByUserId($user_id);
                                 <span class="role-badge customer"><?= htmlspecialchars($user_role) ?></span>
                             </div>
                         </div>
+                        <?php if ($user_role == 'Member') : ?>
+                            <div class="info-row">
+                                <div class="info-label">
+                                    <i class="fa-solid fa-coins"></i>
+                                    Layalty Points
+                                </div>
+                                <div class="info-value"><?= $loyalty_points ?? '<i>None</i>' ?>
+                                </div>
+                            </div>
+                        <?php endif ?>
+
 
                         <div class="info-row">
                             <div class="info-label">
@@ -217,19 +230,19 @@ $addresses = getAddressesByUserId($user_id);
                                 <i class="fas fa-credit-card"></i>
                                 <span>Payment Methods</span>
                             </button> -->
-                            <?php if(temp('USER_ROLE') == 'Member') : ?>
-                            <a href="<?= $rootDir ?>/pages/order/member-order-history.php" class="action-card" style="text-decoration: none;">
-                                <i class="fas fa-history"></i>
-                                <span>Order History</span>
-                            </a>
-                            <!-- <button class="action-card">
+                            <?php if (temp('USER_ROLE') == 'Member') : ?>
+                                <a href="<?= $rootDir ?>/pages/order/member-order-history.php" class="action-card" style="text-decoration: none;">
+                                    <i class="fas fa-history"></i>
+                                    <span>Order History</span>
+                                </a>
+                                <!-- <button class="action-card">
                                 <i class="fas fa-heart"></i>
                                 <span>Wishlist</span>
                             </button> -->
-                            <a href="<?= $rootDir ?>/pages/guest/contactUs.php#request-form" class="action-card danger" style="text-decoration: none;">
-                                <i class="fas fa-user-slash"></i>
-                                <span>Request Delete Account</span>
-                            </a>
+                                <a href="<?= $rootDir ?>/pages/guest/contactUs.php#request-form" class="action-card danger" style="text-decoration: none;">
+                                    <i class="fas fa-user-slash"></i>
+                                    <span>Request Delete Account</span>
+                                </a>
                             <?php endif ?>
                         </div>
                     </div>
