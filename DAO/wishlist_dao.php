@@ -66,6 +66,8 @@ function getWishlistItemsByUserIdDao(string $user_id): array
                 p.product_id,
                 p.product_name,
                 p.unit_price,
+            p.isdeleted,
+            p.status,
                 COALESCE(pvm.file_path, 'images/no-image.jpg') AS file_path,
                 COALESCE(pvm.alt, p.product_name) AS alt_text
          FROM wishlist w

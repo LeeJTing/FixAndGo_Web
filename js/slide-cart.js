@@ -6,15 +6,16 @@
     let count = 0;
     $("#cartItems .cart-item").each(function () {
       const $it = $(this);
+      const unavailable = parseInt($it.data("unavailable"), 10) === 1;
       const checked = $it.find(".is-check-checkbox").is(":checked");
       const qty = parseInt($it.find(".product-quantity-display").text()) || 0;
       const price = parseFloat($it.data("price")) || 0;
-      
+
       // Count all items (for cart count badge)
       count += 1;
-      
+
       // Total only includes checked items (for checkout total)
-      if (checked) {
+      if (checked && !unavailable) {
         total += qty * price;
       }
     });
@@ -43,13 +44,18 @@
     $(document).on("click", "#cartItems .qty-btn", function (e) {
       e.preventDefault();
       const $btn = $(this);
-      
+
       // Prevent action if button is disabled
       if ($btn.hasClass("disabled")) {
         return false;
       }
-      
+
       const $item = $btn.closest(".cart-item");
+      const unavailable = parseInt($item.data("unavailable"), 10) === 1;
+      if (unavailable) {
+        alert("This item is currently unavailable.");
+        return false;
+      }
       const itemId = $item.data("item-id");
       let qty = parseInt($item.find(".product-quantity-display").text()) || 0;
       if ($btn.hasClass("plus")) qty++;
@@ -69,7 +75,7 @@
             $item.find(".product-quantity-display").text(appliedQty);
             const price = parseFloat($item.data("price")) || 0;
             $item.find(".product-total").text((price * appliedQty).toFixed(2));
-            
+
             // Update disabled state for minus button
             const $minusBtn = $item.find(".qty-btn.minus");
             if (appliedQty <= 1) {
@@ -85,7 +91,7 @@
             } else {
               $plusBtn.removeClass("disabled");
             }
-            
+
             recalcHeaderCart();
           } else {
             alert("Error: " + (resp.error || "Failed to update quantity"));
@@ -125,6 +131,13 @@
     $(document).on("change", "#cartItems .is-check-checkbox", function () {
       const $cb = $(this);
       const itemId = $cb.data("item-id");
+      const $row = $cb.closest(".cart-item");
+      const unavailable = parseInt($row.data("unavailable"), 10) === 1;
+      if (unavailable) {
+        $cb.prop("checked", false);
+        alert("This item is currently unavailable.");
+        return;
+      }
       const isCheck = $cb.is(":checked") ? 1 : 0;
 
       $.post(ROOT_DIR + "/AJAX/update_cart_check.php", {

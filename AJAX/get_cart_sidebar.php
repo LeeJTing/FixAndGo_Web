@@ -31,6 +31,9 @@ try {
         $unit_price = (float) ($ci->unit_price ?? ($ci['unit_price'] ?? 0));
         $qty = (int) ($ci->qty ?? ($ci['qty'] ?? 1));
         $stock = (int) ($ci->stock_quantity ?? ($ci['stock_quantity'] ?? 0));
+        $isdeleted = (int) ($ci->isdeleted ?? ($ci['isdeleted'] ?? 0));
+        $status = strtolower((string) ($ci->status ?? ($ci['status'] ?? 'active')));
+        $unavailable = ($isdeleted === 1) || ($status !== 'active');
         $file_path = (string) ($ci->file_path ?? ($ci['file_path'] ?? ''));
         $is_check = (int) ($ci->is_check ?? ($ci['is_check'] ?? 1));
 
@@ -45,6 +48,7 @@ try {
             'unit_price' => $unit_price,
             'qty' => $qty,
             'stock' => $stock,
+            'unavailable' => $unavailable ? 1 : 0,
             'file_path' => $file_path,
             'is_check' => $is_check,
         ];

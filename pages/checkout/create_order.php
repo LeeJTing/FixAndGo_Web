@@ -34,6 +34,10 @@ try {
 
     $total = 0;
     foreach ($items as $it) {
+        $isUnavailable = ((int)($it->isdeleted ?? 0) === 1) || (strtolower(trim((string)($it->status ?? ''))) !== 'active');
+        if ($isUnavailable) {
+            throw new Exception("Product currently unavailable: {$it->product_name}");
+        }
         $qty = (int)$it->qty;
         if ($qty <= 0) throw new Exception("Invalid quantity.");
         if ((int)$it->stock_quantity < $qty) {

@@ -98,19 +98,22 @@ foreach ($cart_items as $item) {
                 $short_description = $product_details ? ($product_details->short_desc ?? '') : '';
             ?>
                 <?php
-                $is_check = isset($item->is_check) ? (int)$item->is_check : (int)($item->is_take ?? 0);
+                $isUnavailable = ((int)($item->isdeleted ?? 0) === 1) || (strtolower((string)($item->status ?? 'active')) !== 'active');
+                $is_check = $isUnavailable ? 0 : (isset($item->is_check) ? (int)$item->is_check : (int)($item->is_take ?? 0));
                 ?>
                 <div class="cart-item flex align-center <?= $is_check ? 'item-selected' : '' ?>"
                     data-item-id="<?= $item->item_id ?>"
                     data-price="<?= $item->unit_price ?>"
-                    data-stock="<?= (int)($item->stock_quantity ?? 0) ?>">
+                    data-stock="<?= (int)($item->stock_quantity ?? 0) ?>"
+                    data-unavailable="<?= $isUnavailable ? 1 : 0 ?>">
 
                     <div class="item-checkbox-container">
                         <input type="checkbox"
                             class="item-checkbox is-take-checkbox"
                             data-item-id="<?= $item->item_id ?>"
                             data-is-check="<?= $is_check ?>"
-                            <?= $is_check ? 'checked' : '' ?> />
+                            <?= $is_check ? 'checked' : '' ?>
+                            <?= $isUnavailable ? 'disabled' : '' ?> />
                     </div>
 
                     <img src="<?= $rootDir ?>/<?= htmlspecialchars($item->file_path) ?>"
@@ -123,13 +126,18 @@ foreach ($cart_items as $item) {
                         data-product-short-desc="<?= htmlspecialchars($short_description) ?>"
                         title="Click to view details" />
 
-                    <span class="product-name"><?= htmlspecialchars($item->product_name) ?></span>
+                    <span class="product-name">
+                        <?= htmlspecialchars($item->product_name) ?>
+                        <?php if ($isUnavailable): ?>
+                            <br><small style="color:#991b1b; font-weight:600;">Currently unavailable</small>
+                        <?php endif; ?>
+                    </span>
                     <span class="product-price">RM <?= number_format($item->unit_price, 2) ?></span>
 
                     <div class="quantity-control">
-                        <a href="javascript:void(0)" class="qty-btn minus <?= $item->qty <= 1 ? 'disabled' : '' ?>">-</a>
+                        <a href="javascript:void(0)" class="qty-btn minus <?= ($isUnavailable || $item->qty <= 1) ? 'disabled' : '' ?>">-</a>
                         <span class="product-quantity-display"><?= $item->qty ?></span>
-                        <a href="javascript:void(0)" class="qty-btn plus <?= ((int)$item->stock_quantity > 0 && (int)$item->qty >= (int)$item->stock_quantity) ? 'disabled' : '' ?>">+</a>
+                        <a href="javascript:void(0)" class="qty-btn plus <?= ($isUnavailable || ((int)$item->stock_quantity > 0 && (int)$item->qty >= (int)$item->stock_quantity)) ? 'disabled' : '' ?>">+</a>
                     </div>
 
                     <span class="product-total">RM <?= number_format($item->item_total, 2) ?></span>

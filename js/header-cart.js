@@ -28,6 +28,7 @@
         const price = parseFloat(it.unit_price) || 0;
         const qty = parseInt(it.qty, 10) || 1;
         const stock = parseInt(it.stock, 10) || 0;
+        const unavailable = parseInt(it.unavailable, 10) === 1;
         const total = (price * qty).toFixed(2);
         const isCheck = parseInt(it.is_check, 10) ? true : false;
         const filePath = (it.file_path || "").replace(/^\/+/, "");
@@ -40,12 +41,16 @@
           price +
           '" data-stock="' +
           stock +
+          '" data-unavailable="' +
+          (unavailable ? 1 : 0) +
           '">' +
           '<div class="item-checkbox-container">' +
           '<input type="checkbox" class="item-checkbox is-check-checkbox" data-item-id="' +
           itemId +
           '" ' +
-          (isCheck ? "checked" : "") +
+          (!unavailable && isCheck ? "checked" : "") +
+          " " +
+          (unavailable ? "disabled" : "") +
           " />" +
           "</div>" +
           (imgSrc
@@ -59,19 +64,22 @@
           '<div class="product-name-small">' +
           name +
           "</div>" +
+          (unavailable
+            ? '<div class="product-name-small" style="color:#991b1b;font-weight:600;">Currently unavailable</div>'
+            : "") +
           '<div class="product-price-small">RM ' +
           price.toFixed(2) +
           "</div>" +
           "</div>" +
           '<div class="quantity-control-small">' +
           '<a href="javascript:void(0)" class="qty-btn minus ' +
-          (qty <= 1 ? "disabled" : "") +
+          (unavailable || qty <= 1 ? "disabled" : "") +
           '">-</a>' +
           '<span class="product-quantity-display">' +
           qty +
           "</span>" +
           '<a href="javascript:void(0)" class="qty-btn plus ' +
-          (stock > 0 && qty >= stock ? "disabled" : "") +
+          (unavailable || (stock > 0 && qty >= stock) ? "disabled" : "") +
           '">+</a>' +
           "</div>" +
           '<div class="product-total-small">RM <span class="product-total">' +
@@ -120,6 +128,7 @@
     let count = 0;
     $("#cartItems .cart-item").each(function () {
       const $it = $(this);
+      const unavailable = parseInt($it.data("unavailable"), 10) === 1;
       const checked = $it.find(".is-check-checkbox").is(":checked");
       const qty = parseInt($it.find(".product-quantity-display").text()) || 0;
       const price = parseFloat($it.data("price")) || 0;
@@ -128,7 +137,7 @@
       count += qty;
 
       // Total only includes checked items (for checkout total)
-      if (checked) {
+      if (checked && !unavailable) {
         total += qty * price;
       }
     });

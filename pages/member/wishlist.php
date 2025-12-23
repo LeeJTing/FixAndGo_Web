@@ -45,20 +45,31 @@ $items = getWishlistItemsByUserIdDao((string)$user_id);
             <tbody class="wishlist-tbody">
                 <?php if (!empty($items)): ?>
                     <?php foreach ($items as $it): ?>
+                        <?php
+                        $isUnavailable = ((int)($it->isdeleted ?? 0) === 1) || (strtolower((string)($it->status ?? 'active')) !== 'active');
+                        ?>
                         <tr class="order-row wishlist-row">
                             <td class="wishlist-cell wishlist-cell--product">
                                 <div class="wishlist-product">
                                     <img class="wishlist-product__img" src="../../<?= htmlspecialchars($it->file_path) ?>" alt="<?= htmlspecialchars($it->alt_text) ?>">
                                     <div class="wishlist-product__info">
                                         <div class="wishlist-product__name"><?= htmlspecialchars($it->product_name) ?></div>
-                                        <small class="wishlist-product__meta">Product ID: <?= (int)$it->product_id ?></small>
+                                        <?php if ($isUnavailable): ?>
+                                            <small class="wishlist-product__meta">Currently unavailable</small>
+                                        <?php else: ?>
+                                            <small class="wishlist-product__meta">Product ID: <?= (int)$it->product_id ?></small>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </td>
                             <td class="price-total wishlist-cell wishlist-cell--price">RM <?= number_format((float)$it->unit_price, 2) ?></td>
                             <td class="wishlist-cell wishlist-cell--added"><small><?= htmlspecialchars($it->created_at) ?></small></td>
                             <td class="actions wishlist-actions wishlist-cell wishlist-cell--actions">
-                                <a class="btn-view wishlist-actions__btn" href="<?= $rootDir ?>/pages/product/product-detail.php?id=<?= (int)$it->product_id ?>">View</a>
+                                <?php if ($isUnavailable): ?>
+                                    <span class="btn-view wishlist-actions__btn" style="opacity:.5; cursor:not-allowed;">Unavailable</span>
+                                <?php else: ?>
+                                    <a class="btn-view wishlist-actions__btn" href="<?= $rootDir ?>/pages/product/product-detail.php?id=<?= (int)$it->product_id ?>">View</a>
+                                <?php endif; ?>
                                 <form method="POST" class="wishlist-actions__form">
                                     <input type="hidden" name="remove_product_id" value="<?= (int)$it->product_id ?>">
                                     <button type="submit" class="btn-view wishlist-actions__btn" onclick="return confirm('Remove from wishlist?')">Remove</button>
