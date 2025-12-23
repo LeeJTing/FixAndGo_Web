@@ -50,6 +50,31 @@
   top: 2rem;
   align-self: start; /* This ensures it sticks to the top of its grid cell */
 }
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  margin-bottom: 0.6rem;
+  padding: 10px 18px;
+
+  font-size: 0.85rem;
+  font-weight: 600;
+
+  color: var(--primary-color);
+  text-decoration: none;
+
+  border: 2px solid var(--primary-color);
+  border-radius: 20px;
+
+  background: transparent;
+  transition: all 0.25s ease;
+}
+
+.btn-back:hover {
+  background-color: var(--primary-color);
+  color: var(--text-light);
+}
 
 /* Pending */
 .status.pending {

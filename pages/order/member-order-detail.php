@@ -1,7 +1,7 @@
 <?php
+$_title = 'Fix & Go | Member Order Detail';
 require_once "../../_base.php";
 include "../../_head.php";
-$_title = 'Fix & Go | Member Order Detail';
 require '../../controller/order-controller.php';
 require '../../component/msg.php';
 
@@ -44,6 +44,10 @@ displayFlashMessage();
     <!-- Order Overview -->
     <div class="order-header">
         <div>
+            <a href="member-order-history.php" class="btn-back">
+                ← Back to Order History
+            </a>
+
             <h2>Order: <?= htmlspecialchars($order->order_id) ?></h2>
             <p class="text-muted">
                 Placed on <?= date('d M Y, H:i', strtotime($order->order_at)) ?>
@@ -53,8 +57,9 @@ displayFlashMessage();
         <span class="status <?= strtolower($order->order_status) ?>">
             <?= htmlspecialchars($order->order_status) ?>
         </span>
-
     </div>
+
+
 
     <div class="grid">
 
@@ -164,7 +169,7 @@ displayFlashMessage();
                 <input type="hidden" name="order_id" value="<?= $order_id ?>">
                 <input type="hidden" name="user_id" value="<?= $user_id ?>">
                 <div class="actions">
-                    <?php if ($order->order_status === 'Processing' || 'Pending'): ?>
+                    <?php if (in_array($order->order_status, ['Processing', 'Pending'])): ?>
                         <button type="submit" class="btn btn-danger">Cancel Order</button>
                     <?php endif; ?>
                 </div>

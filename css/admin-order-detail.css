@@ -59,7 +59,6 @@ body[data-theme="light"] {
   --btn-text: #0f172a;
 }
 
-
 body {
   background-color: var(--color-bg-body);
   color: var(--color-text-primary);
@@ -409,352 +408,352 @@ body {
   background-color: var(--color-input-bg);
   color: var(--color-text-primary);
   border: 1px solid var(--color-border);
-.btn-back:hover {
-  background-color: #e2e6ea;
-}
+  .btn-back:hover {
+    background-color: #e2e6ea;
+  }
 
-.btn-edit {
-  background-color: var(--primary-color, #f59e0b); /* Fallback orange */
-  color: white;
-}
-.btn-edit:hover {
-  filter: brightness(90%);
-  transform: translateY(-1px);
-}
+  .btn-edit {
+    background-color: var(--primary-color, #f59e0b); /* Fallback orange */
+    color: white;
+  }
+  .btn-edit:hover {
+    filter: brightness(90%);
+    transform: translateY(-1px);
+  }
 
-/* Disabled State */
-.btn-disabled {
-  background-color: #e9ecef;
-  color: #adb5bd;
-  cursor: not-allowed;
-  pointer-events: none; /* Prevents clicking */
-  box-shadow: none;
-}
+  /* Disabled State */
+  .btn-disabled {
+    background-color: #e9ecef;
+    color: #adb5bd;
+    cursor: not-allowed;
+    pointer-events: none; /* Prevents clicking */
+    box-shadow: none;
+  }
 
-/* Flex container to push button to the right */
-.address-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem; /* Space between header and address text */
-}
+  /* Flex container to push button to the right */
+  .address-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem; /* Space between header and address text */
+  }
 
-/* Remove default margin from label so it aligns perfectly */
-.address-header .label {
-  margin-bottom: 0;
-}
+  /* Remove default margin from label so it aligns perfectly */
+  .address-header .label {
+    margin-bottom: 0;
+  }
 
-/* Style for the small edit link */
-.btn-text-edit {
-  font-size: 0.85rem;
-  color: var(--primary-color, #f59e0b);
-  text-decoration: none;
-  font-weight: 600;
-  cursor: pointer;
-  transition: color 0.2s;
-}
+  /* Style for the small edit link */
+  .btn-text-edit {
+    font-size: 0.85rem;
+    color: var(--primary-color, #f59e0b);
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
 
-.btn-text-edit:hover {
-  color: var(--primary-hover, #d97706);
-  text-decoration: underline;
-}
+  .btn-text-edit:hover {
+    color: var(--primary-hover, #d97706);
+    text-decoration: underline;
+  }
 
-.btn-text-edit i {
-  font-size: 0.75rem;
-  margin-left: 4px;
-}
-/* Style the dropdown to look like a badge */
-.status-select {
-  appearance: none; /* Remove default browser arrow */
-  -webkit-appearance: none;
-  -moz-appearance: none;
+  .btn-text-edit i {
+    font-size: 0.75rem;
+    margin-left: 4px;
+  }
+  /* Style the dropdown to look like a badge */
+  .status-select {
+    appearance: none; /* Remove default browser arrow */
+    -webkit-appearance: none;
+    -moz-appearance: none;
 
-  padding: 5px 15px;
-  padding-right: 30px; /* Space for custom arrow */
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  text-transform: capitalize;
-  outline: none;
+    padding: 5px 15px;
+    padding-right: 30px; /* Space for custom arrow */
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    text-transform: capitalize;
+    outline: none;
 
-  /* Add a custom small arrow icon */
-  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23333%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
-  background-repeat: no-repeat;
-  background-position: right 10px top 50%;
-  background-size: 10px auto;
-}
+    /* Add a custom small arrow icon */
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23333%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px top 50%;
+    background-size: 10px auto;
+  }
 
-/* Hover effect */
-.status-select:hover {
-  filter: brightness(0.95);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
+  /* Hover effect */
+  .status-select:hover {
+    filter: brightness(0.95);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
 
-/* Status Colors (Ensure these exist in your CSS) */
-.status-pending {
-  background-color: #fef3c7;
-  color: #92400e;
-}
-.status-processing {
-  background-color: #dbeafe;
-  color: #1e40af;
-}
-.status-shipping {
-  background-color: #e0e7ff;
-  color: #3730a3;
-}
-.status-delivered {
-  background-color: #dcfce7;
-  color: #166534;
-}
-.status-cancelled {
-  background-color: #fee2e2;
-  color: #991b1b;
-}
+  /* Status Colors (Ensure these exist in your CSS) */
+  .status-pending {
+    background-color: #fef3c7;
+    color: #92400e;
+  }
+  .status-processing {
+    background-color: #dbeafe;
+    color: #1e40af;
+  }
+  .status-shipping {
+    background-color: #e0e7ff;
+    color: #3730a3;
+  }
+  .status-delivered {
+    background-color: #dcfce7;
+    color: #166534;
+  }
+  .status-cancelled {
+    background-color: #fee2e2;
+    color: #991b1b;
+  }
 
-/* Container for the scrollable list */
-#address-list-container {
-  max-height: 400px; /* Limits height if there are many addresses */
-  overflow-y: auto; /* Enables scrolling */
-  padding: 10px;
-  background-color: var(--color-bg-body);
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  margin-bottom: 20px;
-}
+  /* Container for the scrollable list */
+  #address-list-container {
+    max-height: 400px; /* Limits height if there are many addresses */
+    overflow-y: auto; /* Enables scrolling */
+    padding: 10px;
+    background-color: var(--color-bg-body);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
 
-/* Individual Address Card */
-.address-option {
-  display: flex;
-  align-items: flex-start; /* Aligns radio button to top */
-  gap: 15px;
-  padding: 15px;
-  margin-bottom: 10px;
-  background: var(--color-card-bg);
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
+  /* Individual Address Card */
+  .address-option {
+    display: flex;
+    align-items: flex-start; /* Aligns radio button to top */
+    gap: 15px;
+    padding: 15px;
+    margin-bottom: 10px;
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
 
-/* Hover Effect */
-.address-option:hover {
-  border-color: var(--primary-color, #f59e0b);
-  background-color: #fffbf0; /* Very light orange tint */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-}
+  /* Hover Effect */
+  .address-option:hover {
+    border-color: var(--primary-color, #f59e0b);
+    background-color: #fffbf0; /* Very light orange tint */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  }
 
-/* Selected State (When radio is checked) */
-/* Note: :has() is supported in all modern browsers */
-.address-option:has(input:checked) {
-  border-color: var(--primary-color, #f59e0b);
-  background-color: #fff7ed;
-  box-shadow: 0 0 0 1px var(--primary-color, #f59e0b); /* Thicker border appearance */
-}
+  /* Selected State (When radio is checked) */
+  /* Note: :has() is supported in all modern browsers */
+  .address-option:has(input:checked) {
+    border-color: var(--primary-color, #f59e0b);
+    background-color: #fff7ed;
+    box-shadow: 0 0 0 1px var(--primary-color, #f59e0b); /* Thicker border appearance */
+  }
 
-/* The Radio Button Input */
-.address-option input[type="radio"] {
-  margin-top: 4px; /* Aligns visually with the first line of text */
-  accent-color: var(--primary-color, #f59e0b);
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-}
+  /* The Radio Button Input */
+  .address-option input[type="radio"] {
+    margin-top: 4px; /* Aligns visually with the first line of text */
+    accent-color: var(--primary-color, #f59e0b);
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
 
-/* Address Text Details */
-.address-details {
-  flex: 1;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  color: var(--color-text-primary); /* Grey text */
-}
+  /* Address Text Details */
+  .address-details {
+    flex: 1;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--color-text-primary); /* Grey text */
+  }
 
-.address-details strong {
-  display: block;
-  color: var(--color-text-heading); /* Darker black for name */
-  font-size: 1rem;
-  margin-bottom: 4px;
-}
+  .address-details strong {
+    display: block;
+    color: var(--color-text-heading); /* Darker black for name */
+    font-size: 1rem;
+    margin-bottom: 4px;
+  }
 
-/* Custom Scrollbar (Optional - for Webkit browsers like Chrome/Edge) */
-#address-list-container::-webkit-scrollbar {
-  width: 8px;
-}
-#address-list-container::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
-}
-#address-list-container::-webkit-scrollbar-thumb {
-  background: #d1d5db;
-  border-radius: 4px;
-}
-#address-list-container::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
-}
-/* Dark Overlay Background */
-#address-form-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5); /* Dimmed background */
-  z-index: 999;
-  display: flex;
-  justify-content: center; /* Center Horizontally */
-  align-items: center; /* Center Vertically */
-}
+  /* Custom Scrollbar (Optional - for Webkit browsers like Chrome/Edge) */
+  #address-list-container::-webkit-scrollbar {
+    width: 8px;
+  }
+  #address-list-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+  #address-list-container::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 4px;
+  }
+  #address-list-container::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+  }
+  /* Dark Overlay Background */
+  #address-form-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Dimmed background */
+    z-index: 999;
+    display: flex;
+    justify-content: center; /* Center Horizontally */
+    align-items: center; /* Center Vertically */
+  }
 
-/* The White Form Box */
-.centered-form-box {
-  background: var(--color-card-bg);
-  width: 500px;
-  max-width: 90%;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.centered-form-box h3 {
-  margin: 0 0 10px 0;
-  color: var(--color-text-primary);
-  border-bottom: 1px solid #eee;
-  padding-bottom: 10px;
-}
-
-/* Scrollable Address List */
-#address-list-container {
-  max-height: 350px;
-  overflow-y: auto;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 10px;
-}
-
-/* Buttons at the bottom */
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 10px;
-  padding-top: 15px;
-  border-top: 1px solid #eee;
-}
-
-.btn-save,
-.btn-cancel {
-  padding: 10px 20px;
-  border-radius: 6px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.btn-save {
-  background: #f59e0b;
-  color: white;
-}
-.btn-save:hover {
-  background: #d97706;
-}
-
-.btn-cancel {
-  background: var(--color-card-bg);
-  border: 1px solid #ddd;
-  color: #555;
-}
-.btn-cancel:hover {
-  background: #f3f4f6;
-}
-
-/* Address Card Style (Same as before) */
-.address-option {
-  display: flex;
-  align-items: flex-start;
-  gap: 15px;
-  padding: 15px;
-  margin-bottom: 10px;
-  background: var(--color-card-bg);
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.address-option:hover {
-  border-color: #f59e0b;
-  background-color: #fffbf0;
-}
-
-.address-option:has(input:checked) {
-  border-color: #f59e0b;
-  background-color: #fff7ed;
-  box-shadow: 0 0 0 1px #f59e0b;
-}
-
-#header-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-
-  border-bottom: 1px solid var(--color-border);
-}
-
-/* Left group (Order ID + Status) */
-#header-row > span,
-#header-row > form {
-  display: flex;
-  align-items: center;
-}
-
-/* Order ID */
-.order-id {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--color-text-heading);
-  white-space: nowrap;
-}
-
-/* Status badge (readonly) */
-#header-row .status {
-  margin-left: 12px;
-}
-
-/* Status select (editable) */
-.status-select {
-  margin-left: 12px;
-}
-
-/* Order date */
-#header-row .estimated {
-  font-size: 0.85rem;
-  color: var(--color-text-muted);
-  white-space: nowrap;
-}
-
-/* Make everything stay in one row on large screens */
-@media (max-width: 768px) {
-  #header-row {
+  /* The White Form Box */
+  .centered-form-box {
+    background: var(--color-card-bg);
+    width: 500px;
+    max-width: 90%;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .centered-form-box h3 {
+    margin: 0 0 10px 0;
+    color: var(--color-text-primary);
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+  }
+
+  /* Scrollable Address List */
+  #address-list-container {
+    max-height: 350px;
+    overflow-y: auto;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 10px;
+  }
+
+  /* Buttons at the bottom */
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
     gap: 10px;
+    margin-top: 10px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
   }
 
+  .btn-save,
+  .btn-cancel {
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .btn-save {
+    background: #f59e0b;
+    color: white;
+  }
+  .btn-save:hover {
+    background: #d97706;
+  }
+
+  .btn-cancel {
+    background: var(--color-card-bg);
+    border: 1px solid #ddd;
+    color: #555;
+  }
+  .btn-cancel:hover {
+    background: #f3f4f6;
+  }
+
+  /* Address Card Style (Same as before) */
+  .address-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 15px;
+    margin-bottom: 10px;
+    background: var(--color-card-bg);
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .address-option:hover {
+    border-color: #f59e0b;
+    background-color: #fffbf0;
+  }
+
+  .address-option:has(input:checked) {
+    border-color: #f59e0b;
+    background-color: #fff7ed;
+    box-shadow: 0 0 0 1px #f59e0b;
+  }
+
+  #header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  /* Left group (Order ID + Status) */
+  #header-row > span,
+  #header-row > form {
+    display: flex;
+    align-items: center;
+  }
+
+  /* Order ID */
+  .order-id {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text-heading);
+    white-space: nowrap;
+  }
+
+  /* Status badge (readonly) */
+  #header-row .status {
+    margin-left: 12px;
+  }
+
+  /* Status select (editable) */
+  .status-select {
+    margin-left: 12px;
+  }
+
+  /* Order date */
   #header-row .estimated {
-    align-self: flex-end;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    white-space: nowrap;
   }
-}
 
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
+  /* Make everything stay in one row on large screens */
+  @media (max-width: 768px) {
+    #header-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    #header-row .estimated {
+      align-self: flex-end;
+    }
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
 }
