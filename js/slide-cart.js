@@ -62,16 +62,28 @@
       })
         .done(function (resp) {
           if (resp.success) {
-            $item.find(".product-quantity-display").text(qty);
+            const appliedQty =
+              resp && typeof resp.quantity !== "undefined"
+                ? parseInt(resp.quantity, 10)
+                : qty;
+            $item.find(".product-quantity-display").text(appliedQty);
             const price = parseFloat($item.data("price")) || 0;
-            $item.find(".product-total").text((price * qty).toFixed(2));
+            $item.find(".product-total").text((price * appliedQty).toFixed(2));
             
             // Update disabled state for minus button
             const $minusBtn = $item.find(".qty-btn.minus");
-            if (qty <= 1) {
+            if (appliedQty <= 1) {
               $minusBtn.addClass("disabled");
             } else {
               $minusBtn.removeClass("disabled");
+            }
+
+            const stock = parseInt($item.data("stock"), 10) || 0;
+            const $plusBtn = $item.find(".qty-btn.plus");
+            if (stock > 0 && appliedQty >= stock) {
+              $plusBtn.addClass("disabled");
+            } else {
+              $plusBtn.removeClass("disabled");
             }
             
             recalcHeaderCart();

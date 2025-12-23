@@ -102,7 +102,8 @@ foreach ($cart_items as $item) {
                 ?>
                 <div class="cart-item flex align-center <?= $is_check ? 'item-selected' : '' ?>"
                     data-item-id="<?= $item->item_id ?>"
-                    data-price="<?= $item->unit_price ?>">
+                    data-price="<?= $item->unit_price ?>"
+                    data-stock="<?= (int)($item->stock_quantity ?? 0) ?>">
 
                     <div class="item-checkbox-container">
                         <input type="checkbox"
@@ -128,7 +129,7 @@ foreach ($cart_items as $item) {
                     <div class="quantity-control">
                         <a href="javascript:void(0)" class="qty-btn minus <?= $item->qty <= 1 ? 'disabled' : '' ?>">-</a>
                         <span class="product-quantity-display"><?= $item->qty ?></span>
-                        <a href="javascript:void(0)" class="qty-btn plus <?= $item->stock_quantity >= 999 ? 'disabled' : '' ?>">+</a>
+                        <a href="javascript:void(0)" class="qty-btn plus <?= ((int)$item->stock_quantity > 0 && (int)$item->qty >= (int)$item->stock_quantity) ? 'disabled' : '' ?>">+</a>
                     </div>
 
                     <span class="product-total">RM <?= number_format($item->item_total, 2) ?></span>

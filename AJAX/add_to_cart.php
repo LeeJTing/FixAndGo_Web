@@ -36,9 +36,14 @@ try {
         $cart_id = (int) ($cart->cart_id ?? $cart['cart_id']);
     }
 
-    $ok = addToCart($cart_id, $product_id, $quantity);
-    if (!$ok) {
-        echo json_encode(['success' => false, 'error' => 'Failed to add item to cart']);
+    $res = addToCart($cart_id, $product_id, $quantity);
+    if (!is_array($res) || empty($res['success'])) {
+        $err = is_array($res) ? ($res['error'] ?? 'Failed to add item to cart') : 'Failed to add item to cart';
+        echo json_encode([
+            'success' => false,
+            'error' => $err,
+            'stock' => is_array($res) ? ($res['stock'] ?? null) : null,
+        ]);
         exit;
     }
 
@@ -52,6 +57,9 @@ try {
     echo json_encode([
         'success' => true,
         'cartCount' => $totalQty,
+        'quantity' => (int)($res['quantity'] ?? $quantity),
+        'stock' => (int)($res['stock'] ?? 0),
+        'capped' => !empty($res['capped']),
     ]);
 } catch (Throwable $e) {
     error_log('add_to_cart error: ' . $e->getMessage());

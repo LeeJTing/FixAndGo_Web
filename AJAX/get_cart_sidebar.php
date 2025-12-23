@@ -30,6 +30,7 @@ try {
         $product_name = (string) ($ci->product_name ?? ($ci['product_name'] ?? ''));
         $unit_price = (float) ($ci->unit_price ?? ($ci['unit_price'] ?? 0));
         $qty = (int) ($ci->qty ?? ($ci['qty'] ?? 1));
+        $stock = (int) ($ci->stock_quantity ?? ($ci['stock_quantity'] ?? 0));
         $file_path = (string) ($ci->file_path ?? ($ci['file_path'] ?? ''));
         $is_check = (int) ($ci->is_check ?? ($ci['is_check'] ?? 1));
 
@@ -43,6 +44,7 @@ try {
             'product_name' => $product_name,
             'unit_price' => $unit_price,
             'qty' => $qty,
+            'stock' => $stock,
             'file_path' => $file_path,
             'is_check' => $is_check,
         ];

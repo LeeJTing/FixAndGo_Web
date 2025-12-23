@@ -27,6 +27,7 @@
         const name = escapeHtml(it.product_name || "");
         const price = parseFloat(it.unit_price) || 0;
         const qty = parseInt(it.qty, 10) || 1;
+        const stock = parseInt(it.stock, 10) || 0;
         const total = (price * qty).toFixed(2);
         const isCheck = parseInt(it.is_check, 10) ? true : false;
         const filePath = (it.file_path || "").replace(/^\/+/, "");
@@ -37,6 +38,8 @@
           itemId +
           '" data-price="' +
           price +
+          '" data-stock="' +
+          stock +
           '">' +
           '<div class="item-checkbox-container">' +
           '<input type="checkbox" class="item-checkbox is-check-checkbox" data-item-id="' +
@@ -67,7 +70,9 @@
           '<span class="product-quantity-display">' +
           qty +
           "</span>" +
-          '<a href="javascript:void(0)" class="qty-btn plus">+</a>' +
+          '<a href="javascript:void(0)" class="qty-btn plus ' +
+          (stock > 0 && qty >= stock ? "disabled" : "") +
+          '">+</a>' +
           "</div>" +
           '<div class="product-total-small">RM <span class="product-total">' +
           total +
@@ -178,16 +183,29 @@
       })
         .done(function (resp) {
           if (resp.success) {
-            $item.find(".product-quantity-display").text(qty);
+            const appliedQty =
+              resp && typeof resp.quantity !== "undefined"
+                ? parseInt(resp.quantity, 10)
+                : qty;
+            $item.find(".product-quantity-display").text(appliedQty);
             const price = parseFloat($item.data("price")) || 0;
-            $item.find(".product-total").text((price * qty).toFixed(2));
+            $item.find(".product-total").text((price * appliedQty).toFixed(2));
 
             // Update disabled state for minus button
             const $minusBtn = $item.find(".qty-btn.minus");
-            if (qty <= 1) {
+            if (appliedQty <= 1) {
               $minusBtn.addClass("disabled");
             } else {
               $minusBtn.removeClass("disabled");
+            }
+
+            // Update disabled state for plus button
+            const stock = parseInt($item.data("stock"), 10) || 0;
+            const $plusBtn = $item.find(".qty-btn.plus");
+            if (stock > 0 && appliedQty >= stock) {
+              $plusBtn.addClass("disabled");
+            } else {
+              $plusBtn.removeClass("disabled");
             }
 
             recalcHeaderCart();
