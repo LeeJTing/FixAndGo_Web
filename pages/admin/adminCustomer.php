@@ -172,7 +172,8 @@ include 'adminHeader.php';
                             </tr>
                         <?php else: ?>
                             <?php foreach ($customers as $customer): ?>
-                            <tr class="<?= ($selectedCustomer && $selectedCustomer->user_id == $customer->user_id) ? 'selected' : '' ?>">
+                            <tr id="row-<?= htmlspecialchars($customer->user_id) ?>"
+                                class="<?= ($selectedCustomer && $selectedCustomer->user_id == $customer->user_id) ? 'selected' : '' ?>">
                                 <td onclick="event.stopPropagation();">
                                     <input type="checkbox" class="user-checkbox" 
                                            value="<?= htmlspecialchars($customer->user_id) ?>"
@@ -209,9 +210,9 @@ include 'adminHeader.php';
                                 </td>
                                 <td onclick="event.stopPropagation();">
                                     <a href="?edit=<?= $customer->user_id ?>&<?= $queryParams ?>" class="btn-edit">Edit</a>
-                                    <a href="?action=delete&id=<?= $customer->user_id ?>&<?= $queryParams ?>"
-                                       onclick="return confirm('Are you sure you want to delete this customer?')" 
-                                       class="btn-delete">Delete</a>
+                                    <a href="javascript:void(0)"
+                                        onclick="deleteUser('<?= $customer->user_id ?>')"
+                                        class="btn-delete">Delete</a>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
@@ -475,8 +476,35 @@ function closeAddModal() {
     document.getElementById('addCustomerModal').style.display = 'none';
 }
 
+function deleteUser(userId) {
+    if (!confirm('Delete this user?')) return;
+
+    fetch('adminCustomerAjax.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: userId })
+    })
+    .then(res => {
+        console.log('HTTP status:', res.status);
+        return res.text(); // ⚠️ 先别 json
+    })
+    .then(text => {
+        console.log('Response:', text);
+        const data = JSON.parse(text);
+        if (data.success) {
+            document.getElementById('row-' + userId).remove();
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(err => {
+        console.error('AJAX error:', err);
+    });
+}
+
+
 window.onclick = function(event) {
-    const modal = document.getElementById('addCustomerModal');
+    const modal = document.ge   tElementById('addCustomerModal');
     if (event.target == modal) {
         modal.style.display = 'none';
     }
