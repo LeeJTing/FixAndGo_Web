@@ -43,7 +43,7 @@
 
       <!-- Section Header -->
       <div class="section-header text-center">
-          <h2 class="section-title">Featured Tools</h2>
+          <h2 class="section-title">Top 5 Selling Products</h2>
           <p class="section-subtitle">Explore our selection of top-rated hardware</p>
       </div>
 
