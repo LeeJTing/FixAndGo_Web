@@ -504,7 +504,7 @@ function deleteUser(userId) {
 
 
 window.onclick = function(event) {
-    const modal = document.ge   tElementById('addCustomerModal');
+    const modal = document.getElementById('addCustomerModal');
     if (event.target == modal) {
         modal.style.display = 'none';
     }
