@@ -8,7 +8,7 @@ include 'adminHeader.php';
 $id = get('id') ?? null;
 
 $orderItems = getAllProductByOrderId($id);
-$address = getOrderWithSelectedAddress($id);
+$address = getWithSelectedAddress($id);
 $order   = getOrderById($id);
 $payment = getPaymentRecord($id);
 

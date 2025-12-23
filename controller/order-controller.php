@@ -3,6 +3,7 @@ require_once  __DIR__ . '/../_base.php';
 require __DIR__ . '/../DAO/order-dao.php';
 require_once __DIR__ . '/../email/email.php';
 require_once __DIR__ . '/../DAO/product_dao.php';
+require_once __DIR__ . '/../DAO/security_dao.php';
 
 $order_id = get('order_id');
 $user_id = get('user_id');
@@ -234,6 +235,10 @@ function getMemberAddress($user_id, $order_id)
 function getAllCategory()
 {
     return getAllCategoryDao();
+}
+function getWithSelectedAddress($id)
+{
+    return getOrderWithSelectedAddressDao($id);
 }
 
 function notifyCustomerCancellation($order_id, $customer_email, $customer_name)
