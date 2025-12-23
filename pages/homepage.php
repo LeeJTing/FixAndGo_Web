@@ -15,7 +15,7 @@
       <div class="container">
           <h1>Build Your Dreams</h1>
           <p>Premium quality tools for professionals and DIY enthusiasts. Built to last, designed for precision.</p>
-          <button class="btn btn-primary" data-link="products">Shop Now &rarr;</button>
+          <a class="btn btn-primary" data-link="products" href="<?= $rootDir ?>/pages/product/product-list.php">Shop Now &rarr;</a>
       </div>
   </section>
 

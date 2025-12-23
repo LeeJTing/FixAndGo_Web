@@ -33,6 +33,12 @@ if ($function === 'Search') {
 
     header('Location: ../pages/admin/admin-product.php');
     exit;
+} else if ($function == 'allProductAdmin') {
+
+    $products = getProductListAdminDao();
+    header('Content-Type: application/json');
+    echo json_encode($products);
+    exit;
 } else if ($function === 'getProductName') {
     $product_id = intval($_GET['id'] ?? 0);
 
@@ -50,9 +56,9 @@ if ($function === 'Search') {
     $result = getAllProductFilterAdminDao($category_code, $sortBy, $priceValue);
     echo json_encode($result);
     exit;
-} else if ($function === 'Search') {
-    $search_value = $_GET['search'] ?? '';  // prevent warning too
-    $result = getProductBySearchAdminDao($search_value);
+} else if ($function === 'SearchAdmin') {
+    $search_value = $_GET['search'] ?? '';
+    $result = getSearchProductAdminDao($search_value);
 
     header('Content-Type: application/json');
     echo json_encode($result);

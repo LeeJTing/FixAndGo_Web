@@ -433,19 +433,25 @@ function getProductBySearchDao($keyword)
 
     $searchTerm = "%" . $keyword . "%";
 
-    $sql = "SELECT p.*,pvm.alt,pvm.file_path,c.category_name
-            FROM product p
-            JOIN category c ON c.category_code = p.category_code AND c.is_deleted = 0
-            LEFT JOIN productvisualmedia pvm ON pvm.product_id = p.product_id AND pvm.is_show = 1
-            WHERE p.isdeleted = 0 
-            AND p.status = 'active'
-            AND p.product_id LIKE ? 
-            OR p.product_name LIKE ? 
-            OR p.description LIKE ?     
-            OR c.category_name LIKE ?
-            OR p.unit_price LIKE ?       
-            OR p.product_point LIKE ?    
-            OR p.short_desc LIKE ?";
+    $sql = "SELECT p.*, pvm.alt, pvm.file_path, c.category_name
+        FROM product p
+        JOIN category c 
+          ON c.category_code = p.category_code 
+         AND c.is_deleted = 0
+        LEFT JOIN productvisualmedia pvm 
+          ON pvm.product_id = p.product_id 
+         AND pvm.is_show = 1
+        WHERE p.isdeleted = 0
+          AND p.status = 'active'
+          AND (
+                p.product_id LIKE ?
+             OR p.product_name LIKE ?
+             OR p.description LIKE ?
+             OR c.category_name LIKE ?
+             OR p.unit_price LIKE ?
+             OR p.product_point LIKE ?
+             OR p.short_desc LIKE ?
+          )";
 
     $stmt = $_db->prepare($sql);
 
@@ -462,38 +468,54 @@ function getProductBySearchDao($keyword)
     return $stmt->fetchAll();
 }
 
+function getSearchProductAdminDao($keyword)
+{
+    global $_db;
+
+    $searchTerm = "%" . $keyword . "%";
+
+    $sql = "SELECT p.*,pvm.alt,pvm.file_path,c.category_name FROM product p JOIN category c ON c.category_code = p.category_code AND c.is_deleted = 0 LEFT JOIN productvisualmedia pvm ON pvm.product_id = p.product_id AND pvm.is_show = 1 WHERE p.isdeleted = 0 AND p.status = 'active' AND p.product_id LIKE ? OR p.product_name LIKE ? OR p.description LIKE ? OR c.category_name LIKE ? OR p.unit_price LIKE ? OR p.product_point LIKE ? OR p.short_desc LIKE ?";
+
+    $stmt = $_db->prepare($sql);
+    $stmt->execute(array_fill(0, 7, $searchTerm));
+
+    return $stmt->fetchAll(PDO::FETCH_OBJ);
+}
+
 function getProductBySearchAdminDao($keyword)
 {
     global $_db;
 
     $searchTerm = "%" . $keyword . "%";
 
-    $sql = "SELECT p.*,pvm.alt,COALESCE(pvm.file_path, '/images/no-image.jpg') AS file_path,c.category_name
+    $sql = "SELECT 
+                p.*,
+                pvm.alt,
+                COALESCE(pvm.file_path, '/images/no-image.jpg') AS file_path,
+                c.category_name
             FROM product p
-            JOIN category c ON c.category_code = p.category_code AND c.is_deleted = 0
-            LEFT JOIN productvisualmedia pvm ON pvm.product_id = p.product_id AND pvm.is_show = 1
-            WHERE p.isdeleted = 0 
-            AND p.product_id LIKE ? 
-            OR p.product_name LIKE ? 
-            OR p.description LIKE ?     
-            OR c.category_name LIKE ?
-            OR p.unit_price LIKE ?       
-            OR p.product_point LIKE ?    
-            OR p.short_desc LIKE ?";
+            JOIN category c 
+              ON c.category_code = p.category_code
+            JOIN productvisualmedia pvm 
+              ON pvm.product_id = p.product_id 
+             AND pvm.is_show = 1
+            WHERE p.isdeleted = 0
+              AND (
+                    p.product_name LIKE ?
+                 OR p.description LIKE ?
+                 OR c.category_name LIKE ?
+                 OR p.short_desc LIKE ?
+                 OR CAST(p.product_id AS CHAR) LIKE ?
+                 OR CAST(p.unit_price AS CHAR) LIKE ?
+                 OR CAST(p.product_point AS CHAR) LIKE ?
+              )
+            GROUP BY p.product_id
+            ORDER BY p.product_id DESC";
 
     $stmt = $_db->prepare($sql);
+    $stmt->execute(array_fill(0, 7, $searchTerm));
 
-    $stmt->execute([
-        $searchTerm,
-        $searchTerm,
-        $searchTerm,
-        $searchTerm,
-        $searchTerm,
-        $searchTerm,
-        $searchTerm
-    ]);
-
-    return $stmt->fetchAll();
+    return $stmt->fetchAll(PDO::FETCH_OBJ);
 }
 
 function deleteByProductId($id)

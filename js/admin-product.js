@@ -1,14 +1,12 @@
 $(document).ready(function () {
-  loadProduct();
-
   $("#searchInput").on("input", function () {
     var valueSearch = $(this).val();
     getSearchData(valueSearch);
   });
+  loadProduct();
 
-  // Filter on change
   $(".filter-select").on("change", function () {
-    loadProduct($(this).val(), "", "");
+    filterCategory($(this).val(), "", "");
   });
 
   $("#mobileMenuToggle").click(function () {
@@ -34,11 +32,79 @@ $(document).ready(function () {
   });
 });
 
-function loadProduct(category, sortType, currentValue) {
+function filterCategory(category, sortType, currentValue) {
   $.ajax({
-    url: "../../controller/admin-controller.php?function=allProduct",
+    url: "../../controller/admin-controller.php",
     type: "GET",
-    data: { category: category, sort: sortType, price: currentValue },
+    data: {
+      function: "allProduct",
+      category: category,
+      sort: sortType,
+      price: currentValue,
+    },
+    dataType: "json",
+    cache: false,
+    beforeSend: function () {
+      $(".products-grid").html("<p>Loading...</p>");
+    },
+    success: function (data) {
+      $(".products-grid").empty();
+
+      if (Array.isArray(data) && data.length > 0) {
+        data.forEach(function (p) {
+          const altText = p.alt || p.product_name;
+          const imagePath = p.file_path
+            ? "../../" + p.file_path.replace(/^\/+/, "")
+            : "../../images/no-image.jpg";
+
+          $(".products-grid").append(`
+            <div class="product-card">
+              <div class="product-image">
+                <img src="${imagePath}" alt="${altText}" loading="lazy">
+              </div>
+
+              <div class="product-info">
+                <div class="product-category">
+                  ${p.category_name} <small>(${p.category_code})</small>
+                </div>
+
+                <h3 class="product-title">${p.product_name}</h3>
+
+                <div class="product-price">
+                  RM ${parseFloat(p.unit_price).toFixed(2)}
+                </div>
+
+                <div class="product-actions">
+                  <a href="../admin/admin-product-update.php?id=${
+                    p.product_id
+                  }" class="btn-update">
+                    Update Details
+                  </a>
+                  <button class="btn-delete" onclick="deleteItem(${
+                    p.product_id
+                  })">
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          `);
+        });
+      } else {
+        $(".products-grid").html("<p>No products found.</p>");
+      }
+    },
+    error: function (xhr) {
+      console.error(xhr.responseText);
+      $(".products-grid").html("<p>Error loading products.</p>");
+    },
+  });
+}
+
+function loadProduct() {
+  $.ajax({
+    url: "../../controller/admin-controller.php?function=allProductAdmin",
+    type: "GET",
     dataType: "json",
     cache: false,
     beforeSend: function () {
@@ -108,7 +174,7 @@ function deleteItem(id) {
 
 function getSearchData(value) {
   $.ajax({
-    url: "../../controller/admin-controller.php?function=Search",
+    url: "../../controller/admin-controller.php?function=SearchAdmin",
     type: "GET",
     data: { search: value },
     dataType: "json",
