@@ -806,6 +806,7 @@ function getTop5BestSellersDifferentCategories()
                 c.category_code,
                 c.category_name,
                 p.description,
+                p.product_id,
                 c.description AS category_description,
 
                 COUNT(DISTINCT p.product_id) AS total_products_in_category,

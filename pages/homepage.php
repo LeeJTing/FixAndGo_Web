@@ -78,8 +78,8 @@
                           </a>
                           <button class="btn-cart add-to-cart"
                               data-id="<?= $item->product_id ?>"
-                              data-name="<?= htmlspecialchars($item->product_name) ?>"
-                              data-price="<?= $item->unit_price ?>">
+                              data-name="<?= htmlspecialchars($item->best_selling_product) ?>"
+                              data-price="<?= $item->top_product_unit_price ?>">
                               <i class="fas fa-cart-plus"></i>
                           </button>
                       </div>
