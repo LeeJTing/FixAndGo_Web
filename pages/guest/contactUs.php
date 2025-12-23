@@ -668,12 +668,12 @@ textarea.form-control {
         <div class="map-container">
             <!-- Google Maps Embed - TAR UMT Arena Location -->
             <iframe
-            src="https://www.google.com/maps?q=TAR%20UMT%20Arena%20Setapak&output=embed"
-            width="100%"
-            height="100%"
-            style="border:0;"
-            allowfullscreen=""
-            loading="lazy">
+                src="https://www.google.com/maps?q=3.2153,101.7281&output=embed"
+                width="100%"
+                height="100%"
+                style="border:0;"
+                allowfullscreen=""
+                loading="lazy">
             </iframe>
         </div>
     </div>
