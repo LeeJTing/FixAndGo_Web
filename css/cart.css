@@ -39,7 +39,7 @@
 
 .cart-header .header-price,
 .cart-header .header-total {
-  width: 120px;
+  width: 170px;
   text-align: center;
   padding: 0 10px;
 }
@@ -53,7 +53,6 @@
 .cart-header .header-delete {
   width: 100px;
   text-align: center;
-  padding: 0 10px;
 }
 
 /* Cart Items - Fixed alignment */

@@ -20,8 +20,34 @@ if ($order->payment_status === 'Paid') {
   exit;
 }
 
-$selectedMethod = $_SESSION['order_payment_method'][$order_id] ?? 'Cash';
-if ($selectedMethod === 'Cash') die("This order is Cash on Delivery.");
+// Determine selected method.
+// Prefer session , otherwise fall back to DB payment record.
+$selectedMethod = $_SESSION['order_payment_method'][$order_id] ?? '';
+if ($selectedMethod === '') {
+  try {
+    $payRow = getPaymentRowByOrderIdDao($order_id);
+    $pmDb = isset($payRow->payment_method) ? (string)$payRow->payment_method : '';
+    // payment.payment_method enum values: 'Credit Card','Debit Card','PayPal','Bank Transfer','Cash','Loyalty Points'
+    if ($pmDb === 'Bank Transfer') {
+      $selectedMethod = 'Online Banking';
+    } elseif ($pmDb === 'Cash') {
+      $selectedMethod = 'Cash';
+    } elseif ($pmDb === 'Loyalty Points') {
+      $selectedMethod = 'Loyalty Points';
+    } elseif ($pmDb === 'Debit Card' || $pmDb === 'Credit Card' || $pmDb === 'PayPal') {
+      $selectedMethod = 'Credit/Debit Card';
+    }
+  } catch (Throwable $e) {
+    error_log('Stripe create session: failed to load payment method for order ' . $order_id . ': ' . $e->getMessage());
+  }
+}
+
+if ($selectedMethod === '' || $selectedMethod === 'Cash') {
+  die("This order is Cash on Delivery.");
+}
+if ($selectedMethod === 'Loyalty Points') {
+  die("This order was paid by loyalty points.");
+}
 
 $stripeCfg = stripe_config();
 \Stripe\Stripe::setApiKey($stripeCfg['secret_key']);

@@ -172,6 +172,19 @@ displayFlashMessage();
                     <?php if (in_array($order->order_status, ['Processing', 'Pending'])): ?>
                         <button type="submit" class="btn btn-danger">Cancel Order</button>
                     <?php endif; ?>
+
+                    <?php
+                    $paymentStatus = strtolower((string)($order->payment_status ?? ''));
+                    $paymentMethod = strtolower((string)($payment->payment_method ?? 'cash'));
+                    $canPayNow = ($paymentStatus === 'pending')
+                        && ($paymentMethod !== 'cash')
+                        && ($paymentMethod !== 'loyalty points');
+                    ?>
+
+                    <?php if ($canPayNow): ?>
+                        <a class="btn btn-primary" target="_blank"
+                            href="<?= $rootDir ?>/pages/payment/stripe_create_session.php?order_id=<?= (int)$order_id ?>">Pay Now</a>
+                    <?php endif; ?>
                 </div>
             </form>
         </div>

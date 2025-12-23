@@ -197,13 +197,10 @@ function refreshCartSummary() {
       : 0
     : 0;
 
-  // Abort any in-flight request to avoid race conditions.
   if (_cartSummaryReq && _cartSummaryReq.readyState !== 4) {
     try {
       _cartSummaryReq.abort();
-    } catch (e) {
-      // ignore
-    }
+    } catch (e) {}
   }
 
   _cartSummaryReq = $.ajax({
@@ -298,6 +295,35 @@ function initImagePopup() {
   const popupProductDescription = $("#popupProductDescription");
   const popupViewDetails = $("#popupViewDetails");
 
+  // Force navigation on click (capture-phase so other handlers can't block it).
+  if (!window.__cartPopupDetailsNavInstalled) {
+    window.__cartPopupDetailsNavInstalled = true;
+    document.addEventListener(
+      "click",
+      function (e) {
+        const link =
+          e.target && e.target.closest
+            ? e.target.closest("#popupViewDetails")
+            : null;
+        if (!link) return;
+
+        const href = link.getAttribute("href");
+        const productId = link.getAttribute("data-product-id");
+        const targetUrl =
+          href && href !== "#"
+            ? href
+            : productId
+            ? ROOT_DIR + "/pages/product/product-detail.php?id=" + productId
+            : "";
+
+        if (!targetUrl) return;
+        e.preventDefault();
+        window.location.assign(targetUrl);
+      },
+      true
+    );
+  }
+
   $(document).on("click", ".clickable-image", function () {
     const productId = $(this).data("product-id");
     const productName = $(this).data("product-name");
@@ -319,8 +345,9 @@ function initImagePopup() {
     );
     popupViewDetails.attr(
       "href",
-      ROOT_DIR + "/product-detail.php?id=" + productId
+      ROOT_DIR + "/pages/product/product-detail.php?id=" + productId
     );
+    popupViewDetails.attr("data-product-id", productId);
 
     popup.show();
     $("body").addClass("popup-open");

@@ -350,6 +350,7 @@ function getMemberOrderHistory($id)
                     o.total_price,
                     o.payment_status,
                     o.status,
+                    MAX(p.payment_method) AS payment_method,
                     COUNT(DISTINCT oi.product_id) AS total_items,
                     SUM(oi.qty) AS total_quantity
                 FROM orders o
@@ -390,14 +391,12 @@ function getSpecificPaymentDao($order_id)
 function createPaymentPendingDao($order_id, $payment_method)
 {
     global $_db;
-    // payment_method enum in DB: Cash / Credit Card / Debit Card / Bank Transfer / PayPal  (from your SQL)
-    // We'll map your UI values into DB values
     $map = [
         'Cash' => 'Cash',
-        'Cash on Delivery' => 'Cash', // Accept 'Cash on Delivery' safely
+        'Cash on Delivery' => 'Cash', 
         'Credit/Debit Card' => 'Credit Card',
         'Online Banking' => 'Bank Transfer',
-        'Loyalty Points' => 'Loyalty Points', // Ensure Loyalty Points can be stored
+        'Loyalty Points' => 'Loyalty Points', 
     ];
     $pm = $map[$payment_method] ?? 'Cash';
 
@@ -506,7 +505,7 @@ function markOrderPaidByOrderIdDao($order_id)
 function insertPaymentForOrderDao($order_id, $payment_method_enum_value)
 {
     global $_db;
-    // must match enum in your DB: Cash / Credit Card / Debit Card / Bank Transfer / PayPal :contentReference[oaicite:3]{index=3}
+    // must match enum in DB: Cash / Credit Card / Debit Card / Bank Transfer :contentReference[oaicite:3]{index=3}
     $stmt = $_db->prepare("INSERT INTO payment (order_id, payment_method) VALUES (?, ?)");
     return $stmt->execute([$order_id, $payment_method_enum_value]);
 }

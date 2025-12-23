@@ -46,14 +46,12 @@ $stripeCfg = stripe_config();
 try {
     $session = \Stripe\Checkout\Session::retrieve($session_id, []);
 
-    // Confirm this session belongs to this order.
     $metaOrderId = isset($session->metadata->order_id) ? (int)$session->metadata->order_id : 0;
     if ($metaOrderId !== (int)$order_id) {
         http_response_code(400);
         die('Session does not match order.');
     }
 
-    // Stripe Checkout uses session.payment_status = 'paid' when payment succeeded.
     if ((string)$session->payment_status !== 'paid') {
         echo "<h2>Payment not completed</h2>";
         echo "<p>Your payment is not marked as paid yet (status: " . htmlspecialchars((string)$session->payment_status) . ").</p>";
@@ -61,7 +59,6 @@ try {
         exit;
     }
 
-    // Optional: sanity check amount
     $expectedAmount = (int)round(((float)$order->total_price) * 100);
     if (isset($session->amount_total) && (int)$session->amount_total !== $expectedAmount) {
         error_log("Stripe amount mismatch for order {$order_id}: expected {$expectedAmount}, got {$session->amount_total}");
@@ -69,25 +66,35 @@ try {
 
     $_db->beginTransaction();
 
-    // Ensure payment row exists.
     if (!paymentExistsForOrderDao($order_id)) {
-        // Default to card if unknown; the user selected method is stored in session elsewhere.
-        createPaymentPendingDao($order_id, 'Credit/Debit Card');
+        try {
+            createPaymentPendingDao($order_id, 'Credit/Debit Card');
+        } catch (Throwable $payEx) {
+            error_log('Stripe success: failed to create payment row for order ' . $order_id . ': ' . $payEx->getMessage());
+        }
     }
 
-    // Persist Stripe IDs.
-    if (!empty($session->id)) {
-        saveStripeSessionIdDao($order_id, (string)$session->id);
-    }
-    if (!empty($session->payment_intent)) {
-        saveStripePaymentIntentIdDao($order_id, (string)$session->payment_intent);
+    // Persist Stripe IDs 
+    try {
+        if (!empty($session->id)) {
+            saveStripeSessionIdDao($order_id, (string)$session->id);
+        }
+        if (!empty($session->payment_intent)) {
+            saveStripePaymentIntentIdDao($order_id, (string)$session->payment_intent);
+        }
+    } catch (Throwable $idEx) {
+        error_log('Stripe success: failed to persist Stripe IDs for order ' . $order_id . ': ' . $idEx->getMessage());
     }
 
-    // Mark order/payment as paid.
+    // Mark order payment as paid.
     markOrderPaidDao($order_id, $user_id);
-    markPaymentPaidDao($order_id);
+    try {
+        markPaymentPaidDao($order_id);
+    } catch (Throwable $paidEx) {
+        error_log('Stripe success: failed to mark payment row paid for order ' . $order_id . ': ' . $paidEx->getMessage());
+    }
 
-    // Reward points: RM 1 spent => 1 point (only now that payment is confirmed).
+    // Reward points: RM 1 spent => 1 point 
     $reward_points = (int)floor((float)$order->total_price);
     if ($reward_points > 0) {
         addLoyaltyPointsDao($user_id, $reward_points);

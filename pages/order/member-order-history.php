@@ -69,7 +69,7 @@ $orders = getOrderHistoryMember($user_id);
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="6" class="empty-state">
+                        <td colspan="7" class="empty-state">
                             No orders found.
                         </td>
                     </tr>

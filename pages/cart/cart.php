@@ -29,14 +29,14 @@ if (temp('USER_ID')) {
     $loyalty_points = getAvailableLoyaltyPointsDao(temp('USER_ID'));
 }
 
-// Get customer addresses (only if logged in)
+// Get customer addresses
 $addresses = temp('USER_ID') ? getAddressesByUserId(temp('USER_ID')) : [];
 $address_count = is_array($addresses) ? count($addresses) : 0;
 foreach ($cart_items as $item) {
     $item->item_total = $item->unit_price * $item->qty;
     $total += $item->item_total;
 
-    // Use is_check to calculate selected total (is_check is the primary selection flag)
+    // Use is_check to calculate selected total 
     $is_check = isset($item->is_check) ? (int)$item->is_check : (int)($item->is_take ?? 0);
     if ($is_check) {
         $selected_total += $item->item_total;
@@ -88,13 +88,12 @@ foreach ($cart_items as $item) {
             </div>
         <?php else: ?>
             <?php foreach ($cart_items as $item):
-                // Get full product details including description
+                // Get product details
                 $product_details = getProductByIdDao($item->product_id);
                 $description = $product_details ? ($product_details->description ?? 'No description available.') : 'No description available.';
                 $short_description = $product_details ? ($product_details->short_desc ?? '') : '';
             ?>
                 <?php
-                // Use is_check as primary, fallback to is_take for backward compatibility
                 $is_check = isset($item->is_check) ? (int)$item->is_check : (int)($item->is_take ?? 0);
                 ?>
                 <div class="cart-item flex align-center <?= $is_check ? 'item-selected' : '' ?>"
@@ -123,12 +122,8 @@ foreach ($cart_items as $item) {
                     <span class="product-price">RM <?= number_format($item->unit_price, 2) ?></span>
 
                     <div class="quantity-control">
-                        <!-- Minus button -->
                         <a href="javascript:void(0)" class="qty-btn minus <?= $item->qty <= 1 ? 'disabled' : '' ?>">-</a>
-
                         <span class="product-quantity-display"><?= $item->qty ?></span>
-
-                        <!-- Plus button -->
                         <a href="javascript:void(0)" class="qty-btn plus <?= $item->stock_quantity >= 999 ? 'disabled' : '' ?>">+</a>
                     </div>
 
@@ -157,8 +152,6 @@ foreach ($cart_items as $item) {
                 </div>
             </div>
         <?php endif; ?>
-
-        <!-- Address Section - Only visible for logged-in users -->
         <?php if ($user_id): ?>
             <div class="cart-address-section">
                 <h3 class="section-title">Delivery Address</h3>
@@ -352,7 +345,7 @@ foreach ($cart_items as $item) {
     <?php endif; ?>
 </main>
 
-<!-- Image Popup Modal -->
+<!-- Image Popup -->
 <div id="imagePopup" class="popup-modal">
     <div class="popup-content">
         <span class="popup-close">&times;</span>

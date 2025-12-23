@@ -6,7 +6,7 @@ require_once "../DAO/loyaltypoint_dao.php";
 header('Content-Type: application/json');
 
 try {
-    // Determine user ID (same logic as cart.php)
+    // Determine user ID 
     $user_id = temp('USER_ID') ?? null;
     if (!$user_id) {
         if (!isset($_SESSION['guest_session_id'])) {
@@ -45,7 +45,6 @@ try {
         $available_points = getAvailableLoyaltyPointsDao(temp('USER_ID'));
     }
 
-    // Redemption rule: 10 points = RM 1.00 (1 point = RM 0.10)
     $discount = 0.0;
     $used_points = 0;
     if ($use_loyalty_points && $available_points > 0 && $subtotal_plus_shipping > 0) {

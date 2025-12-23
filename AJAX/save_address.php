@@ -56,7 +56,6 @@ try {
         exit();
     }
 
-    // Validate postal code (5 digits)
     if (!preg_match('/^\d{5}$/', $post_code)) {
         $response['message'] = 'Postal code must be 5 digits';
         ob_end_clean();
@@ -66,7 +65,7 @@ try {
 
     if (!empty($address_id)) {
         // updateAddress($address_id, $address_one, $address_two, $address_three, $state, $post_code, $country)
-        $ok = updateAddress($address_id,$address_name, $address_one, $address_two, $address_three, $state, $post_code, $country);
+        $ok = updateAddress($address_id, $address_name, $address_one, $address_two, $address_three, $state, $post_code, $country);
         if ($ok) {
             $response['success'] = true;
             $response['message'] = 'Address updated successfully';
@@ -87,8 +86,8 @@ try {
     } else {
         $newId = addAddress($user_id, $address_one, $address_two, $address_three, $state, $post_code, $country, $address_name);
         if ($newId !== false && (int)$newId > 0) {
-            // updateAddress($address_id, $address_name, $address_one, $address_two, $address_three, $state, $post_code, $country)
-            $ok = updateAddress($address_id, $address_name, $address_one, $address_two, $address_three, $state, $post_code, $country);
+            $response['success'] = true;
+            $response['message'] = 'Address saved successfully';
             $response['address_id'] = (int)$newId;
             $response['address_display'] = [
                 'address_id' => (int)$newId,
@@ -108,7 +107,7 @@ try {
     $response['message'] = 'Server error: ' . $e->getMessage();
 }
 
-// Clear any buffered output (warnings/HTML) and send JSON
+// Clear warnings and send JSON
 if (ob_get_length() !== false) {
     @ob_end_clean();
 }

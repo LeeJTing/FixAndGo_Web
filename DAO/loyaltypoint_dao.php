@@ -26,8 +26,27 @@ function addLoyaltyPointsDao(string $user_id, int $points, ?string $expired_at_s
         $expiredAt = date('Y-m-d H:i:s', strtotime('+1 year'));
     }
 
-    $stmt = $_db->prepare("INSERT INTO loyaltypoint (user_id, royalty_point, expired_at) VALUES (?, ?, ?)");
-    return $stmt->execute([$user_id, $points, $expiredAt]);
+    $sql = "INSERT INTO loyaltypoint (user_id, get_at, royalty_point, expired_at) VALUES (?, ?, ?, ?)";
+    $stmt = $_db->prepare($sql);
+
+    $baseTs = time();
+    for ($attempt = 0; $attempt < 5; $attempt++) {
+        $getAt = date('Y-m-d H:i:s', $baseTs + $attempt);
+        try {
+            return $stmt->execute([$user_id, $getAt, $points, $expiredAt]);
+        } catch (PDOException $e) {
+            // 23000 / 1062 => duplicate entry
+            $errorInfo = $e->errorInfo ?? null;
+            $sqlState = is_array($errorInfo) ? ($errorInfo[0] ?? '') : '';
+            $driverCode = is_array($errorInfo) ? (int)($errorInfo[1] ?? 0) : 0;
+            if ($sqlState === '23000' && $driverCode === 1062) {
+                continue;
+            }
+            throw $e;
+        }
+    }
+
+    return false;
 }
 
 function spendLoyaltyPointsDao(string $user_id, int $points): bool
@@ -36,6 +55,25 @@ function spendLoyaltyPointsDao(string $user_id, int $points): bool
 
     if ($points <= 0) return true;
 
-    $stmt = $_db->prepare("INSERT INTO loyaltypoint (user_id, royalty_point, expired_at) VALUES (?, ?, NULL)");
-    return $stmt->execute([$user_id, -$points]);
+    // Same duplicate-PK protection 
+    $sql = "INSERT INTO loyaltypoint (user_id, get_at, royalty_point, expired_at) VALUES (?, ?, ?, NULL)";
+    $stmt = $_db->prepare($sql);
+
+    $baseTs = time();
+    for ($attempt = 0; $attempt < 5; $attempt++) {
+        $getAt = date('Y-m-d H:i:s', $baseTs + $attempt);
+        try {
+            return $stmt->execute([$user_id, $getAt, -$points]);
+        } catch (PDOException $e) {
+            $errorInfo = $e->errorInfo ?? null;
+            $sqlState = is_array($errorInfo) ? ($errorInfo[0] ?? '') : '';
+            $driverCode = is_array($errorInfo) ? (int)($errorInfo[1] ?? 0) : 0;
+            if ($sqlState === '23000' && $driverCode === 1062) {
+                continue;
+            }
+            throw $e;
+        }
+    }
+
+    return false;
 }
