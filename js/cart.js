@@ -643,7 +643,7 @@ function saveNewAddress() {
           $editBtn.data("post-code", addr.post_code);
           $editBtn.data("country", addr.country);
         } else {
-          addAddressToList(addr);
+          addAddressToList(addr, true);
         }
 
         // reset form
@@ -667,9 +667,28 @@ function saveNewAddress() {
   });
 }
 
-function addAddressToList(addressData) {
-  const addressList = $(".address-options");
-  const isFirstAddress = addressList.find(".address-option").length === 0;
+function addAddressToList(addressData, selectAfterAdd = false) {
+  let addressList = $(".address-options").first();
+
+  // When there are no addresses, the PHP page doesn't render the list container at all.
+  // Create it so the new address can be appended without a full page reload.
+  if (!addressList.length) {
+    const $section = $(".cart-address-section").first();
+    const $addNew = $section.find(".add-new-address").first();
+    if ($section.length && $addNew.length) {
+      $addNew.before(`
+        <div class="address-list">
+          <h4>Select Delivery Address:</h4>
+          <div class="address-options"></div>
+        </div>
+      `);
+      addressList = $section.find(".address-options").first();
+    }
+  }
+
+  const isFirstAddress = addressList.length
+    ? addressList.find(".address-option").length === 0
+    : true;
   const html = `
     <div class="address-option" data-address-id="${addressData.address_id}">
       <input type="radio"
@@ -678,7 +697,7 @@ function addAddressToList(addressData) {
         name="selected_address"
         value="${addressData.address_id}"
         data-address-id="${addressData.address_id}"
-        ${isFirstAddress ? "checked" : ""} />
+        ${isFirstAddress || selectAfterAdd ? "checked" : ""} />
 
       <label for="address-${addressData.address_id}" class="address-label">
         <div class="address-details">
@@ -724,7 +743,17 @@ function addAddressToList(addressData) {
   </div>
   `;
 
-  addressList.append(html);
+  if (addressList.length) {
+    addressList.append(html);
+
+    // Ensure newly-added address is selected (especially for first address)
+    if (isFirstAddress || selectAfterAdd) {
+      const $radio = $("#address-" + addressData.address_id);
+      if ($radio.length) {
+        $radio.prop("checked", true).trigger("change");
+      }
+    }
+  }
 
   // Update address limit after adding
   updateAddressLimit();
