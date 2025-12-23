@@ -380,6 +380,7 @@ include 'adminHeader.php';
 
             <label>Status</label>
             <select name="account_status">
+                <option value="Unblock" selected>Unblock</option>
                 <option value="Verified">Verified</option>
                 <option value="Unverify">Unverify</option>
             </select>
