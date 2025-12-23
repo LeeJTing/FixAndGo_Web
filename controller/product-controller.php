@@ -5,28 +5,28 @@ require __DIR__ . '/../DAO/product_dao.php';
 $function = $_GET['function'] ?? null;;
 
 if ($function === 'allProduct') {
-
     header('Content-Type: application/json');
 
     $category_code = $_GET['category'] ?? "";
     $sortBy        = $_GET['sort'] ?? "";
     $priceValue    = $_GET['price'] ?? "";
+    $searchValue   = $_GET['search'] ?? ""; // NEW: search input
 
     $page  = max(1, (int)($_GET['page'] ?? 1));
     $limit = (int)($_GET['limit'] ?? 8);
-
     $offset = ($page - 1) * $limit;
 
+    // Fetch filtered products
     $products = getAllProductFilterDao(
         $category_code,
         $sortBy,
         $priceValue,
+        $searchValue, // Pass search
         $limit,
         $offset
     );
 
-    // Attach wishlist state for the current user (if logged in).
-    // Fail-safe: if wishlist table isn't created yet, don't break product listing.
+    // Attach wishlist state for the current user (if logged in)
     $user_id = temp('USER_ID');
     if (!empty($products)) {
         foreach ($products as $p) {
@@ -38,11 +38,7 @@ if ($function === 'allProduct') {
         try {
             require_once __DIR__ . '/../DAO/wishlist_dao.php';
 
-            $productIds = [];
-            foreach ($products as $p) {
-                $productIds[] = (int)($p->product_id ?? 0);
-            }
-
+            $productIds = array_map(fn($p) => (int)($p->product_id ?? 0), $products);
             $wishIds = getWishlistProductIdsForUserDao((string)$user_id, $productIds);
             $wishSet = array_fill_keys($wishIds, true);
 
@@ -55,9 +51,11 @@ if ($function === 'allProduct') {
         }
     }
 
+    // Fetch total rows for pagination (with same filters, including search)
     $totalRows = getAllProductFilterCountDao(
         $category_code,
-        $priceValue
+        $priceValue,
+        $searchValue // Pass search to count function
     );
 
     echo json_encode([

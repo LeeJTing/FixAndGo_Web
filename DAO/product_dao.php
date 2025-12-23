@@ -3,11 +3,11 @@
 /**
  * Get all products with category name
  */
-function getAllProductFilterDao($category, $sort, $price, $limit, $offset)
+function getAllProductFilterDao($category, $sort, $price, $search, $limit, $offset)
 {
     global $_db;
 
-    $sql = "SELECT p.*, c.category_name, pvm.file_path, pvm.alt
+    $sql = "SELECT p.*, c.category_name, COALESCE(pvm.file_path, '/images/no-image.jpg') AS file_path, pvm.alt
             FROM product p
             JOIN category c 
                 ON p.category_code = c.category_code AND c.is_deleted = 0
@@ -18,14 +18,31 @@ function getAllProductFilterDao($category, $sort, $price, $limit, $offset)
 
     $param = [];
 
+    // Category filter
     if (!empty($category)) {
         $sql .= " AND p.category_code = ?";
         $param[] = $category;
     }
 
+    // Price filter
     if ($price !== "" && $price !== null) {
         $sql .= " AND p.unit_price <= ?";
         $param[] = $price;
+    }
+
+    // Search filter
+    if (!empty($search)) {
+        $sql .= " AND (
+                    p.product_name LIKE ? OR 
+                    p.description LIKE ? OR 
+                    p.short_desc LIKE ? OR 
+                    c.category_name LIKE ?
+                  )";
+        $searchTerm = "%" . $search . "%";
+        $param[] = $searchTerm;
+        $param[] = $searchTerm;
+        $param[] = $searchTerm;
+        $param[] = $searchTerm;
     }
 
     // Sorting
@@ -54,13 +71,14 @@ function getAllProductFilterDao($category, $sort, $price, $limit, $offset)
         $stmt->bindValue($i++, $p);
     }
 
-    // Bind limit & offset (IMPORTANT: must be INT)
+    // Bind limit & offset (must be INT)
     $stmt->bindValue($i++, (int)$limit, PDO::PARAM_INT);
     $stmt->bindValue($i++, (int)$offset, PDO::PARAM_INT);
 
     $stmt->execute();
-    return $stmt->fetchAll();
+    return $stmt->fetchAll(PDO::FETCH_OBJ);
 }
+
 
 function getTopSellingProductsDao($limit = 5)
 {

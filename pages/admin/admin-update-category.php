@@ -87,7 +87,7 @@ $category = getCategoryByCode($category_code);
 
         <!-- Action Buttons -->
         <div class="btn-group">
-            <a class="btn btn-cancel" href="../admin/admin-category.php">Cancel</a>
+            <a class="btn btn-cancel" href="../admin/admin-category.php" style="text-decoration: none;">Cancel</a>
             <button type="submit" class="btn btn-save">
                 <i class="fa-solid fa-save"></i> Save Changes
             </button>

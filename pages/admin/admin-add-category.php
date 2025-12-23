@@ -69,7 +69,7 @@ $category = getAllCategoryDao() ?? [];
 
         <!-- Action Buttons -->
         <div class="btn-group">
-            <a type="button" class="btn btn-cancel" href="../admin/admin-category.php">Cancel</a>
+            <a type="button" class="btn btn-cancel" href="../admin/admin-category.php" style="text-decoration: none;">Cancel</a>
             <button type="submit" class="btn btn-save">
                 <i class="fa-solid fa-plus-circle"></i> Add Category
             </button>

@@ -23,8 +23,11 @@ $(document).ready(function () {
   }
 
   // Input change
-  fileInput.addEventListener("change", () => handleFile(fileInput.files[0]));
-
+  fileInput.addEventListener("change", () => {
+    if (fileInput.files && fileInput.files[0]) {
+      handleFile(fileInput.files[0]);
+    }
+  });
   // Drag & Drop
   uploadContainer.addEventListener("dragover", (e) => {
     e.preventDefault();
@@ -35,12 +38,24 @@ $(document).ready(function () {
     uploadContainer.classList.remove("dragover");
   });
 
+  // Drag & Drop
   uploadContainer.addEventListener("drop", (e) => {
     e.preventDefault();
     uploadContainer.classList.remove("dragover");
-    if (e.dataTransfer.files.length > 0) {
-      handleFile(e.dataTransfer.files[0]);
+
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      alert("Invalid file type. Please drop an image file.");
+      return;
     }
+    // Update the input manually
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    fileInput.files = dt.files; // <-- this updates fileInput.files
+
+    handleFile(file);
   });
 
   // Remove preview
