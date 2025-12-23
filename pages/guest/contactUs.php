@@ -668,11 +668,11 @@ textarea.form-control {
         <div class="map-container">
             <!-- Google Maps Embed - TAR UMT Arena Location -->
             <iframe
-                src="https://www.google.com/maps?q=3.2153,101.7281&output=embed"
+                src="https://www.google.com/maps?q=3.215963,101.728667&output=embed"
                 width="100%"
                 height="100%"
                 style="border:0;"
-                allowfullscreen=""
+                allowfullscreen
                 loading="lazy">
             </iframe>
         </div>
