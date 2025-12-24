@@ -802,7 +802,7 @@ function getTop5BestSellersDifferentCategories()
 {
     global $_db;
 
-    $sql = "SELECT 
+    $sql = "SELECT
                 c.category_code,
                 c.category_name,
                 p.description,
@@ -882,7 +882,8 @@ function getTop5BestSellersDifferentCategories()
                 c.category_name,
                 c.description
 
-            ORDER BY category_total_revenue DESC";
+            ORDER BY category_total_revenue DESC
+            LIMIT 5";
 
     try {
         $stmt = $_db->prepare($sql);
